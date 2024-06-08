@@ -1,0 +1,63 @@
+#!/bin/ksh
+#
+
+${SCR_DBG}set -xv
+set -xv
+
+#    MAKE_1_ARC_DATES
+
+SCR_NAME=MAKE_1_ARC_DATES
+SCR_PARM=5
+SCR_LIST="case endate arclen skipdays accel"
+SCR_VERS=040225.0
+
+
+if [ `expr $#` -lt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+
+#  case = the calendar date for the first arc, e.g. 010401
+#
+#  arclen = the length of th earc in days, e.g. 8
+#
+#  skipdays = number of days from 1st of arc till next 1st
+#             this in case the arcs have overlap, e.g. 8-day
+#             arcs starting always every seven (7) days.
+#             if no overlap, =arclen
+#  accel = number of acceleration intervals in arc
+
+case=$1
+endate=$2
+arclen=$3
+skipdays=$4
+accel=$5
+
+
+printf "%.6s%.6s%+10.3f%+10.3f%10.d\n" $case $endate $arclen $skipdays $accel > ftn05
+#printf "%6.d%6.d%+10.3f%+10.3f%10.d\n" $case $endate $arclen $skipdays $accel > ftn05
+echo "." >> ftn05
+cat ftn05
+
+/umbc/research/epavlis/EXECUTABLES/PE2_EXECi64/makearc_dates.x < ftn05 > ftn06
+
+sed "s/ /0/g" midepochs > t1
+mv t1 midepochs
+
+cat ftn06 
+cat newepochs
+cat midepochs
+
+
+exit 0

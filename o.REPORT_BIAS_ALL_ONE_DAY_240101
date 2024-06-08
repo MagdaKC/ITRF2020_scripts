@@ -1,0 +1,3377 @@
+set -xv
+
+
+
++ set -xv
+#  RUN_STR
+
+#
+
+SCR_NAME=REPORT_BiAS_ALL
++ SCR_NAME=REPORT_BiAS_ALL
+SCR_LIST="CASE ETA_IN"
++ SCR_LIST='CASE ETA_IN'
+SCR_VERS=070928.0
+
++ SCR_VERS=070928.0
+SCR_DBG="#"
++ SCR_DBG='#'
+export SCR_DBG
+
+
++ export SCR_DBG
+Date=`date +%y%m%d`
+
+date +%y%m%d
++ date +%y%m%d
++ Date=240102
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+date '+DATE: %m/%d/%y  TIME: %H:%M:%S'
++ date '+DATE: %m/%d/%y  TIME: %H:%M:%S'
++ DateTime='DATE: 01/02/24  TIME: 17:12:45'
+echo " # "
++ echo ' # '
+ # 
+echo " #  $SCR_NAME $* "
++ echo ' #  REPORT_BiAS_ALL  '
+ #  REPORT_BiAS_ALL  
+echo " # "
++ echo ' # '
+ # 
+echo " #  Version $SCR_VERS "
++ echo ' #  Version 070928.0 '
+ #  Version 070928.0 
+echo " # "
++ echo ' # '
+ # 
+echo " #  Run Date $DateTime "
++ echo ' #  Run Date DATE: 01/02/24  TIME: 17:12:45 '
+ #  Run Date DATE: 01/02/24  TIME: 17:12:45 
+echo " # "
++ echo ' # '
+ # 
+CASE=DAILY
++ CASE=DAILY
+#ARC=z70925
+ARC=$1
++ ARC=''
+diskC=$disk_n
++ diskC=''
+ CASE=DAILY
++ CASE=DAILY
+  #ARC=z70925
+   SNX_VER=180
++ SNX_VER=180
+    ARC=w31225
++ ARC=w31225
+     diskC=/umbc/epavlis/data01/LOCAL/magdak
++ diskC=/umbc/epavlis/data01/LOCAL/magdak
+#------------------------------
+#  Report for all satellites: L1, L2, E1, E2, A1 and S1
+#------------------------------
+# To the end of the proces. Merge Reports from all satellites and sort by station and date.
+#Merge alll station together and sort unique
+cat /$diskC/MISSIONS/GISL1/qc_report/${CASE}/v${SNX_VER}/${ARC}/st_L1 > ST1
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/qc_report/DAILY/v180/w31225/st_L1
++ 1> ST1
+cat /$diskC/MISSIONS/GISL2/qc_report/${CASE}/v${SNX_VER}//${ARC}/st_L2 >> ST1
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180//w31225/st_L2
++ 1>> ST1
+cat /$diskC/MISSIONS/ETA1/qc_report/${CASE}/v${SNX_VER}/${ARC}/st_E1 >> ST1
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/st_E1
++ 1>> ST1
+cat /$diskC/MISSIONS/ETA2/qc_report/${CASE}/v${SNX_VER}/${ARC}/st_E2 >> ST1
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/st_E2
++ 1>> ST1
+cat /$diskC/MISSIONS/LARES2/qc_report/${CASE}/v${SNX_VER}/${ARC}/st_R2 >> ST1
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/qc_report/DAILY/v180/w31225/st_R2
++ 1>> ST1
+cat /$diskC/MISSIONS/LARES/qc_report/${CASE}/v${SNX_VER}/${ARC}/st_LR >> ST1
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/qc_report/DAILY/v180/w31225/st_LR
++ 1>> ST1
+cat /$diskC/MISSIONS/AJISI/qc_report/${CASE}/v${SNX_VER}/${ARC}/st_AJ >> ST1
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/st_AJ
++ 1>> ST1
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/st_AJ: No such file or directory
+cat /$diskC/MISSIONS/STARL/qc_report/${CASE}/v${SNX_VER}/${ARC}/st_ST >> ST1
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/st_ST
++ 1>> ST1
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/st_ST: No such file or directory
+sort -u ST1 > ST
+
++ sort -u ST1
++ 1> ST
+# To the end of the proces. Merge Reports from all satellites and sort by station and date.
+#Merge alll station together and sort unique
+cat /$diskC/MISSIONS/PPV/qc_report/${CASE}/v${SNX_VER}/${ARC}_LEAS.txt > ST2
+
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/qc_report/DAILY/v180/w31225_LEAS.txt
++ 1> ST2
+MAIN_PATH=/$diskC
++ MAIN_PATH=//umbc/epavlis/data01/LOCAL/magdak
+read NYEAR NDOY Date_NEW_ARC ARC2 < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_NEW.${CASE}_v${SNX_VER}
++ read NYEAR NDOY Date_NEW_ARC ARC2
++ 0< //umbc/epavlis/data01/LOCAL/magdak/INFILES/INF_OPS_ITRF2020/ARC_SETUP_NEW.DAILY_v180
+read XYEAR XDOY Date_NXT_ARC NXT < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_NXT.${CASE}_v${SNX_VER}
++ read XYEAR XDOY Date_NXT_ARC NXT
++ 0< //umbc/epavlis/data01/LOCAL/magdak/INFILES/INF_OPS_ITRF2020/ARC_SETUP_NXT.DAILY_v180
+read EYEAR EDOY Date_END_ARC END < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_END_OLD.${CASE}_v${SNX_VER}
++ read EYEAR EDOY Date_END_ARC END
++ 0< //umbc/epavlis/data01/LOCAL/magdak/INFILES/INF_OPS_ITRF2020/ARC_SETUP_END_OLD.DAILY_v180
+read EYEAR2 EDOY2 Date_END_ARC2 END2 < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_END.${CASE}_v${SNX_VER}
++ read EYEAR2 EDOY2 Date_END_ARC2 END2
++ 0< //umbc/epavlis/data01/LOCAL/magdak/INFILES/INF_OPS_ITRF2020/ARC_SETUP_END.DAILY_v180
+XDOY2=`expr $XDOY - 1`
+
+expr $XDOY - 1
++ expr 362 - 1
++ XDOY2=361
+/$diskC/scripts/ydoy2ymd $NYEAR $NDOY > D1a
++ //umbc/epavlis/data01/LOCAL/magdak/scripts/ydoy2ymd 2023 361
++ 1> D1a
+/$diskC/scripts/ydoy2ymd $XYEAR $XDOY2 > D2a
++ //umbc/epavlis/data01/LOCAL/magdak/scripts/ydoy2ymd 2023 361
++ 1> D2a
+read D1 < D1a
++ read D1
++ 0< D1a
+read D2 < D2a
++ read D2
++ 0< D2a
+print "$Date_END_ARC" > D3a
++ print 240102
++ 1> D3a
+cut -c1-2 D3a > YYY 
++ cut -c1-2 D3a
++ 1> YYY
+cut -c3-4 D3a > MMM 
++ cut -c3-4 D3a
++ 1> MMM
+cut -c5-6 D3a > DDD 
++ cut -c5-6 D3a
++ 1> DDD
+read YYYA < YYY
++ read YYYA
++ 0< YYY
+read DDDA < DDD
++ read DDDA
++ 0< DDD
+read MMMA < MMM
++ read MMMA
++ 0< MMM
+#231002 /$diskC/scripts/ymd2ydoy $EYEAR $YYYA $DDDA $MMMA > D2b
+/$diskC/scripts/ymd2ydoy $EYEAR $MMMA $DDDA > D2b
++ //umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 2024 01 02
++ 1> D2b
+@ year=2024
+if ( 2024 < 1900 ) then
+if ( 2024 < 1980 ) then
+set mm=01
+set dd=02
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2024 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 02 < = 0 || 02 > 31 ) then
+if ( 01 < = 0 || 01 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 01 )
+@ doy=02 + 0
+@ i=1 + 1
+end
+while ( 2 < = 01 )
+echo 2 2024
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
+cut -c1-2 D2b > YY3 
++ cut -c1-2 D2b
++ 1> YY3
+cut -c3-5 D2b > DY3 
++ cut -c3-5 D2b
++ 1> DY3
+read  DYB < DY3
++ read DYB
++ 0< DY3
+DYC=`expr $DYB - 1`
+expr $DYB - 1
++ expr 002 - 1
++ DYC=1
+DYCC=$DYC
++ DYCC=1
+/$diskC/scripts/ydoy2ymd $EYEAR $DYCC > D2c
++ //umbc/epavlis/data01/LOCAL/magdak/scripts/ydoy2ymd 2024 1
++ 1> D2c
+#cut -c1-2 D3a > YYY
+#cut -c3-4 D3a > MMM
+#cut -c5-6 D3a > DDD
+cut -c1-2 D2c > YYY
++ cut -c1-2 D2c
++ 1> YYY
+cut -c3-4 D2c > MMM
++ cut -c3-4 D2c
++ 1> MMM
+cut -c5-6 D2c > DDD
++ cut -c5-6 D2c
++ 1> DDD
+read YYYA < YYY
++ read YYYA
++ 0< YYY
+read DDDA < DDD
++ read DDDA
++ 0< DDD
+read MMMA < MMM
+
++ read MMMA
++ 0< MMM
+print "${YYYA}/${MMMA}/${DDDA}" > G_Da
++ print 24/01/01
++ 1> G_Da
+read G_D < G_Da
+
+
+
+
++ read G_D
++ 0< G_Da
+#Merge data for for one station from  all satellites
+
+G_D="23/12/31"
++ G_D=23/12/31
+grep "${G_D}" ST2 > Report_all_sort_one
+
++ grep 23/12/31 ST2
++ 1> Report_all_sort_one
+# *.rpt - report with titles and *.txt report without any title
+cp Report_all_sort_one  /$diskC/MISSIONS/PPV/qc_report/${CASE}/v${SNX_VER}/${ARC}.txt
+
+
++ cp Report_all_sort_one //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/qc_report/DAILY/v180/w31225.txt
+/$diskC/scripts/ydoy2ymd $NYEAR $NDOY > D1b
++ //umbc/epavlis/data01/LOCAL/magdak/scripts/ydoy2ymd 2023 361
++ 1> D1b
+/$diskC/scripts/ydoy2ymd $EYEAR2 $EDOY2 > D2a
++ //umbc/epavlis/data01/LOCAL/magdak/scripts/ydoy2ymd 2024 3
++ 1> D2a
+read D1c < D1b
++ read D1c
++ 0< D1b
+read D2c < D2a
++ read D2c
++ 0< D2a
+EDOY3=`expr $EDOY2 - 1`
+expr $EDOY2 - 1
++ expr 3 - 1
++ EDOY3=2
+/$diskC/scripts/ydoy2ymd $EYEAR2 $EDOY3 > D3a
++ //umbc/epavlis/data01/LOCAL/magdak/scripts/ydoy2ymd 2024 2
++ 1> D3a
+read D3 < D3a
+
++ read D3
++ 0< D3a
+#START Report for all satellites
+print "# @$Date" > Report2
++ print '# @240102'
++ 1> Report2
+print "# @Data span  ${D1c}-${D2c}" >> Report2
++ print '# @Data span  231227-240103'
++ 1>> Report2
+print "# @contact epavlis@umbc.edu" >> Report2
++ print '# @contact epavlis@umbc.edu'
++ 1>> Report2
+print "# @website  http://geodesy.jcet.umbc.edu/" >> Report2
++ print '# @website  http://geodesy.jcet.umbc.edu/'
++ 1>> Report2
+print "# @version 2.0" >> Report2
++ print '# @version 2.0'
++ 1>> Report2
+print "#    " >> Report2
++ print '#    '
++ 1>> Report2
+print "# each line contains:" >> Report2
++ print '# each line contains:'
++ 1>> Report2
+print "#    " >> Report2
++ print '#    '
++ 1>> Report2
+print "# STA ID           = site name  " >> Report2
++ print '# STA ID           = site name  '
++ 1>> Report2
+print "# YY/MM/DD HH:MM   = pass starting time " >> Report2
++ print '# YY/MM/DD HH:MM   = pass starting time '
++ 1>> Report2
+print "# SAT              = satellite name (L1: LAGEOS1; L2: LAGEOS2; E1: ETALON1; E2:ETALON2; LR LARES; R2: LARES2 S1: STARLETTE; A1: AJISAI) " >> Report2
++ print '# SAT              = satellite name (L1: LAGEOS1; L2: LAGEOS2; E1: ETALON1; E2:ETALON2; LR LARES; R2: LARES2 S1: STARLETTE; A1: AJISAI) '
++ 1>> Report2
+print "# GOD OBS          = number of good normal points  " >> Report2
++ print '# GOD OBS          = number of good normal points  '
++ 1>> Report2
+print "# RAW RMS          = residual RMS before editing & bias application " >> Report2
++ print '# RAW RMS          = residual RMS before editing & bias application '
++ 1>> Report2
+print "# PREC EST         = post-fit scattering rms  " >> Report2
++ print '# PREC EST         = post-fit scattering rms  '
++ 1>> Report2
+print "# RANGE BIAS       = estimated range bias  " >> Report2
++ print '# RANGE BIAS       = estimated range bias  '
++ 1>> Report2
+print "# RANGE BIAS SIGMA = estimated range bias sigma " >> Report2
++ print '# RANGE BIAS SIGMA = estimated range bias sigma '
++ 1>> Report2
+print "# TIME BIAS        = estimated time bias  " >> Report2
++ print '# TIME BIAS        = estimated time bias  '
++ 1>> Report2
+print "# TIME BIAS SIGMA  = estimated time bias sigma" >> Report2
++ print '# TIME BIAS SIGMA  = estimated time bias sigma'
++ 1>> Report2
+print "# PASS DUR         = pass duration  " >> Report2
++ print '# PASS DUR         = pass duration  '
++ 1>> Report2
+print "# EDIT OBS         = number of bad normal points  " >> Report2
++ print '# EDIT OBS         = number of bad normal points  '
++ 1>> Report2
+print "# CALIB+ MEAN      = mean Applied System Delay (ILRS FR format cols 97-104)  " >> Report2
++ print '# CALIB+ MEAN      = mean Applied System Delay (ILRS FR format cols 97-104)  '
++ 1>> Report2
+print "# CALIB SDEV       = mean System Calibration Method (ILRS FR format cols 126) " >> Report2
++ print '# CALIB SDEV       = mean System Calibration Method (ILRS FR format cols 126) '
++ 1>> Report2
+print "# CALIB SHIFT+     = mean Root Mean Square (ILRS FR format cols 111-114) " >> Report2
++ print '# CALIB SHIFT+     = mean Root Mean Square (ILRS FR format cols 111-114) '
++ 1>> Report2
+print "# STPASS RMS       = mean Pass RMS (ILRS FR format cols 58-64) "  >> Report2
++ print '# STPASS RMS       = mean Pass RMS (ILRS FR format cols 58-64) '
++ 1>> Report2
+print "# TEMP             = mean surface temperature [K]  " >> Report2
++ print '# TEMP             = mean surface temperature [K]  '
++ 1>> Report2
+print "# HUM              = mean relative humidity of surface %  " >> Report2
++ print '# HUM              = mean relative humidity of surface %  '
++ 1>> Report2
+print "# PRES             = mean pressure [hPa]  " >> Report2
++ print '# PRES             = mean pressure [hPa]  '
++ 1>> Report2
+print "# WLEN             = walelength [nm]  " >> Report2
++ print '# WLEN             = walelength [nm]  '
++ 1>> Report2
+print "# SCH              = System Change Indicator (ILRS FR format cols 127) " >> Report2
++ print '# SCH              = System Change Indicator (ILRS FR format cols 127) '
++ 1>> Report2
+print "# SCI              = System Configuration (ILRS FR format cols 128)  " >> Report2
++ print '# SCI              = System Configuration (ILRS FR format cols 128)  '
++ 1>> Report2
+print "# DRF              = Data Release Flag (ILRS FR format cols 130)" >> Report2
++ print '# DRF              = Data Release Flag (ILRS FR format cols 130)'
++ 1>> Report2
+print "# ELEVATION MAX    = maximum elevation for pass [degrees]  " >> Report2
++ print '# ELEVATION MAX    = maximum elevation for pass [degrees]  '
++ 1>> Report2
+print "# ELEVATION MIN    = minimum elevation for pass [degrees]  " >> Report2
++ print '# ELEVATION MIN    = minimum elevation for pass [degrees]  '
++ 1>> Report2
+print "#    " >> Report2
+
+
++ print '#    '
++ 1>> Report2
+#Merge data for for one station from  all satellites
+#1
+while read STAN2
+do
+rm T1ALL T2ALL
+cat /$diskC/MISSIONS/GISL1/qc_report/${CASE}/v${SNX_VER}/${ARC}/${STAN2}_L1 >>  T1ALL 
+cat /$diskC/MISSIONS/GISL2/qc_report/${CASE}/v${SNX_VER}/${ARC}/${STAN2}_L2 >>  T1ALL 
+cat /$diskC/MISSIONS/ETA1/qc_report/${CASE}/v${SNX_VER}/${ARC}/${STAN2}_E1 >>  T1ALL 
+cat /$diskC/MISSIONS/ETA2/qc_report/${CASE}/v${SNX_VER}/${ARC}/${STAN2}_E2 >>  T1ALL 
+cat /$diskC/MISSIONS/LARES2/qc_report/${CASE}/v${SNX_VER}/${ARC}/${STAN2}_R2 >>  T1ALL 
+cat /$diskC/MISSIONS/LARES/qc_report/${CASE}/v${SNX_VER}/${ARC}/${STAN2}_LR >>  T1ALL 
+cat /$diskC/MISSIONS/STARL/qc_report/${CASE}/v${SNX_VER}/${ARC}/${STAN2}_S1 >>  T1ALL 
+cat /$diskC/MISSIONS/AJISI/qc_report/${CASE}/v${SNX_VER}/${ARC}/${STAN2}_A1 >>  T1ALL 
+sort -k1,1 -k2,2 T1ALL > T2ALLA
+grep "${G_D}" T2ALLA > T2ALL 
+if [ -s T2ALL ]; then
+cp T2ALL ${STAN2}
+print "$STAN2" > STAT1
+cut -c1-4 STAT1 > STAT12
+#2
+read STAT2 < STAT12
+while read STAT3 NAME DOS
+do
+if [ "${STAT2}" = "${STAT3}" ]; then
+print "#$STAT3 ${NAME}  $DOS" >> Report2
+fi
+
+#2
+done < /$diskC/INFILES/ILRS_SITE_LIST_102
+
+
+
+print "#                            GOOD        RAW      PREC       RANGE     RANGE    TIME    TIME  PASS    EDIT    CALIB+  CALIB  CALIB++ STPASS    TEMP     HUM     PRES     WLEN   S S D        ELEVATION " >> Report2
+print "#                             OBS        RMS       EST        BIAS      BIAS    BIAS    BIAS   DUR     OBS    MEAN    SDEV   SHIFT   RMS        [K]       %     [hPa]    [nm]   C C R      MAX       MIN     ">> Report2
+print "# STA ID YY/MM/DD HH:MM SAT  A          [mm]      [mm]        [mm]     SIGMA    [us]   SIGMA  [MIN]           [mm]    [mm]   [mm]    [mm]                                       H I F        [degrees]" >> Report2
+print "#                 " >> Report2
+cat T2ALL >>  Report2
+print "#" >> Report2
+#cp T3ALL ${SATN2}_ALL
+fi
+done <  ST
++ 0< ST
++ read STAN2
++ rm T1ALL T2ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/qc_report/DAILY/v180/w31225/18248101_L1
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180/w31225/18248101_L2
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180/w31225/18248101_L2: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/18248101_E1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/18248101_E1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/18248101_E2
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/18248101_E2: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/qc_report/DAILY/v180/w31225/18248101_R2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/qc_report/DAILY/v180/w31225/18248101_LR
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/qc_report/DAILY/v180/w31225/18248101_LR: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/18248101_S1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/18248101_S1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/18248101_A1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/18248101_A1: No such file or directory
++ sort -k1,1 -k2,2 T1ALL
++ 1> T2ALLA
++ grep 23/12/31 T2ALLA
++ 1> T2ALL
++ [ -s T2ALL ]
++ cp T2ALL 18248101
++ print 18248101
++ 1> STAT1
++ cut -c1-4 STAT1
++ 1> STAT12
++ read STAT2
++ 0< STAT12
++ 0< //umbc/epavlis/data01/LOCAL/magdak/INFILES/ILRS_SITE_LIST_102
++ read STAT3 NAME DOS
++ [ 1824 '=' 1181 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 1824 ]
++ print '#1824 Kiev  12356S001'
++ 1>> Report2
++ read STAT3 NAME DOS
++ [ 1824 '=' 1831 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 1863 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 1864 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 1868 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 1873 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 1874 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 1879 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 1884 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 1885 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 1886 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 1887 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 1888 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 1889 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 1890 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 1891 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 1893 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 1953 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7035 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7045 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7046 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7051 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7062 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7063 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7063 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7065 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7067 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7068 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7080 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7082 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7084 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7085 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7086 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7090 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7091 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7092 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7096 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7097 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7100 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7101 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7102 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7103 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7104 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7105 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7106 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7109 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7110 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7112 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7114 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7115 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7119 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7120 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7121 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7122 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7123 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7124 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7125 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7130 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7210 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7220 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7231 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7236 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7237 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7249 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7265 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7274 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7288 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7295 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7308 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7328 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7335 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7337 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7339 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7355 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7356 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7357 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7358 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7370 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7394 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7400 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7401 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7403 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7404 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7405 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7405 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7405 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7406 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7407 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7410 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7411 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7501 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7502 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7505 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7510 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7512 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7515 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7517 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7520 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7525 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7530 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7540 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7541 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7542 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7543 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7544 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7545 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7546 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7548 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7550 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7560 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7561 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7575 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7580 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7585 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7587 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7589 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7594 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7596 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7597 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7599 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7602 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7604 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7701 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7805 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7806 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7810 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7810 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7810 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7810 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7811 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7811 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7819 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7820 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7821 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7824 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7824 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7825 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7830 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7831 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7832 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7833 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7834 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7835 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7836 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7837 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7838 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7839 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7840 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7841 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7843 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7845 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7846 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7847 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7848 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7849 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7850 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7850 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7853 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7865 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7882 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7883 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7884 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7885 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7886 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7888 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7891 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7892 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7894 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7896 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7899 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7907 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7918 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7919 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7920 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7921 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7929 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7939 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7940 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7941 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7941 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 7943 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 8833 ]
++ read STAT3 NAME DOS
++ [ 1824 '=' 8834 ]
++ read STAT3 NAME DOS
++ print '#                            GOOD        RAW      PREC       RANGE     RANGE    TIME    TIME  PASS    EDIT    CALIB+  CALIB  CALIB++ STPASS    TEMP     HUM     PRES     WLEN   S S D        ELEVATION '
++ 1>> Report2
++ print '#                             OBS        RMS       EST        BIAS      BIAS    BIAS    BIAS   DUR     OBS    MEAN    SDEV   SHIFT   RMS        [K]       %     [hPa]    [nm]   C C R      MAX       MIN     '
++ 1>> Report2
++ print '# STA ID YY/MM/DD HH:MM SAT  A          [mm]      [mm]        [mm]     SIGMA    [us]   SIGMA  [MIN]           [mm]    [mm]   [mm]    [mm]                                       H I F        [degrees]'
++ 1>> Report2
++ print '#                 '
++ 1>> Report2
++ cat T2ALL
++ 1>> Report2
++ print '#'
++ 1>> Report2
++ read STAN2
++ rm T1ALL T2ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/qc_report/DAILY/v180/w31225/18734901_L1
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180/w31225/18734901_L2
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180/w31225/18734901_L2: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/18734901_E1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/18734901_E1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/18734901_E2
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/18734901_E2: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/qc_report/DAILY/v180/w31225/18734901_R2
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/qc_report/DAILY/v180/w31225/18734901_R2: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/qc_report/DAILY/v180/w31225/18734901_LR
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/qc_report/DAILY/v180/w31225/18734901_LR: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/18734901_S1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/18734901_S1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/18734901_A1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/18734901_A1: No such file or directory
++ sort -k1,1 -k2,2 T1ALL
++ 1> T2ALLA
++ grep 23/12/31 T2ALLA
++ 1> T2ALL
++ [ -s T2ALL ]
++ read STAN2
++ rm T1ALL T2ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/qc_report/DAILY/v180/w31225/18900901_L1
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180/w31225/18900901_L2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/18900901_E1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/18900901_E1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/18900901_E2
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/18900901_E2: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/qc_report/DAILY/v180/w31225/18900901_R2
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/qc_report/DAILY/v180/w31225/18900901_R2: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/qc_report/DAILY/v180/w31225/18900901_LR
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/18900901_S1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/18900901_S1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/18900901_A1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/18900901_A1: No such file or directory
++ sort -k1,1 -k2,2 T1ALL
++ 1> T2ALLA
++ grep 23/12/31 T2ALLA
++ 1> T2ALL
++ [ -s T2ALL ]
++ cp T2ALL 18900901
++ print 18900901
++ 1> STAT1
++ cut -c1-4 STAT1
++ 1> STAT12
++ read STAT2
++ 0< STAT12
++ 0< //umbc/epavlis/data01/LOCAL/magdak/INFILES/ILRS_SITE_LIST_102
++ read STAT3 NAME DOS
++ [ 1890 '=' 1181 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 1824 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 1831 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 1863 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 1864 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 1868 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 1873 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 1874 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 1879 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 1884 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 1885 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 1886 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 1887 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 1888 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 1889 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 1890 ]
++ print '#1890 Badary  12338S004'
++ 1>> Report2
++ read STAT3 NAME DOS
++ [ 1890 '=' 1891 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 1893 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 1953 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7035 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7045 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7046 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7051 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7062 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7063 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7063 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7065 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7067 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7068 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7080 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7082 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7084 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7085 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7086 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7090 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7091 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7092 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7096 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7097 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7100 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7101 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7102 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7103 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7104 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7105 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7106 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7109 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7110 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7112 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7114 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7115 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7119 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7120 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7121 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7122 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7123 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7124 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7125 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7130 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7210 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7220 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7231 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7236 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7237 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7249 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7265 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7274 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7288 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7295 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7308 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7328 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7335 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7337 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7339 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7355 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7356 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7357 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7358 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7370 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7394 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7400 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7401 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7403 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7404 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7405 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7405 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7405 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7406 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7407 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7410 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7411 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7501 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7502 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7505 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7510 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7512 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7515 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7517 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7520 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7525 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7530 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7540 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7541 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7542 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7543 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7544 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7545 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7546 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7548 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7550 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7560 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7561 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7575 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7580 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7585 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7587 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7589 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7594 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7596 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7597 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7599 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7602 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7604 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7701 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7805 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7806 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7810 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7810 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7810 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7810 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7811 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7811 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7819 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7820 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7821 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7824 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7824 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7825 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7830 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7831 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7832 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7833 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7834 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7835 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7836 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7837 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7838 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7839 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7840 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7841 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7843 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7845 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7846 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7847 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7848 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7849 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7850 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7850 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7853 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7865 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7882 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7883 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7884 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7885 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7886 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7888 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7891 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7892 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7894 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7896 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7899 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7907 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7918 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7919 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7920 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7921 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7929 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7939 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7940 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7941 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7941 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 7943 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 8833 ]
++ read STAT3 NAME DOS
++ [ 1890 '=' 8834 ]
++ read STAT3 NAME DOS
++ print '#                            GOOD        RAW      PREC       RANGE     RANGE    TIME    TIME  PASS    EDIT    CALIB+  CALIB  CALIB++ STPASS    TEMP     HUM     PRES     WLEN   S S D        ELEVATION '
++ 1>> Report2
++ print '#                             OBS        RMS       EST        BIAS      BIAS    BIAS    BIAS   DUR     OBS    MEAN    SDEV   SHIFT   RMS        [K]       %     [hPa]    [nm]   C C R      MAX       MIN     '
++ 1>> Report2
++ print '# STA ID YY/MM/DD HH:MM SAT  A          [mm]      [mm]        [mm]     SIGMA    [us]   SIGMA  [MIN]           [mm]    [mm]   [mm]    [mm]                                       H I F        [degrees]'
++ 1>> Report2
++ print '#                 '
++ 1>> Report2
++ cat T2ALL
++ 1>> Report2
++ print '#'
++ 1>> Report2
++ read STAN2
++ rm T1ALL T2ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/qc_report/DAILY/v180/w31225/18915301_L1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/qc_report/DAILY/v180/w31225/18915301_L1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180/w31225/18915301_L2
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180/w31225/18915301_L2: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/18915301_E1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/18915301_E1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/18915301_E2
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/18915301_E2: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/qc_report/DAILY/v180/w31225/18915301_R2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/qc_report/DAILY/v180/w31225/18915301_LR
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/qc_report/DAILY/v180/w31225/18915301_LR: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/18915301_S1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/18915301_S1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/18915301_A1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/18915301_A1: No such file or directory
++ sort -k1,1 -k2,2 T1ALL
++ 1> T2ALLA
++ grep 23/12/31 T2ALLA
++ 1> T2ALL
++ [ -s T2ALL ]
++ read STAN2
++ rm T1ALL T2ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/qc_report/DAILY/v180/w31225/18931801_L1
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180/w31225/18931801_L2
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180/w31225/18931801_L2: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/18931801_E1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/18931801_E1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/18931801_E2
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/18931801_E2: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/qc_report/DAILY/v180/w31225/18931801_R2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/qc_report/DAILY/v180/w31225/18931801_LR
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/qc_report/DAILY/v180/w31225/18931801_LR: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/18931801_S1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/18931801_S1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/18931801_A1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/18931801_A1: No such file or directory
++ sort -k1,1 -k2,2 T1ALL
++ 1> T2ALLA
++ grep 23/12/31 T2ALLA
++ 1> T2ALL
++ [ -s T2ALL ]
++ read STAN2
++ rm T1ALL T2ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/qc_report/DAILY/v180/w31225/70900513_L1
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180/w31225/70900513_L2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/70900513_E1
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/70900513_E2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/qc_report/DAILY/v180/w31225/70900513_R2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/qc_report/DAILY/v180/w31225/70900513_LR
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/70900513_S1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/70900513_S1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/70900513_A1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/70900513_A1: No such file or directory
++ sort -k1,1 -k2,2 T1ALL
++ 1> T2ALLA
++ grep 23/12/31 T2ALLA
++ 1> T2ALL
++ [ -s T2ALL ]
++ cp T2ALL 70900513
++ print 70900513
++ 1> STAT1
++ cut -c1-4 STAT1
++ 1> STAT12
++ read STAT2
++ 0< STAT12
++ 0< //umbc/epavlis/data01/LOCAL/magdak/INFILES/ILRS_SITE_LIST_102
++ read STAT3 NAME DOS
++ [ 7090 '=' 1181 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 1824 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 1831 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 1863 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 1864 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 1868 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 1873 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 1874 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 1879 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 1884 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 1885 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 1886 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 1887 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 1888 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 1889 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 1890 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 1891 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 1893 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 1953 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7035 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7045 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7046 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7051 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7062 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7063 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7063 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7065 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7067 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7068 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7080 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7082 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7084 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7085 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7086 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7090 ]
++ print '#7090 Yarragadee  50107M001'
++ 1>> Report2
++ read STAT3 NAME DOS
++ [ 7090 '=' 7091 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7092 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7096 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7097 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7100 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7101 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7102 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7103 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7104 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7105 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7106 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7109 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7110 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7112 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7114 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7115 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7119 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7120 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7121 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7122 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7123 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7124 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7125 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7130 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7210 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7220 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7231 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7236 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7237 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7249 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7265 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7274 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7288 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7295 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7308 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7328 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7335 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7337 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7339 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7355 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7356 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7357 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7358 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7370 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7394 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7400 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7401 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7403 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7404 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7405 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7405 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7405 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7406 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7407 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7410 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7411 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7501 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7502 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7505 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7510 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7512 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7515 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7517 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7520 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7525 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7530 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7540 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7541 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7542 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7543 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7544 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7545 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7546 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7548 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7550 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7560 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7561 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7575 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7580 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7585 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7587 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7589 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7594 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7596 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7597 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7599 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7602 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7604 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7701 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7805 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7806 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7810 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7810 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7810 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7810 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7811 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7811 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7819 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7820 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7821 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7824 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7824 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7825 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7830 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7831 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7832 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7833 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7834 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7835 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7836 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7837 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7838 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7839 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7840 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7841 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7843 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7845 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7846 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7847 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7848 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7849 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7850 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7850 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7853 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7865 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7882 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7883 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7884 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7885 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7886 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7888 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7891 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7892 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7894 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7896 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7899 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7907 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7918 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7919 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7920 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7921 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7929 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7939 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7940 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7941 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7941 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 7943 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 8833 ]
++ read STAT3 NAME DOS
++ [ 7090 '=' 8834 ]
++ read STAT3 NAME DOS
++ print '#                            GOOD        RAW      PREC       RANGE     RANGE    TIME    TIME  PASS    EDIT    CALIB+  CALIB  CALIB++ STPASS    TEMP     HUM     PRES     WLEN   S S D        ELEVATION '
++ 1>> Report2
++ print '#                             OBS        RMS       EST        BIAS      BIAS    BIAS    BIAS   DUR     OBS    MEAN    SDEV   SHIFT   RMS        [K]       %     [hPa]    [nm]   C C R      MAX       MIN     '
++ 1>> Report2
++ print '# STA ID YY/MM/DD HH:MM SAT  A          [mm]      [mm]        [mm]     SIGMA    [us]   SIGMA  [MIN]           [mm]    [mm]   [mm]    [mm]                                       H I F        [degrees]'
++ 1>> Report2
++ print '#                 '
++ 1>> Report2
++ cat T2ALL
++ 1>> Report2
++ print '#'
++ 1>> Report2
++ read STAN2
++ rm T1ALL T2ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/qc_report/DAILY/v180/w31225/71050725_L1
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180/w31225/71050725_L2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/71050725_E1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/71050725_E1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/71050725_E2
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/71050725_E2: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/qc_report/DAILY/v180/w31225/71050725_R2
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/qc_report/DAILY/v180/w31225/71050725_R2: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/qc_report/DAILY/v180/w31225/71050725_LR
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/qc_report/DAILY/v180/w31225/71050725_LR: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/71050725_S1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/71050725_S1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/71050725_A1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/71050725_A1: No such file or directory
++ sort -k1,1 -k2,2 T1ALL
++ 1> T2ALLA
++ grep 23/12/31 T2ALLA
++ 1> T2ALL
++ [ -s T2ALL ]
++ read STAN2
++ rm T1ALL T2ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/qc_report/DAILY/v180/w31225/71100412_L1
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180/w31225/71100412_L2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/71100412_E1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/71100412_E1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/71100412_E2
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/71100412_E2: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/qc_report/DAILY/v180/w31225/71100412_R2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/qc_report/DAILY/v180/w31225/71100412_LR
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/71100412_S1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/71100412_S1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/71100412_A1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/71100412_A1: No such file or directory
++ sort -k1,1 -k2,2 T1ALL
++ 1> T2ALLA
++ grep 23/12/31 T2ALLA
++ 1> T2ALL
++ [ -s T2ALL ]
++ read STAN2
++ rm T1ALL T2ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/qc_report/DAILY/v180/w31225/71191402_L1
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180/w31225/71191402_L2
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180/w31225/71191402_L2: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/71191402_E1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/71191402_E1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/71191402_E2
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/71191402_E2: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/qc_report/DAILY/v180/w31225/71191402_R2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/qc_report/DAILY/v180/w31225/71191402_LR
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/71191402_S1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/71191402_S1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/71191402_A1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/71191402_A1: No such file or directory
++ sort -k1,1 -k2,2 T1ALL
++ 1> T2ALLA
++ grep 23/12/31 T2ALLA
++ 1> T2ALL
++ [ -s T2ALL ]
++ read STAN2
++ rm T1ALL T2ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/qc_report/DAILY/v180/w31225/72371901_L1
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180/w31225/72371901_L2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/72371901_E1
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/72371901_E2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/qc_report/DAILY/v180/w31225/72371901_R2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/qc_report/DAILY/v180/w31225/72371901_LR
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/72371901_S1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/72371901_S1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/72371901_A1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/72371901_A1: No such file or directory
++ sort -k1,1 -k2,2 T1ALL
++ 1> T2ALLA
++ grep 23/12/31 T2ALLA
++ 1> T2ALL
++ [ -s T2ALL ]
++ cp T2ALL 72371901
++ print 72371901
++ 1> STAT1
++ cut -c1-4 STAT1
++ 1> STAT12
++ read STAT2
++ 0< STAT12
++ 0< //umbc/epavlis/data01/LOCAL/magdak/INFILES/ILRS_SITE_LIST_102
++ read STAT3 NAME DOS
++ [ 7237 '=' 1181 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 1824 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 1831 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 1863 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 1864 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 1868 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 1873 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 1874 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 1879 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 1884 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 1885 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 1886 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 1887 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 1888 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 1889 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 1890 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 1891 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 1893 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 1953 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7035 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7045 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7046 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7051 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7062 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7063 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7063 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7065 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7067 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7068 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7080 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7082 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7084 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7085 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7086 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7090 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7091 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7092 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7096 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7097 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7100 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7101 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7102 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7103 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7104 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7105 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7106 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7109 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7110 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7112 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7114 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7115 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7119 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7120 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7121 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7122 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7123 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7124 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7125 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7130 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7210 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7220 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7231 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7236 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7237 ]
++ print '#7237 Changchun  21611S001'
++ 1>> Report2
++ read STAT3 NAME DOS
++ [ 7237 '=' 7249 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7265 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7274 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7288 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7295 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7308 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7328 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7335 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7337 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7339 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7355 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7356 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7357 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7358 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7370 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7394 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7400 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7401 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7403 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7404 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7405 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7405 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7405 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7406 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7407 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7410 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7411 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7501 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7502 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7505 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7510 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7512 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7515 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7517 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7520 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7525 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7530 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7540 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7541 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7542 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7543 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7544 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7545 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7546 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7548 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7550 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7560 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7561 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7575 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7580 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7585 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7587 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7589 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7594 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7596 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7597 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7599 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7602 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7604 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7701 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7805 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7806 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7810 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7810 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7810 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7810 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7811 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7811 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7819 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7820 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7821 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7824 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7824 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7825 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7830 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7831 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7832 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7833 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7834 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7835 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7836 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7837 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7838 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7839 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7840 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7841 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7843 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7845 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7846 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7847 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7848 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7849 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7850 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7850 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7853 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7865 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7882 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7883 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7884 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7885 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7886 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7888 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7891 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7892 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7894 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7896 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7899 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7907 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7918 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7919 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7920 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7921 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7929 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7939 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7940 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7941 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7941 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 7943 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 8833 ]
++ read STAT3 NAME DOS
++ [ 7237 '=' 8834 ]
++ read STAT3 NAME DOS
++ print '#                            GOOD        RAW      PREC       RANGE     RANGE    TIME    TIME  PASS    EDIT    CALIB+  CALIB  CALIB++ STPASS    TEMP     HUM     PRES     WLEN   S S D        ELEVATION '
++ 1>> Report2
++ print '#                             OBS        RMS       EST        BIAS      BIAS    BIAS    BIAS   DUR     OBS    MEAN    SDEV   SHIFT   RMS        [K]       %     [hPa]    [nm]   C C R      MAX       MIN     '
++ 1>> Report2
++ print '# STA ID YY/MM/DD HH:MM SAT  A          [mm]      [mm]        [mm]     SIGMA    [us]   SIGMA  [MIN]           [mm]    [mm]   [mm]    [mm]                                       H I F        [degrees]'
++ 1>> Report2
++ print '#                 '
++ 1>> Report2
++ cat T2ALL
++ 1>> Report2
++ print '#'
++ 1>> Report2
++ read STAN2
++ rm T1ALL T2ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/qc_report/DAILY/v180/w31225/73964701_L1
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180/w31225/73964701_L2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/73964701_E1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/73964701_E1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/73964701_E2
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/73964701_E2: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/qc_report/DAILY/v180/w31225/73964701_R2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/qc_report/DAILY/v180/w31225/73964701_LR
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/73964701_S1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/73964701_S1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/73964701_A1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/73964701_A1: No such file or directory
++ sort -k1,1 -k2,2 T1ALL
++ 1> T2ALLA
++ grep 23/12/31 T2ALLA
++ 1> T2ALL
++ [ -s T2ALL ]
++ cp T2ALL 73964701
++ print 73964701
++ 1> STAT1
++ cut -c1-4 STAT1
++ 1> STAT12
++ read STAT2
++ 0< STAT12
++ 0< //umbc/epavlis/data01/LOCAL/magdak/INFILES/ILRS_SITE_LIST_102
++ read STAT3 NAME DOS
++ [ 7396 '=' 1181 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 1824 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 1831 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 1863 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 1864 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 1868 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 1873 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 1874 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 1879 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 1884 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 1885 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 1886 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 1887 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 1888 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 1889 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 1890 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 1891 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 1893 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 1953 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7035 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7045 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7046 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7051 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7062 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7063 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7063 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7065 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7067 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7068 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7080 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7082 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7084 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7085 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7086 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7090 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7091 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7092 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7096 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7097 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7100 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7101 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7102 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7103 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7104 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7105 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7106 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7109 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7110 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7112 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7114 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7115 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7119 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7120 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7121 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7122 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7123 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7124 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7125 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7130 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7210 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7220 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7231 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7236 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7237 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7249 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7265 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7274 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7288 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7295 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7308 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7328 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7335 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7337 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7339 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7355 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7356 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7357 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7358 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7370 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7394 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7400 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7401 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7403 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7404 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7405 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7405 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7405 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7406 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7407 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7410 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7411 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7501 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7502 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7505 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7510 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7512 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7515 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7517 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7520 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7525 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7530 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7540 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7541 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7542 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7543 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7544 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7545 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7546 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7548 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7550 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7560 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7561 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7575 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7580 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7585 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7587 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7589 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7594 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7596 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7597 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7599 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7602 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7604 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7701 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7805 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7806 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7810 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7810 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7810 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7810 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7811 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7811 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7819 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7820 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7821 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7824 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7824 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7825 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7830 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7831 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7832 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7833 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7834 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7835 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7836 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7837 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7838 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7839 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7840 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7841 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7843 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7845 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7846 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7847 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7848 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7849 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7850 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7850 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7853 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7865 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7882 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7883 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7884 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7885 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7886 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7888 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7891 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7892 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7894 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7896 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7899 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7907 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7918 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7919 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7920 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7921 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7929 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7939 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7940 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7941 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7941 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 7943 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 8833 ]
++ read STAT3 NAME DOS
++ [ 7396 '=' 8834 ]
++ read STAT3 NAME DOS
++ print '#                            GOOD        RAW      PREC       RANGE     RANGE    TIME    TIME  PASS    EDIT    CALIB+  CALIB  CALIB++ STPASS    TEMP     HUM     PRES     WLEN   S S D        ELEVATION '
++ 1>> Report2
++ print '#                             OBS        RMS       EST        BIAS      BIAS    BIAS    BIAS   DUR     OBS    MEAN    SDEV   SHIFT   RMS        [K]       %     [hPa]    [nm]   C C R      MAX       MIN     '
++ 1>> Report2
++ print '# STA ID YY/MM/DD HH:MM SAT  A          [mm]      [mm]        [mm]     SIGMA    [us]   SIGMA  [MIN]           [mm]    [mm]   [mm]    [mm]                                       H I F        [degrees]'
++ 1>> Report2
++ print '#                 '
++ 1>> Report2
++ cat T2ALL
++ 1>> Report2
++ print '#'
++ 1>> Report2
++ read STAN2
++ rm T1ALL T2ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/qc_report/DAILY/v180/w31225/78106821_L1
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180/w31225/78106821_L2
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180/w31225/78106821_L2: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/78106821_E1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/78106821_E1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/78106821_E2
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/78106821_E2: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/qc_report/DAILY/v180/w31225/78106821_R2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/qc_report/DAILY/v180/w31225/78106821_LR
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/78106821_S1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/78106821_S1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/78106821_A1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/78106821_A1: No such file or directory
++ sort -k1,1 -k2,2 T1ALL
++ 1> T2ALLA
++ grep 23/12/31 T2ALLA
++ 1> T2ALL
++ [ -s T2ALL ]
++ read STAN2
++ rm T1ALL T2ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/qc_report/DAILY/v180/w31225/78113802_L1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/qc_report/DAILY/v180/w31225/78113802_L1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180/w31225/78113802_L2
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180/w31225/78113802_L2: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/78113802_E1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/78113802_E1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/78113802_E2
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/78113802_E2: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/qc_report/DAILY/v180/w31225/78113802_R2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/qc_report/DAILY/v180/w31225/78113802_LR
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/qc_report/DAILY/v180/w31225/78113802_LR: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/78113802_S1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/78113802_S1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/78113802_A1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/78113802_A1: No such file or directory
++ sort -k1,1 -k2,2 T1ALL
++ 1> T2ALLA
++ grep 23/12/31 T2ALLA
++ 1> T2ALL
++ [ -s T2ALL ]
++ read STAN2
++ rm T1ALL T2ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/qc_report/DAILY/v180/w31225/78198201_L1
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180/w31225/78198201_L2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/78198201_E1
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/78198201_E2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/qc_report/DAILY/v180/w31225/78198201_R2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/qc_report/DAILY/v180/w31225/78198201_LR
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/78198201_S1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/78198201_S1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/78198201_A1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/78198201_A1: No such file or directory
++ sort -k1,1 -k2,2 T1ALL
++ 1> T2ALLA
++ grep 23/12/31 T2ALLA
++ 1> T2ALL
++ [ -s T2ALL ]
++ cp T2ALL 78198201
++ print 78198201
++ 1> STAT1
++ cut -c1-4 STAT1
++ 1> STAT12
++ read STAT2
++ 0< STAT12
++ 0< //umbc/epavlis/data01/LOCAL/magdak/INFILES/ILRS_SITE_LIST_102
++ read STAT3 NAME DOS
++ [ 7819 '=' 1181 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 1824 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 1831 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 1863 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 1864 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 1868 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 1873 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 1874 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 1879 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 1884 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 1885 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 1886 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 1887 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 1888 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 1889 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 1890 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 1891 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 1893 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 1953 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7035 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7045 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7046 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7051 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7062 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7063 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7063 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7065 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7067 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7068 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7080 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7082 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7084 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7085 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7086 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7090 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7091 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7092 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7096 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7097 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7100 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7101 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7102 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7103 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7104 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7105 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7106 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7109 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7110 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7112 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7114 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7115 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7119 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7120 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7121 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7122 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7123 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7124 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7125 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7130 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7210 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7220 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7231 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7236 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7237 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7249 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7265 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7274 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7288 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7295 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7308 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7328 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7335 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7337 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7339 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7355 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7356 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7357 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7358 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7370 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7394 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7400 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7401 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7403 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7404 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7405 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7405 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7405 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7406 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7407 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7410 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7411 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7501 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7502 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7505 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7510 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7512 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7515 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7517 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7520 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7525 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7530 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7540 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7541 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7542 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7543 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7544 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7545 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7546 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7548 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7550 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7560 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7561 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7575 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7580 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7585 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7587 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7589 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7594 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7596 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7597 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7599 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7602 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7604 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7701 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7805 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7806 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7810 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7810 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7810 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7810 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7811 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7811 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7819 ]
++ print '#7819 Kunming  21609S004'
++ 1>> Report2
++ read STAT3 NAME DOS
++ [ 7819 '=' 7820 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7821 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7824 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7824 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7825 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7830 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7831 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7832 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7833 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7834 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7835 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7836 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7837 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7838 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7839 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7840 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7841 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7843 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7845 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7846 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7847 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7848 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7849 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7850 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7850 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7853 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7865 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7882 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7883 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7884 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7885 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7886 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7888 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7891 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7892 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7894 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7896 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7899 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7907 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7918 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7919 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7920 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7921 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7929 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7939 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7940 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7941 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7941 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 7943 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 8833 ]
++ read STAT3 NAME DOS
++ [ 7819 '=' 8834 ]
++ read STAT3 NAME DOS
++ print '#                            GOOD        RAW      PREC       RANGE     RANGE    TIME    TIME  PASS    EDIT    CALIB+  CALIB  CALIB++ STPASS    TEMP     HUM     PRES     WLEN   S S D        ELEVATION '
++ 1>> Report2
++ print '#                             OBS        RMS       EST        BIAS      BIAS    BIAS    BIAS   DUR     OBS    MEAN    SDEV   SHIFT   RMS        [K]       %     [hPa]    [nm]   C C R      MAX       MIN     '
++ 1>> Report2
++ print '# STA ID YY/MM/DD HH:MM SAT  A          [mm]      [mm]        [mm]     SIGMA    [us]   SIGMA  [MIN]           [mm]    [mm]   [mm]    [mm]                                       H I F        [degrees]'
++ 1>> Report2
++ print '#                 '
++ 1>> Report2
++ cat T2ALL
++ 1>> Report2
++ print '#'
++ 1>> Report2
++ read STAN2
++ rm T1ALL T2ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/qc_report/DAILY/v180/w31225/78212801_L1
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180/w31225/78212801_L2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/78212801_E1
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/78212801_E2
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/78212801_E2: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/qc_report/DAILY/v180/w31225/78212801_R2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/qc_report/DAILY/v180/w31225/78212801_LR
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/78212801_S1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/78212801_S1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/78212801_A1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/78212801_A1: No such file or directory
++ sort -k1,1 -k2,2 T1ALL
++ 1> T2ALLA
++ grep 23/12/31 T2ALLA
++ 1> T2ALL
++ [ -s T2ALL ]
++ read STAN2
++ rm T1ALL T2ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/qc_report/DAILY/v180/w31225/78259001_L1
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180/w31225/78259001_L2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/78259001_E1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/78259001_E1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/78259001_E2
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/78259001_E2: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/qc_report/DAILY/v180/w31225/78259001_R2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/qc_report/DAILY/v180/w31225/78259001_LR
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/78259001_S1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/78259001_S1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/78259001_A1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/78259001_A1: No such file or directory
++ sort -k1,1 -k2,2 T1ALL
++ 1> T2ALLA
++ grep 23/12/31 T2ALLA
++ 1> T2ALL
++ [ -s T2ALL ]
++ read STAN2
++ rm T1ALL T2ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/qc_report/DAILY/v180/w31225/78383603_L1
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180/w31225/78383603_L2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/78383603_E1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/78383603_E1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/78383603_E2
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/78383603_E2: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/qc_report/DAILY/v180/w31225/78383603_R2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/qc_report/DAILY/v180/w31225/78383603_LR
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/78383603_S1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/78383603_S1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/78383603_A1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/78383603_A1: No such file or directory
++ sort -k1,1 -k2,2 T1ALL
++ 1> T2ALLA
++ grep 23/12/31 T2ALLA
++ 1> T2ALL
++ [ -s T2ALL ]
++ read STAN2
++ rm T1ALL T2ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/qc_report/DAILY/v180/w31225/78393402_L1
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180/w31225/78393402_L2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/78393402_E1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/78393402_E1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/78393402_E2
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/78393402_E2: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/qc_report/DAILY/v180/w31225/78393402_R2
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/qc_report/DAILY/v180/w31225/78393402_R2: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/qc_report/DAILY/v180/w31225/78393402_LR
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/qc_report/DAILY/v180/w31225/78393402_LR: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/78393402_S1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/78393402_S1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/78393402_A1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/78393402_A1: No such file or directory
++ sort -k1,1 -k2,2 T1ALL
++ 1> T2ALLA
++ grep 23/12/31 T2ALLA
++ 1> T2ALL
++ [ -s T2ALL ]
++ read STAN2
++ rm T1ALL T2ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/qc_report/DAILY/v180/w31225/78403501_L1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/qc_report/DAILY/v180/w31225/78403501_L1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180/w31225/78403501_L2
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180/w31225/78403501_L2: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/78403501_E1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/78403501_E1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/78403501_E2
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/78403501_E2: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/qc_report/DAILY/v180/w31225/78403501_R2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/qc_report/DAILY/v180/w31225/78403501_LR
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/78403501_S1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/78403501_S1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/78403501_A1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/78403501_A1: No such file or directory
++ sort -k1,1 -k2,2 T1ALL
++ 1> T2ALLA
++ grep 23/12/31 T2ALLA
++ 1> T2ALL
++ [ -s T2ALL ]
++ read STAN2
++ rm T1ALL T2ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/qc_report/DAILY/v180/w31225/78418701_L1
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180/w31225/78418701_L2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/78418701_E1
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/78418701_E2
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/78418701_E2: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/qc_report/DAILY/v180/w31225/78418701_R2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/qc_report/DAILY/v180/w31225/78418701_LR
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/78418701_S1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/78418701_S1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/78418701_A1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/78418701_A1: No such file or directory
++ sort -k1,1 -k2,2 T1ALL
++ 1> T2ALLA
++ grep 23/12/31 T2ALLA
++ 1> T2ALL
++ [ -s T2ALL ]
++ read STAN2
++ rm T1ALL T2ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/qc_report/DAILY/v180/w31225/79417701_L1
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180/w31225/79417701_L2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/79417701_E1
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/79417701_E2
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/79417701_E2: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/qc_report/DAILY/v180/w31225/79417701_R2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/qc_report/DAILY/v180/w31225/79417701_LR
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/79417701_S1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/79417701_S1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/79417701_A1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/79417701_A1: No such file or directory
++ sort -k1,1 -k2,2 T1ALL
++ 1> T2ALLA
++ grep 23/12/31 T2ALLA
++ 1> T2ALL
++ [ -s T2ALL ]
++ read STAN2
++ rm T1ALL T2ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/qc_report/DAILY/v180/w31225/88341001_L1
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/qc_report/DAILY/v180/w31225/88341001_L2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/qc_report/DAILY/v180/w31225/88341001_E1
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/qc_report/DAILY/v180/w31225/88341001_E2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/qc_report/DAILY/v180/w31225/88341001_R2
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/qc_report/DAILY/v180/w31225/88341001_LR
++ 1>> T1ALL
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/88341001_S1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/qc_report/DAILY/v180/w31225/88341001_S1: No such file or directory
++ cat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/88341001_A1
++ 1>> T1ALL
+cat: //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/qc_report/DAILY/v180/w31225/88341001_A1: No such file or directory
++ sort -k1,1 -k2,2 T1ALL
++ 1> T2ALLA
++ grep 23/12/31 T2ALLA
++ 1> T2ALL
++ [ -s T2ALL ]
++ read STAN2
+Date_ENDO_ARC=$D3
++ Date_ENDO_ARC=240102
+cp Report2 /$diskC/MISSIONS/PPV/qc_report/${CASE}/v${SNX_VER}/jcet.qc1day.${Date_ENDO_ARC}.slr.v01.rpt
++ cp Report2 //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/qc_report/DAILY/v180/jcet.qc1day.240102.slr.v01.rpt
+exit 0
++ exit 0

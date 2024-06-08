@@ -1,0 +1,198 @@
+#!/bin/ksh
+#
+set -xv
+#   RMS_OF_FIT_SLR_ALL
+
+#             CASE to be either null, "WEEKLY", "MONTHLY", etc
+#             MODE to be either DR or EMT, depending on what type
+#                  of runs you are summarizing.
+
+${SCR_DBG}set -vx
+
+#   RMS_OF_FIT_SLR_ALL
+
+SCR_NAME=RMS_OF_FIT_SLR_ALL
+SCR_PARM=4
+SCR_LIST="file SV CASE MODE"
+SCR_VERS=030825.0
+
+
+if [ `expr $#` -lt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+
+file=$1
+SV=$2
+CASE=${3:-WEEKLY}
+MODE=${4:-DR}
+
+Date=`date +%y%m%d`
+
+  if [ "$SV" = "L1" ]; then
+
+  DSK=umbc/epavlis/data01/LOCAL/magdak/MISSIONS
+  sat=GISL1
+  satn=7603901
+
+  elif [ "$SV" = "L2" ]; then
+
+  DSK=umbc/epavlis/data01/LOCAL/magdak/MISSIONS
+  sat=GISL2
+  satn=9207002
+  
+  elif [ "$SV" = "E1" ]; then
+
+  DSK=umbc/epavlis/data01/LOCAL/magdak/MISSIONS
+  sat=ETA1
+  satn=8900103
+
+  elif [ "$SV" = "E2" ]; then
+
+  DSK=umbc/epavlis/data01/LOCAL/magdak/MISSIONS
+  sat=ETA2
+  satn=8903903
+
+  elif [ "$SV" = "LARES" ]; then
+
+  DSK=umbc/epavlis/data01/LOCAL/magdak/MISSIONS
+  sat=LARES
+  satn=1200601
+  elif [ "$SV" = "R2" ]; then
+
+  DSK=umbc/epavlis/data01/LOCAL/magdak/MISSIONS
+  sat=LARES2
+  satn=2208001
+
+  elif [ "$SV" = "CHAMP" ]; then
+
+  DSK=space/MISSIONS
+  sat=CHAMP
+  satn=0309002
+
+  elif [ "$SV" = "STARL" ]; then
+
+  DSK=umbc/epavlis/data01/LOCAL/magdak/MISSIONS
+  sat=STARL
+  satn=8903903
+
+  elif [ "$SV" = "GFZ" ]; then
+
+  DSK=space/MISSIONS
+  sat=GFZ
+  satn=8601795
+
+  elif [ "$SV" = "AJISI" ]; then
+
+  DSK=umbc/epavlis/data01/LOCAL/magdak/MISSIONS
+  sat=AJISI
+  satn=8903903
+
+  elif [ "$SV" = " ERS1" ]; then
+
+  DSK=space/MISSIONS
+  sat=ERS1
+  satn=8903903
+
+  elif [ "$SV" = "TP" ]; then
+
+  DSK=space/MISSIONS
+  sat=TP
+  satn=8903903
+
+  fi
+
+disk1=/${DSK}/$sat/summaries/$MODE/$CASE/v${SNX_VER}
+
+if [ "$MODE" = "DR" ]; then
+
+cd $disk1
+
+\rm x1m x2m x3m x4m yyy1m yyy2m yyy3m zzzzzzm sumRMS_Nobs_Elcutm
+
+zcat ${file}.gz > temp
+
+lastline=`sed -n /NUMBER.OF.OBSERVATIONS.DELETED.DUE.TO.CUTOFF.ANGLE.=/= temp`
+echo $lastline 
+
+echo $lastline > ppp1
+
+stopline=`awk ' {print $NF} ' ppp1`
+
+strtline=`expr $stopline - 2`
+
+sed -n "${strtline},${stopline}p" temp > zzzzzzm
+
+grep 'WEIGHTED   RMS' zzzzzzm > yyy1m
+grep 'NUMBER OF WEIGHTED OBSERVATIONS =' zzzzzzm > yyy2m
+grep 'NUMBER OF OBSERVATIONS DELETED' zzzzzzm > yyy3m
+
+sed -e "s/0                    WEIGHTED   RMS  =      /${file}_: /g" yyy1m > x1m    
+sed -e "s/0                    WEIGHTED   RMS  =      //g" yyy1m > x1am    
+sed -e "s/0          NUMBER OF WEIGHTED OBSERVATIONS =//g" yyy2m > x2m    
+sed -e "s/                   NUMBER OF OBSERVATIONS DELETED DUE TO CUTOFF ANGLE =   //g" yyy3m > x3m    
+
+paste -d" " x1m x2m x3m > x4m
+paste -d" " x1am > x5m
+cat x5m > $MAIN_PATH/OUTFILES/RMS_Nobs_Elcut_R
+cat x5m > $MAIN_PATH/OUTFILES/RMS_Nobs_Elcut_R.${file}.${SV}
+cat x5m > $MAIN_PATH/OUTFILES/RMS_Nobs_Elcut_R.$ARC1.$SV
+cat x4m >> $MAIN_PATH/OUTFILES/RMS_Nobs_Elcut_R.$Date.$sat
+
+
+
+elif [ "$MODE" = "EMT" ]; then
+
+
+
+
+cd $disk1
+
+
+\rm x1m x2m x3m x4m yyy1m yyy2m yyy3m zzzzzzm sumRMS_Nobs_Elcut
+
+
+zcat ${file}.gz > temp
+
+lastline=`sed -n /NUMBER.OF.OBSERVATIONS.DELETED.DUE.TO.CUTOFF.ANGLE.=/= temp`
+echo $lastline 
+
+echo $lastline > ppp1
+
+stopline=`awk ' {print $NF} ' ppp1`
+
+strtline=`expr $stopline - 2`
+
+sed -n "${strtline},${stopline}p" temp > zzzzzzm
+
+grep 'WEIGHTED   RMS' zzzzzz > yyy1m
+grep 'NUMBER OF WEIGHTED OBSERVATIONS =' zzzzzzm > yyy2m
+grep 'NUMBER OF OBSERVATIONS DELETED' zzzzzzm > yyy3m
+
+sed -e "s/0                    WEIGHTED   RMS  =      /${file}_: /g" yyy1m > x1m    
+sed -e "s/0                    WEIGHTED   RMS  =      //g" yyy1m > x1am    
+sed -e "s/0          NUMBER OF WEIGHTED OBSERVATIONS =//g" yyy2m > x2m    
+sed -e "s/                   NUMBER OF OBSERVATIONS DELETED DUE TO CUTOFF ANGLE =   //g" yyy3m > x3m    
+
+paste -d" " x1am > x5m
+paste -d" " x1m x2m x3m > x4m
+cat x5m > $MAIN_PATH/OUTFILES/RMS_Nobs_Elcut_QC
+cat x5m > $MAIN_PATH/OUTFILES/RMS_Nobs_Elcut_QC.$ARC1.$SV 
+cat x4m >> $MAIN_PATH/OUTFILES/RMS_Nobs_Elcut_QC.$Date.$sat
+
+\rm tttdirslct x1m x2m x3m x4m yyy1m yyy2m yyy3m zzzzzzm sumRMS_Nobs_Elcut temp ppp1
+
+fi
+
+exit 0

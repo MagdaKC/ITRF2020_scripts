@@ -1,0 +1,168 @@
+#!/bin/ksh
+#                                                               ecp 080806      
+# Usage: SUB.emailBIASreports
+#
+# 210331.0
+#
+ 
+ set -vx
+
+# Usage: SUB.emailBIASreports
+
+if [ `expr $#` -gt 0 ]; then
+   echo "Usage: SUB.emailBIASreports \007"
+   exit 100
+fi
+
+Date=`date +%y%m%d`
+
+
+inputloc=/umbc/epavlis/data01/LOCAL/magdak/INFILES
+
+read daily_dir daily_fil   < $inputloc/Current_biasreport.DAILY
+
+cd ${daily_dir}
+
+if [ ! -s ${daily_fil} ]; then
+
+   echo Bias file $daily_fil doesn\'t exist !
+
+   echo "Bias file $daily_fil doesn\'t exist  !!!  " > 2mail.d
+
+   mail -s URGENT_DAILY_BIASreport_DOES_NOT_EXIST  magdak@umbc.edu < 2mail.d
+
+   \rm 2mail.d
+
+else
+
+# Check for a reasonable size report:
+
+  sum $daily_fil > s_cur
+  read d_cur l_cur f_cur < s_cur
+  
+  if [ "$l_cur" -lt "4" ]; then
+  
+  #
+  # It looks like the report is empty or we have a VERY bad week!
+  #
+  
+    echo "Possible problem with DAILY bias report: $daily_fil" > 2mail.d
+    mail -s URGENT_DAILY_BIASreport_SEEMS_EMPTY magdak@umbc.edu < 2mail.d
+  
+  else
+  
+    echo "ALL OK !!!"
+    echo "eMail the report !!!"
+  
+  fi
+
+
+#### 161208 mail -s JCET_DAILY_Bias_report.$Date laser@zimmerwald.unibe.ch  cinzia.luceri@e-geos.it      < $daily_fil
+
+#mailx -s JCET_DAILY_Bias_report.$Date epavlis@umbc.edu magdak@umbc.edu < $daily_fil
+#mailx -s JCET_DAILY_Bias_report.$Date laser@zimmerwald.unibe.ch  mark.h.torrence.1@nasa.gov  cinzia.luceri@e-geos.it      < $daily_fil
+
+mailx -s JCET_DAILY_Bias_report.$Date laser@zimmerwald.unibe.ch                              cinzia.luceri@e-geos.it      < $daily_fil
+#echo | mutt -s JCET_DAILY_Bias_report.$Date -a $daily_fil  laser@zimmerwald.unibe.ch
+
+
+
+cat > inputCDDIS <<EOF1
+bin
+
+case
+
+cd qc_reports
+
+put FFFFFF
+
+quit
+
+EOF1
+
+sed -e "1,\$s/FFFFFF/$daily_fil/g" inputCDDIS > input2CDDIS
+
+#ftp cddisin.gsfc.nasa.gov       < input2CDDIS > output2CDDIS
+/usr/bin/curl -c .urs_cookies -n -L https://depot.cddis.eosdis.nasa.gov/CDDIS_FileUpload/login
+
+/usr/bin/curl -X POST -b .urs_cookies -F "fileType=SLR"  -F "fileContentType=products" -F "file[]=@$daily_fil"  https://depot.cddis.eosdis.nasa.gov/CDDIS_FileUpload/upload/
+
+
+fi
+
+read weekly_dir weekly_fil < $inputloc/Current_biasreport.WEEKLY
+
+cd ${weekly_dir}
+
+if [ ! -s ${weekly_fil} ]; then
+
+   echo Bias file $weekly_fil doesn\'t exist !
+
+   echo "Bias file $weekly_fil doesn\'t exist  !!!  " > 2mail.w
+
+   #mail -s URGENT_WEEKLY_BIASreport_DOES_NOT_EXIST epavlis@umbc.edu magdak@umbc.edu < 2mail.w
+   mail -s URGENT_WEEKLY_BIASreport_DOES_NOT_EXIST  magdak@umbc.edu < 2mail.w
+
+   \rm 2mail.w
+
+else
+
+# Check for a reasonable size report:
+
+  sum $weekly_fil > s_cur
+  read d_cur l_cur f_cur < s_cur
+  
+  if [ "$l_cur" -lt "4" ]; then
+  
+  #
+  # It looks like the report is empty or we have a VERY bad week!
+  #
+  
+    echo "Possible problem with WEEKLY bias report: $weekly_fil" > 2mail.w
+    #mail -s URGENT_WEEKLY_BIASreport_SEEMS_EMPTY epavlis@umbc.edu magdak@umbc.edu < 2mail.w
+    mail -s URGENT_WEEKLY_BIASreport_SEEMS_EMPTY  magdak@umbc.edu < 2mail.w
+  
+   \rm 2mail.w
+
+  else
+  
+    echo "ALL OK !!!"
+    echo "eMail the report !!!"
+  
+  fi
+
+
+### 161208 mail -s JCET_WEEKLY_Bias_report.$Date laser@zimmerwald.unibe.ch < $weekly_fil
+
+#mailx -s JCET_WEEKLY_Bias_report.$Date epavlis@umbc.edu magdak@umbc.edu < $weekly_fil
+#mailx -s JCET_WEEKLY_Bias_report.$Date laser@zimmerwald.unibe.ch mark.h.torrence.1@nasa.gov  < $weekly_fil
+
+mailx -s JCET_WEEKLY_Bias_report.$Date laser@zimmerwald.unibe.ch                             < $weekly_fil
+
+
+cat > inputCDDIS <<EOF2
+bin
+
+case
+
+cd qc_reports
+
+put FFFFFF
+
+quit
+
+EOF2
+
+sed -e "1,\$s/FFFFFF/$weekly_fil/g" inputCDDIS > input2CDDIS
+
+#ftp cddisin.gsfc.nasa.gov       < input2CDDIS >> output2CDDIS
+/usr/bin/curl -c .urs_cookies -n -L https://depot.cddis.eosdis.nasa.gov/CDDIS_FileUpload/login
+
+/usr/bin/curl -X POST -b .urs_cookies -F "fileType=SLR"  -F "fileContentType=products" -F "file[]=@$weekly_fil"  https://depot.cddis.eosdis.nasa.gov/CDDIS_FileUpload/upload/
+
+
+fi
+
+
+
+exit 0

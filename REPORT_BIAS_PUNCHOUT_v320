@@ -1,0 +1,660 @@
+#!/bin/ksh
+#
+
+set -xv
+
+#  RUN_STR
+
+#
+
+SCR_NAME=REPORT_BIAS
+SCR_PARM=0
+SCR_LIST="CASE ETA_IN"
+SCR_VERS=070928.0
+
+SCR_DBG="#"
+export SCR_DBG
+
+if [ `expr $#` -lt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+Date=`date +%y%m%d`
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+#pfe 21 . /usr/share/modules/init/bash
+#module load texlive/2008
+#pfe21 module load pkgsrc/2018Q3
+#. /usr/share/modules/init/ksh
+#module load pkgsrc/2021Q2
+MAIN_PATH=/umbc/epavlis/data01/LOCAL/magdak
+disk=$MAIN_PATH/MISSIONS
+SCRIPTS=$MAIN_PATH/scripts/ITRF2020/OPS/
+export SCRIPTS disk
+ARC=$1
+ARC=w30702
+CASE=$2
+CASE=WEEKLY
+SNX_VER=320
+export SNX_VER
+#mkdir -p /tmp/magdak
+cd $MAIN_PATH/tmp/magdak
+mkdir ${CASE}$$
+cd ${CASE}$$
+
+SAT=GISL1
+$SCRIPTS/RES_PLOTS_PL_ver ${ARC} $SAT $CASE > o.RES_PLOTS_${SAT} 2>&1
+SAT=GISL2
+$SCRIPTS/RES_PLOTS_PL_ver ${ARC} $SAT  $CASE > o.RES_PLOTS_${SAT} 2>&1
+SAT=ETA1
+$SCRIPTS/RES_PLOTS_PL_ver ${ARC} $SAT $CASE > o.RES_PLOTS_${SAT} 2>&1
+SAT=ETA2
+$SCRIPTS/RES_PLOTS_PL_ver ${ARC} $SAT $CASE > o.RES_PLOTS_${SAT} 2>&1
+SAT=LARES2
+$SCRIPTS/RES_PLOTS_PL_ver ${ARC} $SAT $CASE > o.RES_PLOTS_${SAT} 2>&1
+
+
+cp $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ADDS4REPORT/A_v320.txt .
+cp $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ADDS4REPORT/A3.txt .
+cp $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ADDS4REPORT/B_v320.txt .
+cp $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ADDS4REPORT/C.txt .
+cp $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ADDS4REPORT/C3.txt .
+cp $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ADDS4REPORT/C4.txt .
+cp $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ADDS4REPORT/TE_v320 .
+cp $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ADDS4REPORT/TE3_v320 .
+
+
+#zcat /nobackup/mkuzmicz/MISSIONS/GISL1/punchdout/EMT/WEEKLY/v${SNX_VER}/${5RC}.wv${SNX_VER}x.gz > /nobackup/mkuzmicz/tmp/magdak/${CASE}$$/t0
+zcat $MAIN_PATH/MISSIONS/GISL1/punchdout/EMT/$CASE/v${SNX_VER}/${ARC}.wv${SNX_VER}x.gz > $MAIN_PATH/tmp/magdak/${CASE}$$/t0
+
+cp t0 E1
+grep MBIAS t0 > t1
+grep " 51" t1 > t2
+sed  -e "s/MBIAS//g" t2 > t3
+grep -v "9207002" t3 > t4 
+grep -v "7090 513900" t4 > t5 
+grep -v " 0.0D+00" t5 > t5a
+grep -v "74 688 1 51" t5a > t6a 
+sed  -e "s/760390/      /g" t6a > t6
+cut -c2-5,17,20-39  t6 > t7
+cut -c2-9 t6 > t8
+paste -d " " t8 t7 > tt  
+sed -e "s/D/E/g" tt> tt2
+cp tt2 tt
+infile1=$MAIN_PATH/INFILES/INF_OPS_ITRF2020/ADDS4REPORT/COR_LIST
+while read STAC
+do
+
+while read SOD STAR BIAS2
+do
+printf "%.15f\n" "$BIAS2" > BB
+read BIAS < BB
+if [ "${STAR}" = "${STAC}" ]; then
+
+echo  $STAR  $SOD   $BIAS  >> COR_L1
+else
+echo  $STAR  $SOD   $BIAS  >> NCOR_L1
+fi
+
+done < tt
+cp tt  M_L1 
+grep -v $STAC NCOR_L1 > NN
+cp NN NCOR_L1
+done < $infile1
+sort -u NCOR_L1 > NCOR_L1s
+sort -u COR_L1 > COR_L1s
+cp NCOR_L1s NCOR_L1
+cp COR_L1s COR_L1
+ 
+#####L2
+
+
+zcat $MAIN_PATH/MISSIONS/GISL2/punchdout/EMT/$CASE/v${SNX_VER}/${ARC}.wv${SNX_VER}x.gz > $MAIN_PATH/tmp/magdak/${CASE}$$/t0
+
+grep MBIAS t0 > t1
+grep " 51" t1 > t2
+sed  -e "s/MBIAS//g" t2 > t3a
+sed  -e "s/920700/      /g" t3a> t3b
+grep -v "7090 513900" t3b> t3
+grep -v "74 688 1 51" t3 > t5a
+grep -v " 0.0D+00" t5a > t5
+cut -c2-5,17,20-39  t5 > t6
+cut -c2-9 t5 > t8
+
+cut -c2-5,17,20-39  t5 > t7
+cut -c2-9 t5 > t8
+paste -d " " t8 t7 > tt
+sed -e "s/D/E/g" tt> tt2
+cp tt2 tt
+
+
+cp tt M_L2
+
+while read STAC
+do
+while read SOD STAR BIAS2
+do
+
+printf "%.15f\n" "$BIAS2" > BB
+read BIAS < BB
+cat BB >> L2_BB
+rm BB
+if [ "${STAR}" = "${STAC}" ]; then
+echo  $STAR  $SOD  $BIAS >> COR_L2
+else
+echo  $STAR  $SOD  $BIAS  >> NCOR_L2
+fi
+done < tt
+grep -v $STAC NCOR_L2 > NN
+cp NN NCOR_L2
+
+done < $infile1
+
+sort -u NCOR_L2 > NCOR_L2s
+cp NCOR_L2s NCOR_L2
+
+sort -u COR_L2 > COR_L2s
+cp COR_L2s COR_L2
+rm t
+#####LARES2
+
+
+zcat $MAIN_PATH/MISSIONS/LARES2/punchdout/EMT/$CASE/v${SNX_VER}/${ARC}.wv${SNX_VER}x.gz > $MAIN_PATH/tmp/magdak/${CASE}$$/t0
+
+grep MBIAS t0 > t1
+grep " 51" t1 > t2
+sed  -e "s/MBIAS//g" t2 > t3a
+sed  -e "s/220800/      /g" t3a> t3b
+grep -v "7090 513900" t3b> t3
+grep -v "74 688 1 51" t3 > t5a
+grep -v " 0.0D+00" t5a > t5
+cut -c2-5,17,20-39  t5 > t6
+cut -c2-9 t5 > t8
+
+cut -c2-5,17,20-39  t5 > t7
+cut -c2-9 t5 > t8
+paste -d " " t8 t7 > tt
+sed -e "s/D/E/g" tt> tt2
+cp tt2 tt
+
+
+cp tt M_R2
+
+while read STAC
+do
+while read SOD STAR BIAS2
+do
+
+printf "%.15f\n" "$BIAS2" > BB
+read BIAS < BB
+cat BB >> R2_BB
+rm BB
+if [ "${STAR}" = "${STAC}" ]; then
+echo  $STAR  $SOD  $BIAS >> COR_R2
+else
+echo  $STAR  $SOD  $BIAS  >> NCOR_R2
+fi
+done < tt
+grep -v $STAC NCOR_R2 > NN
+cp NN NCOR_R2
+
+done < $infile1
+
+sort -u NCOR_R2 > NCOR_R2s
+cp NCOR_R2s NCOR_R2
+
+sort -u COR_R2 > COR_R2s
+cp COR_R2s COR_R2
+rm t
+####E1
+
+zcat $MAIN_PATH/MISSIONS/ETA1/punchdout/EMT/$CASE/v${SNX_VER}/${ARC}.wv${SNX_VER}x.gz > $MAIN_PATH/tmp/magdak/${CASE}$$/t0
+
+grep MBIAS t0 > t1
+grep " 51" t1 > t2
+sed  -e "s/MBIAS//g" t2 > t3a
+sed  -e "s/518900103/51       /g" t3a> t3
+grep -v "9207002" t3 > t4
+grep -v "74 688 1 51" t4 > t5
+grep -v " 0.0D+00" t5 > t5a
+grep -v "7090 513900" t5a > t6
+cut -c2-5,17,20-39  t6 > t7
+cut -c2-9 t6 > t8
+paste -d " " t8 t7 > tt
+paste -d " " t8 t7 > tt
+sed -e "s/D/E/g" tt > tt2
+cp tt2 tt
+
+infile1=$MAIN_PATH/INFILES/INF_OPS_ITRF2020/ADDS4REPORT/COR_LIST
+while read STAC
+do
+while read SOD STAR BIAS2
+do
+printf "%.15f\n" "$BIAS2" > BB
+read BIAS < BB
+
+if [ "${STAR}" = "${STAC}" ]; then
+
+
+echo  $STAR  $SOD $BIAS  >> COR_E1
+else
+echo $STAR  $SOD  $BIAS  >> NCOR_E1
+fi
+done < tt
+grep -v $STAC NCOR_E1 > NNE1
+cp NNE1 NCOR_E1
+
+done < $infile1
+sort -u NCOR_E1 > NCOR_E1s
+cp NCOR_E1s NCOR_E1
+
+sort -u COR_E1 > COR_E1s
+cp COR_E1s COR_E1
+rm t
+####E2
+
+zcat $MAIN_PATH/MISSIONS/ETA2/punchdout/EMT/$CASE/v${SNX_VER}/${ARC}.wv${SNX_VER}x.gz > $MAIN_PATH/tmp/magdak/${CASE}$$/t0
+
+grep MBIAS t0 > t1
+grep " 51" t1 > t2
+sed  -e "s/MBIAS//g" t2 > t3a
+sed  -e "s/518903903/51       /g" t3a> t3
+grep -v "9207002" t3 > t4
+grep -v "74 688 1 51" t4 > t5
+grep -v " 0.0D+00" t5 > t5a
+grep -v "7090 513900" t5a > t6
+cut -c2-5,17,20-39  t6 > t7
+cut -c2-9 t6 > t8
+paste -d " " t8 t7 > tt
+paste -d " " t8 t7 > tt
+sed -e "s/D/E/g" tt > tt2
+cp tt2 tt
+
+infile1=$MAIN_PATH/INFILES/INF_OPS_ITRF2020/ADDS4REPORT/COR_LIST
+while read STAC
+do
+
+while read SOD STAR BIAS2
+do
+printf "%.15f\n" "$BIAS2" > BB
+read BIAS < BB
+
+if [ "${STAR}" = "${STAC}" ]; then
+
+echo  $STAR  $SOD $BIAS  >> COR_E2
+
+else
+echo $STAR  $SOD $BIAS  >> NCOR_E2
+fi
+done < tt
+grep -v $STAC NCOR_E2 > NNE2
+cp NNE2 NCOR_E2
+
+done < $infile1
+
+sort -u NCOR_E2 > NCOR_E2s
+cp NCOR_E2s NCOR_E2
+
+sort -u COR_E2 > COR_E2s
+cp COR_E2s COR_E2
+rm t
+
+##COR
+
+
+
+cat COR_?? > t1
+cut -c5-14 t1 > t2
+sed -e "s/ //g" t2 >t2a
+sort -u t2a > t3 
+
+while read STAC
+do
+grep $STAC t3 >> t3s
+
+done < $infile1
+
+cp t3s t3
+cp t3 CORSTA
+
+while read STA
+do
+echo "STATION $STA"
+BIASL1="0.0"
+BIASL2="0.0"
+BIASE1="0.0"
+BIASE2="0.0"
+BIASR2="0.0"
+while read STAL1 SODL1 BIASL1
+do
+
+if [ "${SODL1}" -ne "${STA}" ]; then
+BIASL1a="0.0"
+else
+BIASL1a=$BIASL1
+break 
+fi
+done < COR_L1
+
+while read STAL2 SODL2 BIASL2
+do
+
+if [ "${SODL2}" -ne "${STA}" ]; then
+BIASL2a="0.0"
+else
+BIASL2a=$BIASL2
+break
+fi
+done < COR_L2
+FILE=COR_R2
+if [[ -s $FILE ]] ; then
+while read STAR2 SODR2 BIASR2
+do
+
+if [ "${SODR2}" -ne "${STA}" ]; then
+BIASR2a="0.0"
+else
+BIASR2a=$BIASR2
+break
+fi
+done < COR_R2
+else
+BIASR2a="0.0"
+echo "NO DATA"
+fi
+
+
+FILE=COR_E1
+if [[ -s $FILE ]] ; then
+while read STAE1 SODE1 BIASE1
+do
+
+if [ "${SODE1}" -ne  "${STA}" ]; then
+BIASE1a="0.0"
+else
+BIASE1a=$BIASE1
+break
+fi
+done < COR_E1
+else
+BIASE1a="0.0"
+fi
+
+
+FILE=COR_E2
+if [[ -s $FILE ]] ; then
+while read STAE2 SODE2 BIASE2
+do
+
+if [ "${SODE2}" -ne "${STA}" ]; then
+BIASE2a="0.0"
+else
+BIASE2a=$BIASE2
+break
+fi
+done < COR_E2
+else
+BIASE2a="0.0"
+fi
+
+
+printf "%25.13f %25.13f %25.13f %25.13f  %25.13f \n" $BIASL1a   $BIASL2a  $BIASE1a  $BIASE2a $BIASR2a > GG
+printf "%25.13f %25.13f %25.13f %25.13f  %25.13f \n" $BIASL1a   $BIASL2a  $BIASE1a  $BIASE2a $BIASR2a >> GG_TEST
+#read  BIASL1 A BIASL2 B BIASE1 C BIASE2 D BIASR2 E < GG
+read  BIASL1  BIASL2  BIASE1  BIASE2  BIASR2  < GG
+BIASL1a=$(echo "( ($BIASL1a*1000 ))" |bc -l )
+BIASL2a=$(echo "( ($BIASL2a*1000 ))" |bc -l )
+BIASR2a=$(echo "( ($BIASR2a*1000 ))" |bc -l )
+BIASE1a=$(echo "( ($BIASE1a*1000 ))" |bc -l )
+BIASE2a=$(echo "( ($BIASE2a*1000 ))" |bc -l )
+
+printf " %10d  %10.1f   %10.1f   %10.1f   %10.1f   %10.1f "  $STA   $BIASL1a   $BIASL2a  $BIASE1a  $BIASE2a $BIASR2a  > C
+printf " %10d  %10.1f   %10.1f   %10.1f   %10.1f   %10.1f \n "  $STA   $BIASL1a   $BIASL2a  $BIASE1a  $BIASE2a $BIASR2a  >> C_TEST
+read STA L1 L2 E1 E2 R2 < C
+echo "$L1" | awk ' { if($1>=0) { print $1} else {print $1*-1 }}'> L11
+read L1v < L11
+echo "$L2" | awk ' { if($1>=0) { print $1} else {print $1*-1 }}'> L22
+read L2v < L22
+echo "$R2" | awk ' { if($1>=0) { print $1} else {print $1*-1 }}'> R22
+read R2v < R22
+echo "$E1" | awk ' { if($1>=0) { print $1} else {print $1*-1 }}'> E11
+read E1v < E11
+echo "$E2" | awk ' { if($1>=0) { print $1} else {print $1*-1 }}'> E22
+read E2v < E22
+
+#if  [ "${L1v}" -gt "50" ]; then
+if [ $(echo "${L1v} > 50"|bc -l) -eq 1 ]; then
+
+sed -e "s/L1/\\\color{red} $L1 \\\color{black}/g" TE_v320 > TT1
+else
+sed -e "s/L1/$L1/g" TE_v320 > TT1
+fi
+#if  [ "${L2v}" > "50"  ]; then
+if [ $(echo "${L2v} > 50"|bc -l) -eq 1 ]; then
+
+sed -e "s/L2/\\\color{red} $L2 \\\color{black}/g" TT1> TT2
+else
+sed -e "s/L2/$L2/g" TT1 > TT2
+fi
+
+#if  [ "${E1v}" > "50" ]; then
+if [ $(echo "${E1v} > 50"|bc -l) -eq 1 ]; then
+
+sed -e "s/E1/\\\color{red} $E1 \\\color{black}/g" TT2> TT3
+else
+sed -e "s/E1/$E1/g" TT2 > TT3
+fi
+#if  [ "${E2v}" > "50" ]; then
+if [ $(echo "${E2v} > 50"|bc -l) -eq 1 ]; then
+
+sed -e "s/E2/\\\color{red} $E2 \\\color{black}/g" TT3> TT4
+else
+sed -e "s/E2/$E2/g" TT3 > TT4
+fi
+if [ $(echo "${R2v} > 50"|bc -l) -eq 1 ]; then
+
+sed -e "s/R2/\\\color{red} $R2 \\\color{black}/g" TT4> TT5
+else
+sed -e "s/R2/$R2/g" TT4 > TT5
+fi
+sed -e "s/STA/$STA/g" TT5 > TT6
+
+cat TT6 >> COR
+done < CORSTA
+
+sed -e "s/ 0\.0 / --- /g" COR > D1
+sort -u D1 > AAA
+
+cat A_v320.txt > TEST.tex
+cat AAA >> TEST.tex
+cat B_v320.txt >> TEST.tex
+
+rm TT*
+
+#NCOR
+cat NCOR_?? > t1
+cut -c5-14 t1 > t2
+sed -e "s/ //g" t2 > t3
+sort -u t3 >  NS
+
+while read STA
+do
+grep -v $STA NS > NT
+cp NT NS
+done < $infile1
+
+while read STA
+do
+
+while read STAL1 SODL1 BIASL1
+do
+
+if [ "${SODL1}" -ne "${STA}" ]; then
+BIASL1a="0.0"
+else
+BIASL1a=$BIASL1
+break 
+fi
+done < NCOR_L1
+
+
+
+
+while read STAL2 SODL2 BIASL2
+do
+
+if [ "${SODL2}" -ne "${STA}" ]; then
+BIASL2a="0.0"
+else
+BIASL2a=$BIASL2
+break
+fi
+done < NCOR_L2
+
+while read STAR2 SODR2 BIASR2
+do
+
+if [ "${SODR2}" -ne "${STA}" ]; then
+BIASR2a="0.0"
+else
+BIASR2a=$BIASR2
+break
+fi
+done < NCOR_R2
+
+while read STAE1 SODE1 BIASE1
+do
+
+if [ "${SODE1}" -ne  "${STA}" ]; then
+BIASE1a="0.0"
+else
+BIASE1a=$BIASE1
+break
+fi
+done < NCOR_E1
+
+while read STAE2 SODE2 BIASE2
+do
+
+if [ "${SODE2}" -ne "${STA}" ]; then
+BIASE2a="0.0"
+else
+BIASE2a=$BIASE2
+break
+fi
+done < NCOR_E2
+
+printf "%25.13f %25.13f %25.13f %25.13f %25.13f \n" $BIASL1a   $BIASL2a  $BIASE1a  $BIASE2a $BIASR2a > FF
+#read  BIASL1 A BIASL2 B BIASE1 C BIASE2 D BIASR2 E < FF
+read  BIASL1  BIASL2  BIASE1 BIASE2 BIASR2  < FF
+#rm FF
+BIASL1a=$(echo "( ($BIASL1a*1000 ))" |bc -l )
+BIASL2a=$(echo "( ($BIASL2a*1000 ))" |bc -l )
+BIASR2a=$(echo "( ($BIASR2a*1000 ))" |bc -l )
+BIASE1a=$(echo "( ($BIASE1a*1000 ))" |bc -l )
+BIASE2a=$(echo "( ($BIASE2a*1000 ))" |bc -l )
+
+
+printf " %10d  %10.1f   %10.1f   %10.1f   %10.1f   %10.1f "  $STA   $BIASL1a   $BIASL2a  $BIASE1a  $BIASE2a $BIASR2a  > C
+read STA L1 L2 E1 E2 R2 < C
+echo "$L1" | awk ' { if($1>=0) { print $1} else {print $1*-1 }}'> L11
+read L1v < L11
+echo "$L2" | awk ' { if($1>=0) { print $1} else {print $1*-1 }}'> L22
+read L2v < L22
+echo "$R2" | awk ' { if($1>=0) { print $1} else {print $1*-1 }}'> R22
+read R2v < R22
+echo "$E1" | awk ' { if($1>=0) { print $1} else {print $1*-1 }}'> E11
+read E1v < E11
+echo "$E2" | awk ' { if($1>=0) { print $1} else {print $1*-1 }}'> E22
+read E2v < E22
+
+#if  [ "${L1v}" -gt "50"  ]; then
+
+if [ $(echo "${L1v} > 50"|bc -l) -eq 1 ]; then
+sed -e "s/L1/\\\color{red} $L1 \\\color{black}/g" TE_v320 > TT1
+else
+sed -e "s/L1/$L1/g" TE_v320 > TT1
+fi
+#if  [ "${L2v}" -gt "50" ]; then
+if [ $(echo "${L2v} > 50"|bc -l) -eq 1 ]; then
+sed -e "s/L2/\\\color{red} $L2 \\\color{black}/g" TT1> TT2
+else
+sed -e "s/L2/$L2/g" TT1 > TT2
+fi
+
+#if  [ "${E1v}" -gt "50"  ]; then
+if [ $(echo "${E1v} > 50"|bc -l) -eq 1 ]; then
+
+sed -e "s/E1/\\\color{red} $E1 \\\color{black}/g" TT2> TT3
+else
+sed -e "s/E1/$E1/g" TT2 > TT3
+fi
+#if  [ "${E2v}" -gt "50"  ]; then
+if [ $(echo "${E2v} > 50"|bc -l) -eq 1 ]; then
+sed -e "s/E2/\\\color{red} $E2 \\\color{black}/g" TT3> TT4
+else
+sed -e "s/E2/$E2/g" TT3 > TT4
+fi
+if [ $(echo "${R2v} > 50"|bc -l) -eq 1 ]; then
+sed -e "s/R2/\\\color{red} $R2 \\\color{black}/g" TT4> TT5
+else
+sed -e "s/R2/$R2/g" TT4 > TT5
+fi
+sed -e "s/STA/$STA/g" TT5 > TT6
+
+cat TT6 >> NCOR
+done < NS 
+
+
+
+sed -e "s/ 0\.0 / --- /g" NCOR > D1
+sort -u D1 > AAA
+
+#NEW mkc 170307
+read A0 A1 < $MAIN_PATH/tmp/magdak/ALL_${ARC}_L1
+read A0 A2 < $MAIN_PATH/tmp/magdak/ALL_${ARC}_L2
+read A0 A3 < $MAIN_PATH/tmp/magdak/ALL_${ARC}_E1
+read A0 A4 < $MAIN_PATH/tmp/magdak/ALL_${ARC}_E2
+read A0 A5 < $MAIN_PATH/tmp/magdak/ALL_${ARC}_R2
+
+sed -e "s/NN1/$A1/g" TE3_v320 > TT1
+sed -e "s/NN2/$A2/g" TT1 > TT2
+sed -e "s/NN3/$A3/g" TT2 > TT3
+sed -e "s/NN4/$A4/g" TT3 > TT4
+sed -e "s/NN5/$A5/g" TT4 > TT5
+
+#  
+cat AAA >> TEST.tex
+cat C3.txt >> TEST.tex
+cat TT5 >> TEST.tex
+cat C4.txt >> TEST.tex
+
+#. /usr/share/modules/init/bash
+#. /usr/share/modules/init/ksh
+#module load pkgsrc/2018Q3
+latex TEST.tex  
+dvips -t landscape  TEST.dvi -o TEST.ps 
+ps2pdf TEST.ps TEST.pdf
+cp TEST.pdf BIAS_TAB.pdf
+
+rm t*
+
+cp BIAS_TAB.pdf $MAIN_PATH/tmp/magda/${CASE}${wkTmp}_${ARC}/$CASE/${Date_NEW_ARC}/.
+
+
+cd ..
+#\rm -r ${CASE}$$
+
+
+exit 0
+
+

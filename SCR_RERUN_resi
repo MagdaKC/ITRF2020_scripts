@@ -1,0 +1,37 @@
+#!/bin/ksh
+#
+
+set -xv
+
+
+
+
+
+Date=`date +%y%m%d`
+SCRIPTS=/umbc/epavlis/data01/LOCAL/magdak/scripts/ITRF2020/OPS/
+CASE=WEEKLY
+SNX_VER=80
+PATH=/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY/
+
+/usr/bin/mkdir /tmp/magda/$$RES
+cd /tmp/magda/$$RES
+
+/usr/bin/rm  std_low_to_high_ALL_v80.${Date}
+/usr/bin/echo "ARC SITENAME SITE_NUM AVG STD NPTS" > std_low_to_high_ALL_v80.${Date}
+while read Date_NEW_ARC
+do
+/usr/bin/cat ${PATH}/std_low_to_high_${Date_NEW_ARC}.txt >  t0
+
+/usr/bin/grep -v -e "JCET" -e "SITENAME" -e "========" -e "------------------------------------" t0 > t1
+/usr/bin/sed -e '/^$/d' t1 > t2
+/usr/bin/sed -e "s/^/${Date_NEW_ARC} /" t2 > t3
+/usr/bin/sed -e "s/   / /" -e "s/ \+/ /g" t3 > t4
+
+/usr/bin/cat  t4 >> std_low_to_high_ALL_v80.${Date} 
+/usr/bin/rm t?
+
+done < ${PATH}/res_ACR_v80
+/usr/bin/cp std_low_to_high_ALL_v80.${Date} ${PATH}/.
+exit 0
+
+

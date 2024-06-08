@@ -1,0 +1,83 @@
+#!/bin/ksh
+#
+
+${SCR_DBG}set -xv 
+set -vx
+
+
+SCR_NAME=mkBIAS_Block
+SCR_PARM=8
+SCR_LIST="ARC [sat] [STAGE] [CASE] [PROJ] [VER] [SUBSFX] [disk]"
+SCR_VERS=210511.0
+
+
+if [ `expr $#` -gt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+#MAIN_PATH=/nobackup/mkuzmicz
+
+ARC=$1
+sat=${2:-GISL1}
+STAGE=${3:-WEEKLY}
+CASE=${4:-A}
+PROJ=${5:-ILRS}
+VER=${6:-400}
+SUBSFX=${7:-}
+disk=${8:-umbc/epavlis/data01/LOCAL/magdak/MISSIONS}
+
+#SNX_VER=400
+
+WT=$WEIGHT
+
+sol=output/DATACATS
+
+if [ ! -d /${disk}/${sat}/${sol}/${STAGE}/$CASE/v${SNX_VER} ]; then
+   mkdir -p /${disk}/${sat}/${sol}/${STAGE}/$CASE/v${SNX_VER}
+fi
+
+if [ ! -d /${disk}/${sat}/${sol}/${STAGE}/$CASE/v${SNX_VER}/$ARC ]; then
+   mkdir -p /${disk}/${sat}/${sol}/${STAGE}/$CASE/v${SNX_VER}/$ARC
+fi
+
+if [ ! -d /${disk}/${sat}/${sol}/${STAGE}/$CASE/v${SNX_VER}/$ARC/PARTS ]; then
+   mkdir -p /${disk}/${sat}/${sol}/${STAGE}/$CASE/v${SNX_VER}/$ARC/PARTS
+fi
+
+dirBB=/${disk}/${sat}/${sol}/${STAGE}/$CASE/v${SNX_VER}/$ARC/PARTS
+
+
+#
+# execute job
+#
+
+mkdir ${sat}.MKBB$$
+cd ${sat}.MKBB$$
+
+cat $MAIN_PATH/INFILES/mkBIAS_Block.$sat > ftn05
+
+cat /$disk/$sat/${sol}/${STAGE}/$CASE/v${SNX_VER}/${ARC}.${VER} > ftn09a
+
+cut -c3-200 ftn09a > ftn09
+sort -u -k 7,7 ftn09 >  ftn08
+#sort -u -k 7,7 ftn09 -o ftn08
+
+#/u/epavlis/EXECUTABLES/PL_EXECi64/mkBIAS_Block.x < ftn05 > /$disk/$sat/${sol}/${STAGE}/$CASE/v${SNX_VER}/$ARC/MKBB.$ARC
+/umbc/epavlis/data01/LOCAL/magdak/EXECUTABLES/PL_202305/mkBIAS_Block.x < ftn05 > /$disk/$sat/${sol}/${STAGE}/$CASE/v${SNX_VER}/$ARC/MKBB.$ARC
+
+cp fort.30 $dirBB/${PROJ}_${ARC}.${VER}_${WT}_$SUBSFX
+
+
+cd ..
+#\rm -r ${sat}.MKBB$$

@@ -1,0 +1,201 @@
+#!/bin/sh
+#                                                               ecp 950926      
+# Usage: parmrdr03_NEOS sol sat [disk] [STAGE] [CASE] 
+#
+set -xv 
+
+# parmrdr03_NEOS
+
+if [ `expr $#` -gt 5 ]; then
+   echo "Usage: parmrdr03_NEOS sol sat [disk] [STAGE] [CASE] 2> script_out \007"
+   exit 100
+fi
+
+sol=$1
+sat=${2:-PPV}
+STAGE=${3:-WEEKLY}
+disk=${4:-${diskC}/MISSIONS}
+CASE=${5:-OPS}
+
+infile=${sol}pnc
+diskC=/umbc/epavlis/data01/LOCAL/magdak
+disk=/umbc/epavlis/data01/LOCAL/magdak/MISSIONS
+
+if [ ! -d /${disk}/${sat}/products ]; then
+   mkdir /${disk}/${sat}/products
+fi
+#
+if [ ! -d /${disk}/${sat}/products/COMPARE ]; then
+   mkdir /${disk}/${sat}/products/COMPARE
+fi
+#
+if [ ! -d /${disk}/${sat}/products/COMPARE/$STAGE ]; then
+   mkdir /${disk}/${sat}/products/COMPARE/$STAGE
+fi
+#
+if [ ! -d /${disk}/${sat}/products/COMPARE/$STAGE/$CASE ]; then
+   mkdir /${disk}/${sat}/products/COMPARE/$STAGE/$CASE
+fi
+#
+#if [ ! -d /${disk}/${sat}/products/COMPARE/$STAGE/$CASE/CASE_$SUBCASE ]; then
+#   mkdir /${disk}/${sat}/products/COMPARE/$STAGE/$CASE/CASE_$SUBCASE
+#fi
+#
+if [ ! -d /${disk}/${sat}/products/$STAGE ]; then
+   mkdir /${disk}/${sat}/products/$STAGE
+fi
+#
+if [ ! -d /${disk}/${sat}/products/$STAGE/$CASE ]; then
+   mkdir /${disk}/${sat}/products/$STAGE/$CASE
+fi
+#
+if [ ! -d /${disk}/${sat}/products/$STAGE/$CASE/${sol} ]; then
+   mkdir /${disk}/${sat}/products/$STAGE/$CASE/${sol}
+fi
+#
+#if [ ! -d /${disk}/${sat}/products/$STAGE/$CASE/CASE_$SUBCASE ]; then
+#   mkdir /${disk}/${sat}/products/$STAGE/$CASE/CASE_$SUBCASE
+#fi
+#
+#if [ ! -d /${disk}/${sat}/products/$STAGE/$CASE/CASE_$SUBCASE/${sol} ]; then
+#   mkdir /${disk}/${sat}/products/$STAGE/$CASE/CASE_$SUBCASE/${sol}
+#fi
+#
+if [ ! -d /${disk}/${sat}/parmvl/$STAGE ]; then
+   mkdir /${disk}/${sat}/parmvl/$STAGE
+fi
+#
+if [ ! -d /${disk}/${sat}/parmvl/$STAGE/$CASE ]; then
+   mkdir /${disk}/${sat}/parmvl/$STAGE/$CASE
+fi
+#
+#if [ ! -d /${disk}/${sat}/parmvl/$STAGE/$CASE/CASE_$SUBCASE ]; then
+#   mkdir /${disk}/${sat}/parmvl/$STAGE/$CASE/CASE_$SUBCASE
+#fi
+#
+# execute job
+#
+mkdir /tmp/parmrdr$$
+cd /tmp/parmrdr$$
+
+
+cat /${diskC}/INFILES/parmrdr01.$sat > fort.5 
+#cat $HOME/INFILES/parmrdr01.$sat > fort.5 
+
+
+
+cat /$disk/d_base/site/newall > fort.9
+cat /$disk/d_base/site/INSTRMNT > fort.8
+#zcat /$disk/$sat/parmvl/$STAGE/$CASE/$infile.Z > temp  
+zcat /$disk/$sat/parmvl/$STAGE/$CASE/v${SNX_VER}/$infile.gz > temp  
+#zcat /$disk/$sat/parmvl/$STAGE/$CASE/CASE_$SUBCASE/$infile.Z > temp  
+
+grep 'RMS....E...' temp > fort.10
+
+grep 'PARM..' temp > temp1
+grep 'PARM..    95' temp1 > t85
+grep 'PARM..    96' temp1 > t86
+
+grep 'PARM..   11........3' temp1 > t-8
+grep 'PARM..   13.........' temp1 >> t-8
+
+#OLD STYLE: grep 'PARM..   1' temp1 > t-8
+
+echo 'PARMSM99999' > lst
+
+cat t85 t86 t-8 lst >> fort.10
+
+sed "1,\$s/PARMSM/PARMVL/g" fort.10 > $infile.PARMVL
+gzip -S .Z -f $infile.PARMVL
+mv $infile.PARMVL.Z /$disk/$sat/parmvl/$STAGE/$CASE/v${SNX_VER}/$infile.PARMVL.Z
+
+
+
+#exit 99
+
+
+#/${diskC}/EXECUTABLES/parmrdrNEOS.x  < fort.5 > /$disk/$sat/products/$STAGE/$CASE/v${SNX_VER}/${sol}/PRM.$infile               
+/${diskC}/EXECUTABLES/PL_202305/parmrdrNEOS.x  < fort.5 > /$disk/$sat/products/$STAGE/$CASE/${sol}/PRM.$infile               
+
+#----------------------------------
+
+ls -la
+
+#----------------------------------
+#cp fort.11 /$disk/$sat/products/$STAGE/$CASE/$sol/state
+#cp fort.12 /$disk/$sat/products/$STAGE/$CASE/$sol/accel
+#cp fort.13 /$disk/$sat/products/$STAGE/$CASE/$sol/solrd
+#cp fort.14 /$disk/$sat/products/$STAGE/$CASE/$sol/xypmaI
+#cp fort.15 /$disk/$sat/products/$STAGE/$CASE/$sol/xypm0I
+#cp fort.16 /$disk/$sat/products/$STAGE/$CASE/$sol/a1utaI
+#cp fort.17 /$disk/$sat/products/$STAGE/$CASE/$sol/a1ut0I
+cp fort.18 /$disk/$sat/products/$STAGE/$CASE/$sol/sprdct
+#cp fort.19 /$disk/$sat/products/$STAGE/$CASE/$sol/stagdt.gdn1
+#cp fort.20 /$disk/$sat/products/$STAGE/$CASE/$sol/stagdt.gdn2
+#cp fort.21 /$disk/$sat/products/$STAGE/$CASE/$sol/stacrt.gdn1
+#cp fort.22 /$disk/$sat/products/$STAGE/$CASE/$sol/stacrt.gdn2
+#cp fort.23 /$disk/$sat/products/$STAGE/$CASE/$sol/tcscoms
+#cp fort.24 /$disk/$sat/products/$STAGE/$CASE/$sol/tcseops
+#cp fort.25 /$disk/$sat/products/$STAGE/$CASE/$sol/tsort1
+#cp fort.26 /$disk/$sat/products/$STAGE/$CASE/$sol/tsort2
+#cp fort.27 /$disk/$sat/products/$STAGE/$CASE/$sol/xyutaG
+#cp fort.28 /$disk/$sat/products/$STAGE/$CASE/$sol/xyut0G
+cp fort.29 /$disk/$sat/products/$STAGE/$CASE/$sol//iers_sub
+cp fort.30 /$disk/$sat/products/$STAGE/$CASE/$sol/trfxfrm
+#cp fort.34 /$disk/$sat/products/$STAGE/$CASE/$sol/xypmaIr
+#cp fort.35 /$disk/$sat/products/$STAGE/$CASE/$sol/xypm0Ir
+#cp fort.36 /$disk/$sat/products/$STAGE/$CASE/$sol/a1utaIr
+#cp fort.37 /$disk/$sat/products/$STAGE/$CASE/$sol/a1ut0Ir
+cp fort.38 /$disk/$sat/products/$STAGE/$CASE/$sol/sprdctr
+#cp fort.40 /$disk/$sat/products/$STAGE/$CASE/$sol/temp_ut1utc
+#cp fort.47 /$disk/$sat/products/$STAGE/$CASE/$sol/xyutaGr
+#cp fort.48 /$disk/$sat/products/$STAGE/$CASE/$sol/xyut0Gr
+cp fort.49 /$disk/$sat/products/$STAGE/$CASE/$sol/iers_subr
+#cp fort.50 /$disk/$sat/products/$STAGE/$CASE/$sol/temp_ut1utcr
+cp fort.60 /$disk/$sat/products/$STAGE/$CASE/$sol/iers_sub2001
+cp fort.70 /$disk/$sat/products/$STAGE/$CASE/$sol/iers_sub2001.sprdct
+#cp fort.90 /$disk/$sat/products/$STAGE/$CASE/$sol/unit90
+
+##----------------------------------
+#cp fort.11 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/state
+#cp fort.12 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/accel
+#cp fort.13 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/solrd
+#cp fort.14 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/xypmaI
+#cp fort.15 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/xypm0I
+#cp fort.16 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/a1utaI
+#cp fort.17 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/a1ut0I
+#cp fort.18 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/sprdct
+#cp fort.19 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/stagdt.gdn1
+#cp fort.20 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/stagdt.gdn2
+#cp fort.21 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/stacrt.gdn1
+#cp fort.22 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/stacrt.gdn2
+#cp fort.23 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/tcscoms
+#cp fort.24 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/tcseops
+#cp fort.25 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/tsort1
+#cp fort.26 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/tsort2
+#cp fort.27 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/xyutaG
+#cp fort.28 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/xyut0G
+#cp fort.29 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/iers_sub
+#cp fort.30 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/trfxfrm
+#cp fort.34 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/xypmaIr
+#cp fort.35 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/xypm0Ir
+#cp fort.36 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/a1utaIr
+#cp fort.37 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/a1ut0Ir
+#cp fort.38 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/sprdctr
+#cp fort.40 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/temp_ut1utc
+#cp fort.47 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/xyutaGr
+#cp fort.48 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/xyut0Gr
+#cp fort.49 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/iers_subr
+#cp fort.50 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/temp_ut1utcr
+#cp fort.60 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/iers_sub2001
+#cp fort.70 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/iers_sub2001.sprdct
+#cp fort.90 /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/unit90
+#
+cd ..
+######\rm -r parmrdr$$
+
+#cd /$disk/$sat/products/COMPARE/$STAGE/$CASE
+#ln -s /$disk/$sat/products/$STAGE/$CASE/$sol/stacrt.gdn2 $sol       
+
+#cd /$disk/$sat/products/COMPARE/$STAGE/$CASE/CASE_$SUBCASE
+#ln -s /$disk/$sat/products/$STAGE/$CASE/CASE_$SUBCASE/$sol/stacrt.gdn2 $sol       

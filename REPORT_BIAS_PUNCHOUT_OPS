@@ -1,0 +1,141 @@
+#!/bin/ksh
+#
+
+set -xv
+
+#  RUN_STR
+
+#
+
+SCR_NAME=REPORT_BIAS
+SCR_PARM=0
+SCR_LIST="CASE ETA_IN"
+SCR_VERS=070928.0
+
+SCR_DBG="#"
+export SCR_DBG
+
+if [ `expr $#` -lt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+Date=`date +%y%m%d`
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+disk=$MAIN_PATH
+SCRIPTS=$MAIN_PATH/scripts/BIAS_DB
+export SCRIPTS disk
+ARC=$1
+#ARC=o41005
+#Date_NEW_ARC=121106
+#Date_NEW_ARC=141005
+Date_NEW_ARC=$2
+#NYEAR=2012
+NYEAR=$3
+#NYEAR=2014
+CASE=$4
+infile1=$disk/INFILES/RUN_H
+#mkdir -p /tmp/magdak
+cd $MAIN_PATH/tmp/magda
+mkdir ${CASE}$$
+cd ${CASE}$$
+
+
+MM=`echo $Date_NEW_ARC | cut -c3-4`
+DD=`echo $Date_NEW_ARC | cut -c5-6`
+
+#echo "$NYEAR-$MM-$DD"
+DATE=$NYEAR/$MM/$DD
+cp $SCRIPTS/NAME_NUMBER .
+cp $SCRIPTS/biasW.pl .
+
+
+
+while read SAT SS
+do 
+zcat $disk/MISSIONS/$SAT/output/EMT/WEEKLY/v${SNX_VER}/${ARC}.wv${SNX_VER}e.gz > $MAIN_PATH/tmp/magda/${CASE}$$/t0
+rr1=`sed -n "/1               RESIDUAL SUMMARY BY MEASUREMENT TYPE FOR ARC  1 INNER ITERATION  3 OF GLOBAL ITERATION 1. /=" t0 `
+echo "$rr1" 
+rr2=`expr $rr1 + 5`
+sed -n "${rr2}p" t0 > rr3
+cut -c79-110 rr3 > rr4
+read RMS < rr4
+echo $RMS
+arcline=`sed -n "/1ARC  1 PARAMETER ADJUSTMENT SUMMARY FOR INNER ITERATION  3 OF GLOBAL ITERATION 1                             UNIT  6 PAGE NO. /=" t0 `
+echo "$arcline" > A1
+read ll < A1
+echo $ll
+sed -n "${ll},\$p" t0 > t1
+arcline=`sed -n "/0B0510000/=" t1 `
+echo "$arcline" > B1
+rm t2
+while read l1
+do
+l2=`expr $l1 + 2`
+l3=`expr $l1 + 3`
+sed -n "${l1}p" t1 > t2
+sed -n "${l2},${l3}p" t1 > t3
+paste -d " " t2 t3 > t4
+cat t4 >> t5
+done < B1
+cut -c10-18,59-83,104-120 t5 > t6
+
+
+ sed -e "s/San Fern/San_Fern/g" t6 > t7
+ sed -e "s/San Juan/San_Juan/g" t7 > t8
+ sed -e "s/Mount St/Mount_St/g" t8 > t9
+rm t10 
+cp $disk/MISSIONS/$SAT/residuals_ascii/EMT/WEEKLY/${ARC}.wv${SNX_VER}e.sort_by_config.gz $MAIN_PATH/tmp/magda/${CASE}$$/PBIAS.gz
+#cp /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/$SAT/residuals_ascii_xtnd/DR/WEEKLY/${ARC}.resxtnd /nobackupnfs2/mkuzmicz/tmp/magda/${CASE}$$/PBIAS
+#cp /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/$SAT/residuals_ascii/DR//${ARC1}.${LVER}P.sort_by_config.gz /nobackupnfs2/mkuzmicz/tmp/magda/${CASE}$$/PBIAS.gz
+#List with station for current arc for PBIAS cards
+#Output file with PBIAS card -> PBa
+gzip -d PBIAS.gz
+#cut -c17-33 PBIAS > SATs
+cut -c17-29 PBIAS > SATs
+sort -u SATs > SAT1
+sed -e "s/Mount St/Mount_St/" SAT1 > SAT2
+sed -e "s/San Fern/San_Fern/" SAT2 > SAT3
+sed -e "s/San Juan/San_Juan/" SAT3 > SAT4
+
+while read NAME NUM
+do
+while read STAT BIAS SBIAS
+do
+if [ "${STAT}" = "${NAME}" ]; then
+
+echo " $DATE $NUM $BIAS $SBIAS $RMS" >>  t10
+fi
+done < t9
+#done < NAME_NUMBER
+done < SAT4
+mv t10 bias_$SS
+rm t? 
+done < $infile1
+cp  bias_L1 $disk/MISSIONS/BIAS_DB/v${SNX_VER}/bias_L1_$ARC  
+cp  bias_L2 $disk/MISSIONS/BIAS_DB/v${SNX_VER}/bias_L2_$ARC  
+cp  bias_E1 $disk/MISSIONS/BIAS_DB/v${SNX_VER}/bias_E1_$ARC  
+cp  bias_E2 $disk/MISSIONS/BIAS_DB/v${SNX_VER}/bias_E2_$ARC  
+cd $disk/MISSIONS/BIAS_DB/v${SNX_VER}
+ls -1  bias_??_$ARC  > bias_fl
+
+
+echo "$ARC" > $MAIN_PATH/INFILES/Current_bias_ARC
+chmod 775 $MAIN_PATH/INFILES/Current_bias_ARC
+ls -1 $disk/MISSIONS/BIAS_DB/v${SNX_VER}/bias_??_$ARC $disk/MISSIONS/BIAS_DB/v${SNX_VER}/bias_fl > Current_bias
+cp Current_bias $MAIN_PATH/INFILES/.
+#cd ..
+#\rm -r ${CASE}$$
+
+
+exit 0
+

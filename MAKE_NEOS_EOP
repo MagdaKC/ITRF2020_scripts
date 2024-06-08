@@ -1,0 +1,116 @@
+#!/bin/ksh
+#
+
+set -xv
+
+#    MAKE_NEOS_EOP
+
+ARC=$1
+SOL=$2
+LABEL=${3:-w1}
+SAT=${4:-PPV}
+CASE=${5:-DR}
+STAGE=${6:-WEEKLY}
+
+#CASE=DR
+#STAGE=WEEKLY
+MAIN_PATH=/umbc/epavlis/data01/LOCAL/magdak
+disk=${MAIN_PATH}/MISSIONS
+
+export ARC LABEL CASE STAGE MAIN_PATH disk
+
+cd /tmp
+mkdir mkneos$$
+cd mkneos$$
+
+
+$MAIN_PATH/scripts/ITRF2020/OPS/GET_RESID_STATS $ARC $LABEL $SAT $STAGE
+
+mv $MAIN_PATH/INFILES/INF_OPS_ITRF2020/EOPSTATS.$ARC t0
+
+cut -c8-10 t0 > tnnp
+cut -c13-15 t0 > trms
+cut -c33-36 t0 > tns
+
+paste -d" " trms tns tnnp > tall
+sed "1,\$s/$/  1/g" tall > tallND
+sed "1,1s/  1$/ ND/g" tallND > Right
+
+$MAIN_PATH/scripts/ITRF2020/OPS/PARM_READER_NEOS $SOL $SAT $STAGE
+
+cat /$disk/$SAT/products/$STAGE/OPS/${SOL}/iers_sub > t1
+sed -n "1,7p" t1 > t2
+cut -c1-63 t2 > t3
+
+cat /$disk/$SAT/products/$STAGE/OPS/Title t3 > Left
+paste -d" " Left Right > /$disk/$SAT/products/$STAGE/OPS/${SOL}/${ARC}.JCET
+sed -n "2,8p" /$disk/$SAT/products/$STAGE/OPS/${SOL}/${ARC}.JCET >> /$disk/$SAT/products/$STAGE/OPS/v${SNX_VER}/NEOS.JCET
+pwd 
+ls -la Left Right
+file_L=Left
+file_R=Right
+file_LR=$disk/$SAT/products/$STAGE/OPS/${SOL}/${ARC}.JCET
+export file_LR
+if [ ! -s ${file_L} ]; then
+
+   echo Left EOP file $file_L doesn\'t exist !
+
+   echo "Left file $file_L doesn\'t exist  !!!  " > 2mail.d
+
+   mail -s URGENT_Left_EOP_NOT_EXIST_v${SNX_VER} magdak@umbc.edu < 2mail.d
+   exit 1
+
+   \rm 2mail.d
+fi
+if [ ! -s ${file_R} ]; then
+
+   echo Right EOP file $file_R doesn\'t exist !
+
+   echo "Right EOP file $file_R doesn\'t exist  !!!  " > 2mail.d
+
+   mail -s URGENT_Right_EOP_NOT_EXIST_v${SNX_VER} magdak@umbc.edu < 2mail.d
+   exit 1
+
+   \rm 2mail.d
+fi
+# Check for a reasonable size report:
+
+  #sum $file_LR > s_curLR
+  du -b $file_LR > s_curLR
+  #read d_curLR l_curLR f_curLR < s_curLR
+  read l_curLR f_curLR < s_curLR
+if [ ! -s ${file_LR} ]; then
+
+   echo  EOP file $file_R doesn\'t exist !
+
+   echo "EOP file $file_R doesn\'t exist  !!!  " > 2mail.d
+
+   mail -s URGENT_EOP_NOT_EXIST_v${SNX_VER} magdak@umbc.edu < 2mail.d
+
+   \rm 2mail.d
+
+ exit  9999 
+
+  elif [ "$l_curLR" -lt "400" ]; then
+  
+  #
+  # It looks like the report is empty or we have a VERY bad week!
+  #
+  
+    echo "Possible problem with EOP file: $file_LR" > 2mail.d
+    mail -s URGENT_EOP_${STAGE}_v${SNX_VER}_FILE_EMPTY magdak@umbc.edu < 2mail.d
+    echo "STOP PROCESS EOP wrong"
+ exit  1 
+  else
+  
+    echo "ALL OK !!!"
+    echo "eMail the report !!!"
+    cat s_curLR >> 2mail.d
+    mail -s EOP_${STAGE}_v${SNX_VER}_OK magdak@umbc.edu < 2mail.d
+  
+  fi
+
+
+cd ..
+\rm -r mkneos$$
+

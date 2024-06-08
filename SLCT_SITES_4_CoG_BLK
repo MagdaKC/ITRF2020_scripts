@@ -1,0 +1,98 @@
+#!/bin/ksh
+#
+
+#${SCR_DBG}set -xv
+set -xv
+
+#    SLCT_SITES_4_CoG_BLK
+
+SCR_NAME=SLCT_SITES_4_CoG_BLK
+SCR_PARM=2
+SCR_LIST="infile sat"
+SCR_VERS=230706.0
+
+
+if [ `expr $#` -lt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+
+# infile  is the file created by MAKE_DATA_CATALOG for this satellite 
+
+infile=$1
+sat=$2
+
+#---------------------------------------------TEMPORARY
+#MAIN_PATH=/umbc/epavlis/data01/LOCAL/magdak
+#CASE=DAILY
+#SNX_VER=180
+#ARC_LEN=7
+#---------------------------------------------TEMPORARY
+
+DATABASE=/umbc/epavlis/data01/LOCAL/magdak/INFILES/INF_OPS_ITRF2020/DATABASE_IRP+WAVELENGTH_CURRENT
+
+Date=`date +%y%m%d`
+
+\rm -r IDcat?
+
+#                 /umbc/epavlis/data01/LOCAL/magdak/INFILES/INF_OPS_ITRF2020/ARC_SETUP_NEW.DAILY_v180
+read NYEAR NDOY Date_NEW_ARC ARC < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_NEW.${CASE}_v${SNX_VER}
+
+YY=`echo $NYEAR|cut -c3-4`
+
+while read staID 
+do
+
+grep $staID $DATABASE >> IDcat1
+
+done < ${infile}
+
+cut -c1-4 IDcat1 > IDcat0
+sed -e "s/^/ /g" -e "s/\$/ $sat/g" IDcat0 > IDcat2
+cut -c12-15 IDcat1 > Wavelngth
+sed "s/\$/ A/g" Wavelngth > IDcat3
+
+# generate the start-stop dates for this arc
+
+DOY_END=`expr $NDOY + $ARC_LEN`
+
+#  IMPORTANT  !!!
+
+# we need to add a check here if the arc straddles New Year's!!!
+# in that case we need to check if we have a leap year or not and
+# then, to subtract the appropriate number of days (365 or 366) 
+# from $DOY_END and ADD 1 to the year $YY.
+#
+# ONLY the leap year check is missing now! We can copy MKCs
+# code from a script that works on dates later.
+
+if [ $DOY_END -gt 365 ] ; then
+
+  DOY_END=`expr $DOY_END - 365` 
+  YY=`expr $YY + 1`
+
+fi
+
+START=`echo ${YY}:${NDOY}:00000`
+STOPS=`echo ${YY}:${DOY_END}:00000`
+
+sed "s/\$/ ${START} ${STOPS} C/g" IDcat3 > IDcat0
+
+paste -d " " IDcat2 IDcat0 > IDcatSAT
+mv IDcatSAT IDcat.${sat}
+
+cat IDcat.${sat}
+
+\rm -r IDcat?
+exit 0

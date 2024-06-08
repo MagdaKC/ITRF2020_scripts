@@ -1,0 +1,86 @@
+[01/18/2024, 9:05:07.514 AM] /tmp/epavlis/ cd 240118_v320
+[01/18/2024, 9:05:10.822 AM] /tmp/epavlis/240118_v320/ cp /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISLV/output/CMAT_out/WEEKLY/ 
+[01/18/2024, 9:05:16.869 AM] cp: missing destination file operand after ‘/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISLV/output/CMAT_out/WEEKLY/’
+[01/18/2024, 9:05:16.869 AM] Try 'cp --help' for more information.
+[01/18/2024, 9:05:16.869 AM] /tmp/epavlis/240118_v320/ cp /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISLV/output/CMAT_out/WEEKLY/*.w30709.240117 .
+[01/18/2024, 9:05:28.659 AM] /tmp/epavlis/240118_v320/ ll
+[01/18/2024, 9:05:30.065 AM] total 224K
+[01/18/2024, 9:05:30.066 AM] drwxrwxrwx 2 magdak  research 4.0K Jan 18 09:05 .
+[01/18/2024, 9:05:30.066 AM] -rw-rw-rw- 1 magdak  research  36K Jan 18 09:05 mkCMATLRC03.23LV41wv320x.w30709.240117
+[01/18/2024, 9:05:30.066 AM] -rw-rw-rw- 1 magdak  research  36K Jan 18 09:05 mkCMATLRC03.23LV40wv320e.w30709.240117
+[01/18/2024, 9:05:30.066 AM] drwxrwxrwx 3 epavlis research 144K Jan 18 09:05 ..
+[01/18/2024, 9:05:30.066 AM] /tmp/epavlis/240118_v320/ cp /2. EMAT E1+E2
+[01/18/2024, 9:06:56.566 AM] /tmp/epavlis/240118_v320/ cp /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETAV/output/CMAT_out/WEEKLY/*.w30709.240117 .
+[01/18/2024, 9:07:10.366 AM] /tmp/epavlis/240118_v320/ lh
+[01/18/2024, 9:07:14.803 AM] -rw-rw-rw- 1 magdak research 25K Jan 18 09:07 mkCMATEC03.23EVx21wv320x.w30709.240117
+[01/18/2024, 9:07:14.803 AM] -rw-rw-rw- 1 magdak research 25K Jan 18 09:07 mkCMATEC03.23EV20wv320e.w30709.240117
+[01/18/2024, 9:07:14.803 AM] -rw-rw-rw- 1 magdak research 36K Jan 18 09:05 mkCMATLRC03.23LV41wv320x.w30709.240117
+[01/18/2024, 9:07:14.803 AM] -rw-rw-rw- 1 magdak research 36K Jan 18 09:05 mkCMATLRC03.23LV40wv320e.w30709.240117
+[01/18/2024, 9:07:14.803 AM] /tmp/epavlis/240118_v320/ lhcp /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETAV/output/CMAT_out/WEEKLY/*.w30709.240117 .OOPP
+[01/18/2024, 9:07:41.840 AM] /tmp/epavlis/240118_v320/ cp /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/output/CMAT_out/WEEKLY/*.w30709.240117 .lh
+[01/18/2024, 9:07:44.062 AM] -rw-rw-rw- 1 magdak research 30K Jan 18 09:07 mkCMATLER03.23LERx51wv320x.w30709.240117
+[01/18/2024, 9:07:44.062 AM] -rw-rw-rw- 1 magdak research 30K Jan 18 09:07 mkCMATLER03.23LER50wv320e.w30709.240117
+[01/18/2024, 9:07:44.062 AM] -rw-rw-rw- 1 magdak research 25K Jan 18 09:07 mkCMATEC03.23EVx21wv320x.w30709.240117
+[01/18/2024, 9:07:44.062 AM] -rw-rw-rw- 1 magdak research 25K Jan 18 09:07 mkCMATEC03.23EV20wv320e.w30709.240117
+[01/18/2024, 9:07:44.062 AM] -rw-rw-rw- 1 magdak research 36K Jan 18 09:05 mkCMATLRC03.23LV41wv320x.w30709.240117
+[01/18/2024, 9:07:44.062 AM] -rw-rw-rw- 1 magdak research 36K Jan 18 09:05 mkCMATLRC03.23LV40wv320e.w30709.240117
+[01/18/2024, 9:07:44.062 AM] /tmp/epavlis/240118_v320/ cp /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/output/WEEKLY/OPS/v320/ /230715 .*
+[01/18/2024, 9:08:34.730 AM] /tmp/epavlis/240118_v320/ lh
+[01/18/2024, 9:08:36.292 AM] -rw-rw-rw- 1 magdak research 8.4M Jan 18 09:08 SLV.ILRS_LE12_OPS230715
+[01/18/2024, 9:08:36.292 AM] -rw-rw-rw- 1 magdak research 8.5M Jan 18 09:08 SLV.ILRS_LE12NEOS230715
+[01/18/2024, 9:08:36.293 AM] -rw-rw-rw- 1 magdak research  30K Jan 18 09:07 mkCMATLER03.23LERx51wv320x.w30709.240117
+[01/18/2024, 9:08:36.293 AM] -rw-rw-rw- 1 magdak research  30K Jan 18 09:07 mkCMATLER03.23LER50wv320e.w30709.240117
+[01/18/2024, 9:08:36.293 AM] -rw-rw-rw- 1 magdak research  25K Jan 18 09:07 mkCMATEC03.23EVx21wv320x.w30709.240117
+[01/18/2024, 9:08:36.293 AM] -rw-rw-rw- 1 magdak research  25K Jan 18 09:07 mkCMATEC03.23EV20wv320e.w30709.240117
+[01/18/2024, 9:08:36.293 AM] -rw-rw-rw- 1 magdak research  36K Jan 18 09:05 mkCMATLRC03.23LV41wv320x.w30709.240117
+[01/18/2024, 9:08:36.293 AM] -rw-rw-rw- 1 magdak research  36K Jan 18 09:05 mkCMATLRC03.23LV40wv320e.w30709.240117
+[01/18/2024, 9:08:36.294 AM] /tmp/epavlis/240118_v320/ cp /umbc/epavlis/data01/LOCAL/magdak/tmp/magda/SAVE_WEEKLY2121_w30709/ 
+[01/18/2024, 9:08:51.377 AM] cp: missing destination file operand after ‘/umbc/epavlis/data01/LOCAL/magdak/tmp/magda/SAVE_WEEKLY2121_w30709/’
+[01/18/2024, 9:08:51.377 AM] Try 'cp --help' for more information.
+[01/18/2024, 9:08:51.377 AM] /tmp/epavlis/240118_v320/ cp /umbc/epavlis/data01/LOCAL/magdak/tmp/magda/SAVE_WEEKLY2121_w30709/o.POST_PROCESS_LE12* .
+[01/18/2024, 9:09:05.002 AM] /tmp/epavlis/240118_v320/ lh
+[01/18/2024, 9:09:06.309 AM] -rw-rw-rw- 1 magdak research  20K Jan 18 09:09 o.POST_PROCESS_LE12_PP
+[01/18/2024, 9:09:06.309 AM] -rw-rw-rw- 1 magdak research  20K Jan 18 09:09 o.POST_PROCESS_LE12_NEOS
+[01/18/2024, 9:09:06.309 AM] -rw-rw-rw- 1 magdak research 8.4M Jan 18 09:08 SLV.ILRS_LE12_OPS230715
+[01/18/2024, 9:09:06.309 AM] -rw-rw-rw- 1 magdak research 8.5M Jan 18 09:08 SLV.ILRS_LE12NEOS230715
+[01/18/2024, 9:09:06.309 AM] -rw-rw-rw- 1 magdak research  30K Jan 18 09:07 mkCMATLER03.23LERx51wv320x.w30709.240117
+[01/18/2024, 9:09:06.309 AM] -rw-rw-rw- 1 magdak research  30K Jan 18 09:07 mkCMATLER03.23LER50wv320e.w30709.240117
+[01/18/2024, 9:09:06.309 AM] -rw-rw-rw- 1 magdak research  25K Jan 18 09:07 mkCMATEC03.23EVx21wv320x.w30709.240117
+[01/18/2024, 9:09:06.310 AM] -rw-rw-rw- 1 magdak research  25K Jan 18 09:07 mkCMATEC03.23EV20wv320e.w30709.240117
+[01/18/2024, 9:09:06.310 AM] -rw-rw-rw- 1 magdak research  36K Jan 18 09:05 mkCMATLRC03.23LV41wv320x.w30709.240117
+[01/18/2024, 9:09:06.310 AM] -rw-rw-rw- 1 magdak research  36K Jan 18 09:05 mkCMATLRC03.23LV40wv320e.w30709.240117
+[01/18/2024, 9:09:06.310 AM] /tmp/epavlis/240118_v320/ cp /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/output/mksinex_out/ILRS/WEEKLY/v320/ 
+[01/18/2024, 9:09:58.220 AM] cp: missing destination file operand after ‘/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/output/mksinex_out/ILRS/WEEKLY/v320/’
+[01/18/2024, 9:09:58.220 AM] Try 'cp --help' for more information.
+[01/18/2024, 9:09:58.220 AM] /tmp/epavlis/240118_v320/ cp /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/output/mksinex_out/ILRS/WEEKLY/v320/SNX.ILRS_LE12_OPS230715 .
+[01/18/2024, 9:10:04.980 AM] /tmp/epavlis/240118_v320/ lh
+[01/18/2024, 9:10:07.293 AM] -rw-rw-rw- 1 magdak research 102K Jan 18 09:10 SNX.ILRS_LE12_OPS230715
+[01/18/2024, 9:10:07.293 AM] -rw-rw-rw- 1 magdak research  20K Jan 18 09:09 o.POST_PROCESS_LE12_PP
+[01/18/2024, 9:10:07.293 AM] -rw-rw-rw- 1 magdak research  20K Jan 18 09:09 o.POST_PROCESS_LE12_NEOS
+[01/18/2024, 9:10:07.293 AM] -rw-rw-rw- 1 magdak research 8.4M Jan 18 09:08 SLV.ILRS_LE12_OPS230715
+[01/18/2024, 9:10:07.293 AM] -rw-rw-rw- 1 magdak research 8.5M Jan 18 09:08 SLV.ILRS_LE12NEOS230715
+[01/18/2024, 9:10:07.293 AM] -rw-rw-rw- 1 magdak research  30K Jan 18 09:07 mkCMATLER03.23LERx51wv320x.w30709.240117
+[01/18/2024, 9:10:07.293 AM] -rw-rw-rw- 1 magdak research  30K Jan 18 09:07 mkCMATLER03.23LER50wv320e.w30709.240117
+[01/18/2024, 9:10:07.293 AM] -rw-rw-rw- 1 magdak research  25K Jan 18 09:07 mkCMATEC03.23EVx21wv320x.w30709.240117
+[01/18/2024, 9:10:07.293 AM] -rw-rw-rw- 1 magdak research  25K Jan 18 09:07 mkCMATEC03.23EV20wv320e.w30709.240117
+[01/18/2024, 9:10:07.293 AM] -rw-rw-rw- 1 magdak research  36K Jan 18 09:05 mkCMATLRC03.23LV41wv320x.w30709.240117
+[01/18/2024, 9:10:07.293 AM] -rw-rw-rw- 1 magdak research  36K Jan 18 09:05 mkCMATLRC03.23LV40wv320e.w30709.240117
+[01/18/2024, 9:10:07.293 AM] /tmp/epavlis/240118_v320/ cp /umbc/epavlis/data01/LOCAL/magdak/tmp/RUN_SERIES_IERS_SLRF2020_7d.WEEKLY_w30709_240117.2121.log
+[01/18/2024, 9:11:12.130 AM] cp: missing destination file operand after ‘/umbc/epavlis/data01/LOCAL/magdak/tmp/RUN_SERIES_IERS_SLRF2020_7d.WEEKLY_w30709_240117.2121.log’
+[01/18/2024, 9:11:12.130 AM] Try 'cp --help' for more information.
+[01/18/2024, 9:11:12.130 AM] /tmp/epavlis/240118_v320/ cp /umbc/epavlis/data01/LOCAL/magdak/tmp/RUN_SERIES_IERS_SLRF2020_7d.WEEKLY_w30709_240117.2121.log .
+[01/18/2024, 9:11:14.176 AM] /tmp/epavlis/240118_v320/ chmod -R 775 /tmp/epavlis/240118_v320/
+[01/18/2024, 9:12:46.518 AM] /tmp/epavlis/240118_v320/ lh
+[01/18/2024, 9:12:47.891 AM] -rwxrwxr-x 1 magdak research  78K Jan 18 09:11 RUN_SERIES_IERS_SLRF2020_7d.WEEKLY_w30709_240117.2121.log
+[01/18/2024, 9:12:47.891 AM] -rwxrwxr-x 1 magdak research 102K Jan 18 09:10 SNX.ILRS_LE12_OPS230715
+[01/18/2024, 9:12:47.891 AM] -rwxrwxr-x 1 magdak research  20K Jan 18 09:09 o.POST_PROCESS_LE12_PP
+[01/18/2024, 9:12:47.891 AM] -rwxrwxr-x 1 magdak research  20K Jan 18 09:09 o.POST_PROCESS_LE12_NEOS
+[01/18/2024, 9:12:47.891 AM] -rwxrwxr-x 1 magdak research 8.4M Jan 18 09:08 SLV.ILRS_LE12_OPS230715
+[01/18/2024, 9:12:47.891 AM] -rwxrwxr-x 1 magdak research 8.5M Jan 18 09:08 SLV.ILRS_LE12NEOS230715
+[01/18/2024, 9:12:47.891 AM] -rwxrwxr-x 1 magdak research  30K Jan 18 09:07 mkCMATLER03.23LERx51wv320x.w30709.240117
+[01/18/2024, 9:12:47.891 AM] -rwxrwxr-x 1 magdak research  30K Jan 18 09:07 mkCMATLER03.23LER50wv320e.w30709.240117
+[01/18/2024, 9:12:47.891 AM] -rwxrwxr-x 1 magdak research  25K Jan 18 09:07 mkCMATEC03.23EVx21wv320x.w30709.240117
+[01/18/2024, 9:12:47.891 AM] -rwxrwxr-x 1 magdak research  25K Jan 18 09:07 mkCMATEC03.23EV20wv320e.w30709.240117
+[01/18/2024, 9:12:47.891 AM] -rwxrwxr-x 1 magdak research  36K Jan 18 09:05 mkCMATLRC03.23LV41wv320x.w30709.240117
+[01/18/2024, 9:12:47.891 AM] -rwxrwxr-x 1 magdak research  36K Jan 18 09:05 mkCMATLRC03.23LV40wv320e.w30709.240117
+[01/18/2024, 9:12:47.892 AM] /tmp/epavlis/240118_v320/ cp /umbc/epavlis/data01/LOCAL/magdak/tmp/magda/SAVE_WEEKLY2121_w30709/ o.mksatIDir_w30709o.mksatIDir_w30709 .

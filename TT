@@ -1,0 +1,7 @@
+ ### FTP QC REPORT
+  #STOP ON 23.101.8 --> switch to SLRF2020
+   #cd $CDIR
+    #$SCRIPTS/SUB.emailBIASreports > o.SUB.emailBIASreports 2>&1
+
+    :wq
+

@@ -1,0 +1,1431 @@
+Date=`date +%y%m%d`
+date +%y%m%d
++ date +%y%m%d
++ Date=240119
+SCRIPTS=/umbc/epavlis/data01/LOCAL/magdak/scripts/ITRF2020/OPS/
++ SCRIPTS=/umbc/epavlis/data01/LOCAL/magdak/scripts/ITRF2020/OPS/
+CASE=WEEKLY
++ CASE=WEEKLY
+SNX_VER=80
++ SNX_VER=80
+PATH=/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY/
+
++ PATH=/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY/
+/usr/bin/mkdir /tmp/magda/$$RES
++ /usr/bin/mkdir /tmp/magda/20798RES
+cd /tmp/magda/$$RES
+
++ cd /tmp/magda/20798RES
+/usr/bin/rm  std_low_to_high_ALL_v80.${Date}
++ /usr/bin/rm std_low_to_high_ALL_v80.240119
+/usr/bin/rm: cannot remove ‘std_low_to_high_ALL_v80.240119’: No such file or directory
+/usr/bin/echo "ARC SITENAME SITE_NUM AVG STD NPTS" > std_low_to_high_ALL_v80.${Date}
++ /usr/bin/echo 'ARC SITENAME SITE_NUM AVG STD NPTS'
++ 1> std_low_to_high_ALL_v80.240119
+while read Date_NEW_ARC
+do
+/usr/bin/cat ${PATH}/std_low_to_high_${Date_NEW_ARC}.txt >  t0
+
+/usr/bin/grep -v -e "JCET" -e "SITENAME" -e "========" -e "------------------------------------" t0 > t1
+/usr/bin/sed -e '/^$/d' t1 > t2
+/usr/bin/sed -e "s/^/${Date_NEW_ARC} /" t2 > t3
+/usr/bin/sed -e "s/   / /" -e "s/ \+/ /g" t3 > t4
+
+/usr/bin/cat  t4 >> std_low_to_high_ALL_v80.${Date} 
+/usr/bin/rm t?
+
+done < ${PATH}/res_ACR_v80
++ 0< /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//res_ACR_v80
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_220703.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/220703 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_220710.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/220710 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_220807.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/220807 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_220814.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/220814 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_220821.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/220821 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_220828.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/220828 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_220904.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/220904 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_220911.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/220911 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_220918.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/220918 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_220925.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/220925 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_221002.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/221002 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_221009.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/221009 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_221016.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/221016 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_221023.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/221023 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_221030.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/221030 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_221106.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/221106 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_221113.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/221113 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_221120.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/221120 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_221127.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/221127 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_221204.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/221204 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_221211.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/221211 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_221218.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/221218 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_221225.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/221225 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230101.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230101 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230107.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230107 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230108.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230108 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230114.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230114 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230115.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230115 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230121.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230121 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230122.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230122 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230128.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230128 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230129.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230129 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230204.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230204 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230205.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230205 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230211.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230211 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230212.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230212 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230218.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230218 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230219.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230219 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230225.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230225 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230226.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230226 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230304.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230304 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230305.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230305 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230311.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230311 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230312.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230312 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230318.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230318 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230319.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230319 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230325.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230325 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230326.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230326 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230401.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230401 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230402.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230402 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230408.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230408 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230409.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230409 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230415.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230415 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230416.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230416 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230422.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230422 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230423.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230423 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230429.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230429 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230430.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230430 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230506.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230506 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230507.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230507 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230513.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230513 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230514.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230514 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230520.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230520 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230521.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230521 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230527.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230527 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230528.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230528 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230603.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230603 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230604.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230604 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230610.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230610 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230611.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230611 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230618.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230618 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230625.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230625 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230702.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230702 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230709.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230709 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230716.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230716 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230723.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230723 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230730.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230730 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230806.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230806 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230813.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230813 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230820.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230820 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230827.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230827 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230903.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230903 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230910.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230910 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230917.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230917 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_230924.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/230924 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_231001.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/231001 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_231008.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/231008 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_231015.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/231015 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_231022.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/231022 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_231029.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/231029 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_231105.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/231105 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_231112.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/231112 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_231119.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/231119 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_231126.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/231126 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_231203.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/231203 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_231210.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/231210 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_231217.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/231217 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_231224.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/231224 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
++ /usr/bin/cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//std_low_to_high_231231.txt
++ 1> t0
++ /usr/bin/grep -v -e JCET -e SITENAME -e '========' -e ------------------------------------ t0
++ 1> t1
++ /usr/bin/sed -e '/^$/d' t1
++ 1> t2
++ /usr/bin/sed -e 's/^/231231 /' t2
++ 1> t3
++ /usr/bin/sed -e 's/   / /' -e 's/ \+/ /g' t3
++ 1> t4
++ /usr/bin/cat t4
++ 1>> std_low_to_high_ALL_v80.240119
++ /usr/bin/rm t0 t1 t2 t3 t4
++ read Date_NEW_ARC
+/usr/bin/cp std_low_to_high_ALL_v80.${Date} ${PATH}/.
++ /usr/bin/cp std_low_to_high_ALL_v80.240119 /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY//.
+exit 0
+
+
++ exit 0

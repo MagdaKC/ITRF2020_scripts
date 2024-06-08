@@ -1,0 +1,63 @@
+#!/bin/ksh
+#
+
+${SCR_DBG}set -xv
+set -xv
+
+SCR_NAME=CULL_SITES
+SCR_PARM=4
+SCR_LIST="SOL SAT STAGE CASE"
+SCR_VERS=040219.0
+
+
+if [ `expr $#` -lt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+
+#  ORIGINALLY: getZEROadjSITEsI1 
+
+
+SOL=$1
+SAT=$2
+STAGE=$3
+CASE=$4
+
+where=/$DISK/$SAT/punchdout/$STAGE/$CASE/v${SNX_VER}
+
+#cd $where
+
+zcat $where/${SOL}_pnc.gz > ttt0
+#cp SLV.$SOL ttt0
+
+#
+#/bin/grep "PARMSM   1........................................0.000000000000000E+00" ttt0 > ttt2
+#/bin/grep "PARMSM   1.........................................0.00000000000000E+00" ttt0 > ttt2
+/bin/grep  "PARMSM   1........................................0.000000000000000E+00" ttt0 > ttt2
+
+
+cut -c10-25 ttt2 > ttt1
+
+
+/bin/grep "11........3...1." ttt1 > a
+/bin/grep "13............1." ttt1 >> a
+/bin/grep "11........3...3." ttt1 > b
+/bin/grep "13............3." ttt1 >> b
+
+paste -d" " a b > c
+
+sed "s/^/MATSUP      /g" c > MATSUP.${SOL}
+
+\rm ttt0 ttt1 ttt2 a b c
+exit 0

@@ -1,0 +1,57 @@
+#!/bin/ksh
+#
+${SCR_DBG}set -xv
+set -xv
+
+
+#  RUN_STR
+
+#
+
+SCR_NAME=REPORT_BiAS_ALL
+SCR_LIST="CASE ETA_IN"
+SCR_VERS=070928.0
+
+SCR_DBG="#"
+export SCR_DBG
+
+
+Date=`date +%y%m%d`
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+CASE=DAILY
+ARC=w30927
+MAIN_PATH=/umbc/epavlis/data01/LOCAL/magdak
+diskC=$MAIN_PATH
+SNX_VER=180
+Date_ENDO_ARC=231005
+
+cp /$diskC/MISSIONS/PPV/qc_report/${CASE}/v${SNX_VER}/${ARC}_LEAS.txt test_ALL
+#CREAT files:
+while read STAT_QC
+do 
+grep  --text "^$STAT_QC" test_ALL > test_ALL_1
+grep --text -v -e "S1" -e  "A1" -e "E1" -e "E2" test_ALL_1 > test_ALL_2
+cp test_ALL_2 /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/qc_report/${CASE}/v${SNX_VER}/jcet.qc7day.${Date_ENDO_ARC}_${STAT_QC}.slr.v01.rpt
+rm test_ALL_1 test_ALL_2
+
+
+if [  -s /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/qc_report/${CASE}/v${SNX_VER}/jcet.qc7day.${Date_ENDO_ARC}_${STAT_QC}.slr.v01.rpt  ]; then
+mail -s "Report_BIAS_SLRF2020_$ARC for ${STAT_QC} " magdak@umbc.edu < /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/qc_report/${CASE}/v${SNX_VER}/jcet.qc7day.${Date_ENDO_ARC}_${STAT_QC}.slr.v01.rpt
+#mail -s "Report_BIAS_SLRF2020_$ARC for ${STAT_QC} " epavlis@umbc.edu < /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/qc_report/${CASE}/v${SNX_VER}/jcet.qc7day.${Date_ENDO_ARC}_${STAT_QC}.slr.v01.rpt
+else
+rm /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/qc_report/${CASE}/v${SNX_VER}/jcet.qc7day.${Date_ENDO_ARC}_${STAT_QC}.slr.v01.rpt
+fi
+done < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/QC_STATION
+
+
+exit 0
+

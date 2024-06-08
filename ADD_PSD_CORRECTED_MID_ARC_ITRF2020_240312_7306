@@ -1,0 +1,150 @@
+#!/bin/ksh
+#
+${SCR_DBG}set -xv
+set -xv
+
+#  ADD_PSD_CORRECTED
+#
+# Imports are: CASEDIR CASE STAGE SV YR DATA LOCALDSK
+#
+
+#if [ `expr $#` -lt 5 ]; then
+#   echo "Usage: ADD_PSD_CORRECTED ARC "
+#   exit 101
+#fi
+
+#echo " # "
+#echo " #  ADD_PSD_CORRECTED $* "
+#echo " # "
+
+# date '+DATE: %m/%d/%y%nTIME: %H:%M:%S'
+
+SCR_NAME=ADD_PSD_CORRECTED
+SCR_PARM=1
+SCR_LIST="ARC "
+SCR_VERS=151204.0
+#ARC=o10701
+
+
+
+ARC=$1
+
+
+mkdir  /tmp/magda/ADD_PSD_MID_$$_$ARC
+cd  /tmp/magda/ADD_PSD_MID_$$_$ARC
+MAIN_PATH=/umbc/epavlis/data01/LOCAL/magdak
+disk=$MAIN_PATH/MISSIONS
+diskC=$disk_n
+
+ ### PROPGATE to mid arc
+
+
+cat $MAIN_PATH/INFILES/INF_OPS_ITRF2020/MID-ARC_INFO.${CASE}_v${SNX_VER} > ftn05
+
+#  post-Arequipa quake positions:
+
+#   zcat /${disk}/d_base/site/DAILY/SLRF2020/w30101_230214_UF.adj.gz > ftn10
+#zcat /${disk}/d_base/site/DAILY/SLRF2020/SLRF2020.adj.gz > s1
+#zcat /${disk}/d_base/site/DAILY/SLRF2020/SLRF2020.adj.gz > ftn10
+zcat /${disk}/d_base/site/DAILY/SLRF2020/w30101_240312_DGFI7306.adj.gz > s1
+
+
+/umbc/research/epavlis/EXECUTABLES/stapropgt.x  < ftn05 > PGT.$ARC
+
+#/bin/grep -v SIGVEL ftn11 > s1 
+cat ftn11 > s1 
+
+
+cp $MAIN_PATH/MISSIONS/d_base/site/ITRF2020_PSD/IMPLEMENT_PSD_2022_DAILY/PSD_CORRECTED_STAPOS/*.ITRF2020 .
+
+
+rm ARC_4* 
+cat *.ITRF2020 > ALL_ARC
+
+
+
+grep "^$ARC" ALL_ARC > temp_arc
+cut -c8-122 temp_arc > replace_STAPOS
+grep -v  CONST replace_STAPOS > replace_STAPOS2
+
+while read  STAT1 STAT2
+do
+
+echo $STAT1 $STAT2
+grep $STAT1 replace_STAPOS > replace_STAPOS_1
+grep $STAT1 s1 > s1_1
+grep $STAT2 replace_STAPOS > replace_STAPOS_2
+cp replace_STAPOS_2 replace_STAPOS_$STAT2
+grep $STAT2 s1 > s1_2
+cp s1_2 s1_2_$STAT2
+ 
+
+if [ -s "replace_STAPOS_$STAT2" ] && [ -s "s1_2_$STAT2" ]
+then
+
+arcline1=`sed -n "/$STAT1/=" s1 `
+echo $arcline1 > ppp1
+arcline11=`awk ' {print $1} ' ppp1`
+arcline12=` expr $arcline11 - 1 `
+sed -n "${arcline12}p" s1 > s2_1
+cat s2_1 > s2_3
+cat replace_STAPOS_1 >> s2_3
+arcline21=` expr $arcline11 - 1 `
+arcline22=` expr $arcline11 - 2 `
+
+arcline1=`sed -n "/$STAT2/=" s1 `
+echo $arcline1 > ppp1
+arcline11=`awk ' {print $1} ' ppp1`
+arcline12=` expr $arcline11 - 1 `
+sed -n "${arcline12}p" s1 > s2_2
+cat s2_2 > s2_4
+cat replace_STAPOS_2 >> s2_4
+echo "CONSTADJ" > A1
+cat s2_3 >> A1
+cat s2_4 >> A1
+echo "CONSTEND" >> A1
+arcline33=` expr $arcline11 + 4 `
+if  [ "${STAT1}" = "74050000" ]; then
+sed -e "s/74057904/74057914/" s2_4 > s2_5
+echo "CONSTADJ" > A1
+cat s2_3 >> A1
+cat s2_4 >> A1
+echo "INSTRMNT 3     0                           0.84700                    SLRF2020 018037001 41719M001 " >> A1
+grep -v "INSTRMNT 3" s2_5 > s2_6
+cat s2_6 >> A1
+echo "CONSTEND" >> A1
+fi
+# sed "${arcline22},${arcline21}d" s1 > s11
+# sed "${arcline12}d" s11 > s22
+# sed "${arcline33}d" s22 > s33
+
+ sed -e "${arcline22},${arcline21}d" -e   "${arcline12}d" -e "${arcline33}d" s1 > s33
+ if  [ "${STAT1}" = "74050000" ]; then
+    grep -v -e $STAT2 -e $STAT1 -e "41719M001"  s33 > s44
+elif  [ "${STAT1}" = "74030000" ]; then
+   grep -v -e $STAT2 -e $STAT1 -e "42202M003"  s33 > s44
+
+	   else
+	    grep -v -e $STAT2 -e $STAT1 s33 > s44
+		 fi
+ cp s44 s44_$STAT1
+cat A1 >> s44
+mv A1 s1_$STAT1
+cp s44 s1
+rm s33 s44 s11 s11 ppp1 s?_? A1 replace_STAPOS_?
+   else
+   echo "$file not found."
+rm s33 s44 s11 s11 ppp1 s?_? A1 replace_STAPOS_?
+
+				                fi
+done < /$MAIN_PATH/INFILES/STATIONS_PSD_CORR
+
+#compress -f  s1
+gzip  -f  s1
+cp s1.gz /${disk}/d_base/site/DAILY/SLRF2020/MID-ARC_EPOCH/${ARC}.adj.gz
+
+
+exit 222
+cd ..
+rm -fr tmp/magdak/ADD_PSD_$$_$ARC
+exit 0

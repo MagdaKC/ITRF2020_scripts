@@ -1,0 +1,207 @@
+#!/bin/ksh
+#                                                                               
+
+${SCR_DBG}set -xv
+set  -vx       
+
+SCR_NAME=MAKE_SINEX
+SCR_PARM=0
+SCR_LIST=""
+SCR_VERS=210709.0
+
+
+if [ `expr $#` -lt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+
+#
+#          MAKE_SINEX
+#
+
+
+if [ ! -d /$DISK/$SAT/output/mksinex_out ]; then
+      mkdir /$DISK/$SAT/output/mksinex_out
+fi
+if [ ! -d /$DISK/$SAT/output/mksinex_out/$PROJ ]; then
+      mkdir /$DISK/$SAT/output/mksinex_out/$PROJ
+fi
+if [ ! -d /$DISK/$SAT/output/mksinex_out/$PROJ/$STEP ]; then
+      mkdir /$DISK/$SAT/output/mksinex_out/$PROJ/$STEP
+fi
+
+mkdir tmpsnx$$
+cd tmpsnx$$
+
+
+# input matrix
+zcat   /$DISK/$SAT/pgscov/${STEP}/OPS/v${SNX_VER}/${SOL}_${WT}cov.gz > fort.10
+
+# epoch file
+cp   $MAIN_PATH/INFILES/INF_OPS_ITRF2020/EPOCH_BLK_$PROJ/${STEP}/v${SNX_VER}/${SOL}    fort.11
+
+# punch file
+zcat   /$DISK/$SAT/punchdout/${STEP}/OPS/v${SNX_VER}/${SOL}_${WT}pnc.gz > fort.13
+
+# eop a_priori file
+#cat /nobackup/mkuzmicz/MISSIONS/d_base/tabs/EOP20C04/EOP20C04_iers5722.omst2212 > fort.14
+#230410
+#230613 cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/d_base/tabs/EOP20C04_mstr.current >  fort.14
+cat /umbc/research/epavlis/MISSIONS/d_base/tabs/EOP20C04_mstr.current > fort.14
+
+###cat /nobackup/mkuzmicz/MISSIONS/d_base/tabs/mstr.current > fort.14
+
+## eccentricity file
+#cat $MAIN_PATH/INFILES/slrecc.current.edt.exc.ecc > fort.15
+
+# station a priori file
+## before 180516 zcat /$DISK/d_base/site/CURRENT_ITRF.apr.Z >   fort.17
+#zcat /${DISK}/d_base/site/${ARC}.x.apr.Z > fort.17
+zcat /${DISK}/d_base/site/${ARC}.x.apr.gz > fort.17
+
+
+# gravity a_priori file
+zcat /$DISK/d_base/grav/${GRAVITY_MDL}.adj.gz > fort.19
+
+
+
+
+#   ----------   UNIT_4   --------------
+# rec 1    type of computer on which this job is run (A4)
+#          'CRAY', 'HP  '  or  'SUN '
+# rec 2    type of matrix
+#          'COVA', 'CORR', 'EMAT' or 'CMAT'
+# rec 3    identify the labeling scheme 'OLD_LABELS' or 'NEW_LABELS'
+# rec 4    Epoch at which the estimated parameter is valid
+#          (yymmddHHMMSS)
+#          this will be used only if epoch for the parameter
+#          is not given on the PUNCH file
+
+# rec 5    observation code, constraint code
+#          solution type ( upto 5 values)
+#          point code & solution id
+#          sinex version, Agency
+#          ( 2(a1,1x), 5a1, 1x,a2,1x,a4,1x,f4.2,1x,a3)
+#           solution type
+#           'S' - station parameters
+#                  M   - GeoCenter (degree_one terms only)
+#                  G   - All the gravity parameters
+#                  M&G - GeoCenter follwed by rest of gravity
+#           'E'  - Earth Orientation Parameters
+#           'T'  - Troposphere
+#           'C'  - Celestial reference frame
+
+# rec 6    APPLY SCALING WITH VARIANCE FACTOR   'YES' or 'NO' (a3)
+
+# rec 7    option to get the apriori values from SOLVE punch
+#          the word "SOLVE_punch" starting in col.1
+
+# rec 8    (OPTIONAL input) range of parameters to be selected
+#          include any no. of 'MADRNG' cards (SOLVE format)
+#          (A6,6x,f16.0,1x,f16.0,2x,3a1)
+#          followed by 3 (char*1) flags
+
+#          for label 96.... to suppress solution for
+#          xdot,ydot or LOD specify "111"
+#          Not to use the eccentricty values read in from input file
+#          (they will be set to zero)
+#          specify '111' on station or station velocity MADRNG cards
+
+# rec 8+   (on the first cardof this set), identify whether
+#          'MADRNG' cards are in old or new labeling scheme
+#          'OLD_LABEL_RANGES' or 'NEW_LABEL_RANGES'
+#          end the set  with 'ENDRNG' cards
+
+# next set    SINEX block file info. (as many blocks as needed)
+#             should start with a record  'BEGIN_BLOCK_INPUT'
+#                  &   end with a record  'END_BLOCK_INPUT'
+#               For each block there should be
+#               1.  Block title starting with '+'
+#               2.  the word 'filename' followed by thename of file
+#                   OR   the records containing the data
+#               3.  Block end record with '-' in col. 1
+#
+
+
+
+
+#sed "1,\$s/SSSSSS/${SOL}/g" $MAIN_PATH/INFILES/INF_OPS_PP_BIAS/unit4_$PROJ/$STEP/v${SNX_VER}/unit4.${SOL} > fort.4
+sed -e "1,\$s/SSSSSS/${SOL}/g" -e  "s/SNXVER/v${SNX_VER}/g"  $MAIN_PATH/INFILES/INF_OPS_ITRF2020/unit4_$PROJ/$STEP/v${SNX_VER}/unit4.${SOL} > fort.4
+
+
+#---------------------------------------------------------------
+cat fort.4
+#---------------------------------------------------------------
+
+##  /$DISK/$SAT/output/mksinex_out/$PROJ/$STEP/v${SNX_VER}/SNX.${SOL}
+##  /nobackup/mkuzmicz/REPRO/PPV/output/mksinex_out/ILRS/WEEKLY/v400/SNX.ILRS_LE12_OPS140309
+
+##/${DISK}/GISLV/output/DATACATS/WEEKLY/EMT/v${SNX_VER}/$ARC/PARTS/ILRS_${ARC}.${LVER}e_${WT}_$SUBSFX
+
+##/${DISK}/PPV/output/DATACATS/WEEKLY/EMT/v${SNX_VER}/$ARC/PARTS/ILRS_${ARC}.${LVER}e_${WT}_$SUBSFX
+
+
+
+# /${DISK}/$SAT/output/DATACATS/$STEP/EMT/v${SNX_VER}/$ARC/PARTS/$PROJ_${ARC}.${LVER}e_${WT}_$SUBSFX
+
+
+cp /${DISK}/$SAT/output/DATACATS/$STEP/EMT/v${SNX_VER}/$ARC/PARTS/${PROJ}_${ARC}.${LVER}e_${WT}_$SUBSFX fort.42
+
+cut -c2-5 fort.42 > sites
+sort -un sites > site_list_$SUBSFX
+
+#  This is the list of unique site ID Nos. (4-digit) in the arc:
+
+cp site_list_$SUBSFX fort.52
+
+
+#  Now cull out the Rb records from the current DH File and save in fort.61:
+
+
+${SCRIPTS}/DHFile_SLCR $DHFile_REPRO ${SOL} R $STEP > o.DHFile_SLCR 2>&1
+
+
+
+#  Now cull out the Tb records from the current DH File and save in fort.62:
+
+
+${SCRIPTS}/DHFile_SLCT $DHFile_REPRO ${SOL} T $STEP > o.DHFile_SLCT 2>&1
+
+
+#191204 
+#/u/epavlis/EXECUTABLES/mksinex_3dgt_tst_zbias_LCEC.x > /$DISK/$SAT/output/mksinex_out/$PROJ/$STEP/v${SNX_VER}/SNX.${SOL}
+
+#210308 
+#/u/epavlis/EXECUTABLES/mksinex_REPRO_PL.x               > /$DISK/$SAT/output/mksinex_out/$PROJ/$STEP/v${SNX_VER}/SNX.${SOL}
+#/umbc/epavlis/data01/LOCAL/magdak/EXECUTABLES/PL_202305/mksinex_REPRO_PL.x               > /$DISK/$SAT/output/mksinex_out/$PROJ/$STEP/v${SNX_VER}/SNX.${SOL}
+/umbc/research/epavlis/EXECUTABLES/PE2_EXECi64/mksinex_REPRO.x   > /$DISK/$SAT/output/mksinex_out/$PROJ/$STEP/v${SNX_VER}/SNX.${SOL}
+
+
+
+
+#                                                                               
+mv  fort.22   /$DISK/$SAT/sinex/${PROJ}/$STEP/v${SNX_VER}/${SNX}
+
+gzip  -f /$DISK/$SAT/sinex/${PROJ}/$STEP/v${SNX_VER}/${SNX}
+
+echo /$DISK/$SAT/sinex/${PROJ}/$STEP/v${SNX_VER} ${SNX}.gz > $MAIN_PATH/INFILES/INF_OPS_ITRF2020/v${SNX_VER}/SINEX_OF_THIS_RUN.$SAT
+
+cd ..                                                                           
+pwd
+#
+#\rm -r tmpsnx$$
+
+exit 0
+
+##                                                                              

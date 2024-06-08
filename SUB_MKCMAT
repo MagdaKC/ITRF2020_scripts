@@ -1,0 +1,413 @@
+#!/bin/sh
+#
+
+set -xv
+
+
+SCR_NAME=SUB_MKCMAT
+SCR_PARM=6
+SCR_LIST="sat FAC Y STAGE SUB SUF FILE_IN"
+SCR_VERS=070213.0
+
+
+if [ `expr $#` -lt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+
+#
+# Pilot Project :  SUB_MKCMAT
+#
+# sat: L1 or L2 or LV or LVA or LVB or EV or EVB or LE
+
+sat=$1
+export sat
+
+FAC=${2:-1.00}
+export FAC
+
+#   Y: 93, 94, 95, 96, 97, 98, 99, 00, 01, 02 or 32 (for 93 - 02)
+#        should be the 2-digit year when we do the solution
+
+Y=$3
+export Y
+
+STAGE=${4:-WEEKLY}
+export STAGE
+
+SUB=${5:-22}
+export SUB
+
+SUF=${6:-we}    #  for WEEKLY this is e1 now
+export SUF
+
+FILE_IN=${7:-}
+export FILE_IN
+
+RDATE=`date +%y%m%d`
+export RDATE
+
+sv=$sat
+export sv
+
+if [ "$sat" = "L1" ]; then
+
+  PROG=mkCMATL103
+  CASE=.
+  export CASE SUB PROG SUF
+  
+  sat=L1
+  sv=$sat
+  export sv
+  
+  #   N: 01 or 02 or 12 or 34 or 14
+  N=10
+  export N
+
+  V=00
+  export V
+  
+  slvdir=GISLV
+  export slvdir
+  
+  mkdir -p $MAIN_PATH/MISSIONS/${slvdir}/output/CMAT_out/$STAGE
+
+  $SCRIPTS/$PROG $FILE_IN >  $MAIN_PATH/MISSIONS/${slvdir}/output/CMAT_out/$STAGE/${PROG}.${Y}${sat}${V}${SUF}.${ARC}.${RDATE} 2>&1
+
+elif [ "$sat" = "L1x" ]; then
+
+  PROG=mkCMATL103
+  CASE=.
+  export CASE SUB PROG SUF
+  
+  sat=L1
+  sv=$sat
+  export sv
+  
+  #   N: 01 or 02 or 12 or 34 or 14
+  N=10
+  export N
+
+  V=01
+  export V
+  
+  slvdir=GISLV
+  export slvdir
+  
+  mkdir -p $MAIN_PATH/MISSIONS/${slvdir}/output/CMAT_out/$STAGE
+
+  $SCRIPTS/$PROG $FILE_IN > $MAIN_PATH/MISSIONS/${slvdir}/output/CMAT_out/$STAGE/${PROG}.${Y}${sat}${V}${SUF}.${ARC}.${RDATE} 2>&1
+
+elif [ "$sat" = "LV" ]; then
+
+  PROG=mkCMATLC03
+  CASE=.
+  export CASE SUB PROG SUF
+  
+  sat=LV
+  sv=$sat
+  export sv
+  
+  #   N: 01 or 02 or 12 or 34 or 14
+  N=12
+  export N
+
+  V=10
+  export V
+  
+  slvdir=GISLV
+  export slvdir
+  
+  mkdir -p $MAIN_PATH/MISSIONS/${slvdir}/output/CMAT_out/$STAGE
+
+  $SCRIPTS/$PROG $FILE_IN >  $MAIN_PATH/MISSIONS/${slvdir}/output/CMAT_out/$STAGE/${PROG}.${Y}${sat}${V}${SUF}.${ARC}.${RDATE} 2>&1
+
+elif [ "$sat" = "LVx" ]; then
+
+  PROG=mkCMATLC03
+  CASE=.
+  export CASE SUB PROG SUF
+  
+  sat=LV
+  sv=$sat
+  export sv
+  
+  #   N: 01 or 02 or 12 or 34 or 14
+  N=12
+  export N
+
+  V=11
+  export V
+  
+  slvdir=GISLV
+  export slvdir
+  
+  mkdir -p $MAIN_PATH/MISSIONS/${slvdir}/output/CMAT_out/$STAGE
+
+  $SCRIPTS/$PROG $FILE_IN >  $MAIN_PATH/MISSIONS/${slvdir}/output/CMAT_out/$STAGE/${PROG}.${Y}${sat}${V}${SUF}.${ARC}.${RDATE} 2>&1
+elif [ "$sat" = "LVR" ]; then
+
+  PROG=mkCMATLRC03
+  CASE=.
+  export CASE SUB PROG SUF
+  
+  sat=LV
+  sv=$sat
+  export sv
+  
+  #   N: 01 or 02 or 12 or 34 or 14
+  N=12
+  export N
+
+  V=40
+  export V
+  
+  slvdir=GISLV
+  export slvdir
+  
+  mkdir -p $MAIN_PATH/MISSIONS/${slvdir}/output/CMAT_out/$STAGE
+
+  $SCRIPTS/$PROG $FILE_IN >  $MAIN_PATH/MISSIONS/${slvdir}/output/CMAT_out/$STAGE/${PROG}.${Y}${sat}${V}${SUF}.${ARC}.${RDATE} 2>&1
+
+elif [ "$sat" = "LVRx" ]; then
+
+  PROG=mkCMATLRC03
+  CASE=.
+  export CASE SUB PROG SUF
+  
+  sat=LV
+  sv=$sat
+  export sv
+  
+  #   N: 01 or 02 or 12 or 34 or 14
+  N=12
+  export N
+
+  V=41
+  export V
+  
+  slvdir=GISLV
+  export slvdir
+  
+  mkdir -p $MAIN_PATH/MISSIONS/${slvdir}/output/CMAT_out/$STAGE
+
+  $SCRIPTS/$PROG $FILE_IN >  $MAIN_PATH/MISSIONS/${slvdir}/output/CMAT_out/$STAGE/${PROG}.${Y}${sat}${V}${SUF}.${ARC}.${RDATE} 2>&1
+
+elif [ "$sat" = "LVA" ]; then
+
+  PROG=mkCMATLC00.PP6A
+  CASE=A
+  export CASE SUB PROG
+  
+  sat=LV
+  sv=$sat
+  export sv
+  
+  #   N: 01 or 02 or 12 or 34 or 14
+  N=12
+  export N
+
+  V=44
+  export V
+  
+  slvdir=GISLV
+  export slvdir
+  
+  $SCRIPTS/$PROG $FILE_IN >  $MAIN_PATH/MISSIONS/${slvdir}/output/CMAT_out/$STAGE/${PROG}.${Y}${sat}${V}${SUF}.${ARC}.${RDATE} 2>&1
+
+elif [ "$sat" = "LVB" ]; then
+
+  PROG=mkCMATLC00.PP
+  PROG=mkCMATLC00.PP_A
+  PROG=mkCMATLC00.PP6B
+  CASE=B3
+  export CASE SUB PROG
+  
+  sat=LV
+  sv=$sat
+  export sv
+  
+  #   N: 01 or 02 or 12 or 34 or 14
+  N=12
+  export N
+
+  V=44
+  export V
+  
+  slvdir=GISLV
+  export slvdir
+  
+  $SCRIPTS/$PROG $FILE_IN >  $MAIN_PATH/MISSIONS/${slvdir}/output/CMAT_out/$STAGE/${PROG}.${Y}${sat}${V}${SUF}.${ARC}.${RDATE} 2>&1
+   
+elif [ "$sat" = "EV" ]; then
+  
+  PROG=mkCMATEC03
+  CASE=.
+  export CASE SUB PROG
+  
+  #   N: 01 or 02 or 12 or 34 or 14
+  N=34
+  export N
+
+  V=20
+  export V
+  
+  slvdir=ETAV
+  export slvdir
+  
+ $SCRIPTS/$PROG $FILE_IN > $MAIN_PATH/MISSIONS/${slvdir}/output/CMAT_out/$STAGE/${PROG}.${Y}${sat}${V}${SUF}.${ARC}.${RDATE} 2>&1 
+   
+elif [ "$sat" = "EVx" ]; then
+  
+  PROG=mkCMATEC03
+  CASE=.
+  export CASE SUB PROG
+  
+  #   N: 01 or 02 or 12 or 34 or 14
+  N=34
+  export N
+
+  V=21
+  export V
+  
+  slvdir=ETAV
+  export slvdir
+  
+ $SCRIPTS/$PROG $FILE_IN > $MAIN_PATH/MISSIONS/${slvdir}/output/CMAT_out/$STAGE/${PROG}.${Y}${sat}${V}${SUF}.${ARC}.${RDATE} 2>&1 
+   
+elif [ "$sat" = "EVB" ]; then
+  
+  PROG=mkCMATEC00.PP
+  PROG=mkCMATEC00.PP6B
+  CASE=B0
+  export CASE SUB PROG
+  
+  #   N: 01 or 02 or 12 or 34 or 14
+  N=34
+  export N
+
+  V=55
+  export V
+  
+  slvdir=ETAV
+  export slvdir
+  
+ $SCRIPTS/$PROG $FILE_IN > $MAIN_PATH/MISSIONS/${slvdir}/output/CMAT_out/$STAGE/${PROG}.${Y}${sat}${V}${SUF}.${ARC}.${RDATE} 2>&1 
+   
+elif [ "$sat" = "LE" ]; then
+  
+  PROG=mkCMATLE03
+  CASE=B4
+  CASE=REANAL2014
+  CASE=.
+  export CASE SUB PROG
+  
+  #   N: 01 or 02 or 12 or 34 or 14
+  N=14
+  export N
+
+  V=30
+  export V
+  
+  SUFL=10
+  SUFE=20
+  export SUFL SUFE
+
+  slvdir=PPV
+  export slvdir
+  
+  mkdir -p $MAIN_PATH/MISSIONS/${slvdir}/output/CMAT_out/$STAGE
+
+  $SCRIPTS/$PROG $FILE_IN > $MAIN_PATH/MISSIONS/${slvdir}/output/CMAT_out/$STAGE/${PROG}.${Y}${sat}${V}${SUF}.${ARC}.${RDATE} 2>&1 
+
+elif [ "$sat" = "LEx" ]; then
+  
+  PROG=mkCMATLE03
+  CASE=B4
+  CASE=.
+  export CASE SUB PROG
+  
+  #   N: 01 or 02 or 12 or 34 or 14
+  N=14
+  export N
+
+  V=31
+  export V
+  
+  SUFL=11
+  SUFE=21
+  export SUFL SUFE
+
+  slvdir=PPV
+  export slvdir
+  
+  mkdir -p $MAIN_PATH/MISSIONS/${slvdir}/output/CMAT_out/$STAGE
+
+  $SCRIPTS/$PROG $FILE_IN > $MAIN_PATH/MISSIONS/${slvdir}/output/CMAT_out/$STAGE/${PROG}.${Y}${sat}${V}${SUF}.${ARC}.${RDATE} 2>&1 
+elif [ "$sat" = "LER" ]; then
+  
+  PROG=mkCMATLER03
+  CASE=B4
+  CASE=REANAL2014
+  CASE=.
+  export CASE SUB PROG
+  
+  #   N: 01 or 02 or 12 or 34 or 14
+  N=14
+  export N
+
+  V=50
+  export V
+  
+  SUFL=40
+  SUFE=20
+  export SUFL SUFE
+
+  slvdir=PPV
+  export slvdir
+  
+  mkdir -p $MAIN_PATH/MISSIONS/${slvdir}/output/CMAT_out/$STAGE
+
+  $SCRIPTS/$PROG $FILE_IN > $MAIN_PATH/MISSIONS/${slvdir}/output/CMAT_out/$STAGE/${PROG}.${Y}${sat}${V}${SUF}.${ARC}.${RDATE} 2>&1 
+
+elif [ "$sat" = "LERx" ]; then
+  
+  PROG=mkCMATLER03
+  CASE=B4
+  CASE=.
+  export CASE SUB PROG
+  
+  #   N: 01 or 02 or 12 or 34 or 14
+  N=14
+  export N
+
+  V=51
+  export V
+  
+  SUFL=41
+  SUFE=21
+  export SUFL SUFE
+
+  slvdir=PPV
+  export slvdir
+  
+  mkdir -p $MAIN_PATH/MISSIONS/${slvdir}/output/CMAT_out/$STAGE
+
+  $SCRIPTS/$PROG $FILE_IN > $MAIN_PATH/MISSIONS/${slvdir}/output/CMAT_out/$STAGE/${PROG}.${Y}${sat}${V}${SUF}.${ARC}.${RDATE} 2>&1 
+
+fi
+
+exit 0
+
+#

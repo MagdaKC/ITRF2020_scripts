@@ -1,0 +1,14 @@
+#!/bin/ksh
+#
+${SCR_DBG}set -xv
+set -xv
+
+
+
+while read FF
+do
+
+ grep   $FF RUN_SERIES_IERS_SLRF2020_7d+satIDir_2023_07_21 >> N_S
+
+done < L_S
+exit 0

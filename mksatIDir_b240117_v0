@@ -1,0 +1,60 @@
+#!/bin/ksh
+#
+
+set -xv
+
+#   mksatIDir          2023.07.10
+
+Date=`date +%y%m%d`
+
+SAT=$1
+file=$2    #   =$ARC  !!!
+
+#     /nobackup/mkuzmicz/REPRO/GISL1/d_base/trnd/DR/WEEKLY/v415
+#
+#     "REPRO" must go and we need to use the new location based on the v80/v180/v280 testrun outputs !!!
+#
+#dirIN=/nobackup/mkuzmicz/REPRO/${SAT}/d_base/trnd/DR/${CASE}/v415    #  We need to bring-in the VERSION as a variable here!
+#
+#     /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/d_base/trnd/DR/WEEKLY/v80
+
+dirIN=/$DISK/${SAT}/d_base/trnd/EMT/${CASE}/v${SNX_VER}    #  We need to bring-in the VERSION as a variable here!
+
+#dirOUT=/nobackup/mkuzmicz/REPRO/${SAT}/d_base/bias/satIDir
+
+dirOUT=/$DISK/${SAT}/d_base/bias/satIDir
+
+mkdir -p $dirOUT
+
+#       MBIAS 78383603 517603901 0.2446196922681D-01211003000000.00211010000000. 7.5D+02 #
+#grep ^"MBIAS ........ 51....................................................... .75D+02"  $file > t0
+#grep ^"MBIAS ........ 51....................................................... 7.5D+01"  $file > t0
+#grep ^"MBIAS ........ 51....................................................... 7.5D+02"  $file > t0
+#grep ^"MBIAS ........ 51....................................................... .75D+02"  $file > t0
+#
+#  We will assume that the MBIAS syntax is like below for ALL arcs from now on!
+#
+#       MBIAS 18879701 517603901-0.1883721983914D-01221204000000.00221211000000. 7.5D+01
+#grep ^"MBIAS ........ 51....................................................... 7.5D+01"  $dirIN/$file > mt0
+
+#  Since the new setups on Perseus2 have a sigma of 100 on the MBIAS, we need to change the script here to allow BOTH 75 & 100:
+
+grep    ^"MBIAS ........ 51"  $dirIN/$file > sig00
+grep -v ^"MBIAS ........ 51....................................................... .00D+00"  sig00 > mt0
+
+cut -c7-13 mt0 > mt10
+sed "s/^/  4051/" mt10 > mt11
+
+#  The sed command below needs to be changed to allow for LARES-2, will that be "7"? What determines that number?  chuz_w.x perhaps???
+
+cut -c18-24 mt0 > mt2
+sed -e "s/7603901/ 1  500 /g" -e "s/9207002/ 2  500 /g" -e "s/8900103/ 3  500 /g" -e "s/8903903/ 4  500 /g" -e "s/1200601/ 6  500 /g" mt2 > mt20
+
+cut -c25-44 mt0 > mt3
+
+paste -d" " mt11 mt20 mt3 > $dirOUT/$file
+
+
+\rm sig00 mt0 mt10 mt11 mt2 mt20 mt3
+
+exit 0

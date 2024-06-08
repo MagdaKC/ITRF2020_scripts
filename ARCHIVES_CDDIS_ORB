@@ -1,0 +1,83 @@
+#!/bin/ksh
+#
+
+set -xv
+
+MAIN_PATH=/umbc/epavlis/data01/LOCAL/magdak
+DISK=/umbc/epavlis/data01/LOCAL/magdak/MISSIONS
+#NEW UPLOADING 2016/06/16
+#SINEX
+read SNXDIR SNXFILE < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/v${SNX_VER}/SINEX_OF_THIS_RUN.PPV
+cd $SNXDIR
+read SNX_DATE < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/SINEX_DATE_INFO.${CASE}_v${SNX_VER}
+/usr/bin/curl -c .urs_cookies -n -L https://depot.cddis.eosdis.nasa.gov/CDDIS_FileUpload/login
+/usr/bin/curl -X POST -b .urs_cookies -F "fileType=SLR"  -F "fileContentType=products" -F "file[]=@$SNXFILE"  https://depot.cddis.eosdis.nasa.gov/CDDIS_FileUpload/upload/
+
+#SP3
+if [ "${SNX_VER}" = "80" ];then
+
+#NEW UPLOADING 2016/06/16 
+#SINEX
+
+#L1
+wherefrom=/$DISK/GISL1/traj/$CASE/v${SNX_VER}/SP3
+echo $wherefrom
+echo $orb_1
+cd $wherefrom
+sed -e "s/ENDATE/${SNX_DATE}/g" -e  "s/DSDS/${SNX_VER}/" $MAIN_PATH/INFILES/TMPLT__fnames.sp3 > SP3_FILENAME.tmplt
+sed "s/CDDIS_SAT/lageos1/g" SP3_FILENAME.tmplt > tmp_1
+read orb_1 < tmp_1
+cp $ARC.wv${SNX_VER}x.sp3.gz ${orb_1}.gz
+echo $orb_1
+rm $orb_1 tmp_1 
+/usr/bin/curl -c .urs_cookies -n -L  https://depot.cddis.eosdis.nasa.gov/CDDIS_FileUpload/login
+/usr/bin/curl -X POST -b .urs_cookies -F "fileType=SLR"  -F "fileContentType=products" -F "file[]=@${orb_1}.gz" https://depot.cddis.eosdis.nasa.gov/CDDIS_FileUpload/upload/  
+
+#L2
+wherefrom=/$DISK/GISL2/traj/$CASE/v${SNX_VER}/SP3
+cd $wherefrom
+sed -e "s/ENDATE/${SNX_DATE}/g" -e  "s/DSDS/${SNX_VER}/" $MAIN_PATH/INFILES/TMPLT__fnames.sp3 > SP3_FILENAME.tmplt
+sed "s/CDDIS_SAT/lageos2/g" SP3_FILENAME.tmplt > tmp_1
+read orb_1 < tmp_1
+echo $wherefrom
+echo $orb_1
+cp $ARC.wv${SNX_VER}x.sp3.gz ${orb_1}.gz
+
+/usr/bin/curl -c .urs_cookies -n -L  https://depot.cddis.eosdis.nasa.gov/CDDIS_FileUpload/login
+/usr/bin/curl -X POST -b .urs_cookies -F "fileType=SLR"  -F "fileContentType=products" -F "file[]=@${orb_1}.gz" https://depot.cddis.eosdis.nasa.gov/CDDIS_FileUpload/upload/  
+rm $orb_1 tmp_1 
+
+#E1
+cat $MAIN_PATH/INFILES/${SOL_FILE}fnames.sp3 > SP3_FILENAME.tmplt
+wherefrom=/$DISK/ETA1/traj/$CASE/v${SNX_VER}/SP3
+cd $wherefrom
+sed -e "s/ENDATE/${SNX_DATE}/g" -e  "s/DSDS/${SNX_VER}/" $MAIN_PATH/INFILES/TMPLT__fnames.sp3 > SP3_FILENAME.tmplt
+sed "s/CDDIS_SAT/etalon1/g" SP3_FILENAME.tmplt > tmp_1
+read orb_1 < tmp_1
+echo $wherefrom
+echo $orb_1
+cp $ARC.wv${SNX_VER}x.sp3.gz ${orb_1}.gz
+
+/usr/bin/curl -c .urs_cookies -n -L  https://depot.cddis.eosdis.nasa.gov/CDDIS_FileUpload/login
+/usr/bin/curl -X POST -b .urs_cookies -F "fileType=SLR"  -F "fileContentType=products" -F "file[]=@${orb_1}.gz"  https://depot.cddis.eosdis.nasa.gov/CDDIS_FileUpload/upload/ 
+rm $orb_1 tmp_1 
+
+#E2
+cat $MAIN_PATH/INFILES/${SOL_FILE}fnames.sp3 > SP3_FILENAME.tmplt
+wherefrom=/$DISK/ETA2/traj/$CASE/v${SNX_VER}/SP3
+cd $wherefrom
+sed -e "s/ENDATE/${SNX_DATE}/g" -e "s/DSDS/${SNX_VER}/" $MAIN_PATH/INFILES/TMPLT__fnames.sp3 > SP3_FILENAME.tmplt
+sed "s/CDDIS_SAT/etalon2/g" SP3_FILENAME.tmplt > tmp_1
+read orb_1 < tmp_1
+echo $wherefrom
+echo $orb_1
+cp $ARC.wv${SNX_VER}x.sp3.gz ${orb_1}.gz
+
+/usr/bin/curl -c .urs_cookies -n -L  https://depot.cddis.eosdis.nasa.gov/CDDIS_FileUpload/login
+/usr/bin/curl -X POST -b .urs_cookies -F "fileType=SLR"  -F "fileContentType=products" -F "file[]=@${orb_1}.gz"  https://depot.cddis.eosdis.nasa.gov/CDDIS_FileUpload/upload/ 
+rm $orb_1 tmp_1 
+
+fi
+
+
+exit 0

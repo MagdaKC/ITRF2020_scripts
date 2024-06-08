@@ -1,0 +1,45 @@
+#!/bin/ksh
+
+${SCR_DBG}set -vx
+set -vx
+
+SCR_NAME=MERGE_DATA_CATALOGS
+SCR_PARM=8
+SCR_LIST="ARC STAGE CASE sat1 sat2 sat3 VER disk"
+SCR_VERS=040218.0
+
+
+if [ `expr $#` -lt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+
+ARC=$1
+STAGE=${2:-WEEKLY}
+CASE=${3:-EMT}
+sat1=${4:-GISL1}
+sat2=${5:-GISL2}
+sat3=${6:-GISLV}
+VER=${7:-w1}
+disk=${8:-raid2/REPRO}
+
+if [ ! -d /${disk}/$sat3/output/DATACATS/$STAGE/$CASE ]; then
+      mkdir -p /${disk}/$sat3/output/DATACATS/$STAGE/$CASE/v${SNX_VER}
+fi
+
+
+cat /$disk/$sat1/output/DATACATS/$STAGE/$CASE/v${SNX_VER}/${ARC}.$VER /$disk/$sat2/output/DATACATS/$STAGE/$CASE/v${SNX_VER}/${ARC}.$VER > /$disk/$sat3/output/DATACATS/$STAGE/$CASE/v${SNX_VER}/${ARC}.$VER
+
+
+exit 0

@@ -1,0 +1,158 @@
+#!/bin/ksh
+#
+${SCR_DBG}set -xv
+set -xv
+
+
+SOL_FILE=$1
+
+#---------------------------------------------------
+
+
+## Submit SINEX to Archives
+
+
+#---------------------------------------------------
+
+
+## Submit SINEX to Archives
+
+#  By default we are submitting always the L12 + E12 combined product, i.e. $SAT=PPV # ecp 070731
+
+read SNXDIR SNXFILE < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/v${SNX_VER}/SINEX_OF_THIS_RUN.PPV
+
+
+
+
+
+cat $MAIN_PATH/INFILES/INF_OPS_ITRF2020/${SOL_FILE}fnames.sp3 > SP3_FILENAME.tmplt
+
+
+echo put $SNXFILE > orb_fil_2_ftp
+
+if [ "${SNX_VER}" = "80" ];then
+wherefrom=/$DISK/GISL1/traj/WEEKLY/v${SNX_VER}/SP3
+
+sed "s/CDDIS_SAT/lageos1/g" SP3_FILENAME.tmplt > tmp_1
+
+read orb_1 < tmp_1
+read ORBFILE < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/rv2sp13_INFILE.GISL1
+echo put $wherefrom/${ORBFILE}.sp3.gz ${orb_1}.gz >> orb_fil_2_ftp
+wherefrom=/$DISK/GISL2/traj/WEEKLY/v${SNX_VER}/SP3
+
+sed "s/CDDIS_SAT/lageos2/g" SP3_FILENAME.tmplt > tmp_1
+
+read orb_1 < tmp_1
+read ORBFILE < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/rv2sp13_INFILE.GISL2
+echo put $wherefrom/${ORBFILE}.sp3.gz ${orb_1}.gz >> orb_fil_2_ftp
+
+wherefrom=/$DISK/ETA1/traj/WEEKLY/v${SNX_VER}/SP3
+
+sed "s/CDDIS_SAT/etalon1/g" SP3_FILENAME.tmplt > tmp_1
+
+read orb_1 < tmp_1
+read ORBFILE < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/rv2sp13_INFILE.ETA1
+echo put $wherefrom/${ORBFILE}.sp3.gz ${orb_1}.gz >> orb_fil_2_ftp
+
+wherefrom=/$DISK/ETA2/traj/WEEKLY/v${SNX_VER}/SP3
+
+sed "s/CDDIS_SAT/etalon2/g" SP3_FILENAME.tmplt > tmp_1
+
+read orb_1 < tmp_1
+read ORBFILE < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/rv2sp13_INFILE.ETA2
+echo put $wherefrom/${ORBFILE}.sp3.gz ${orb_1}.gz >> orb_fil_2_ftp
+fi
+
+echo quit >> orb_fil_2_ftp
+
+echo '-------------------------------------------------'
+cat orb_fil_2_ftp
+echo '-------------------------------------------------'
+
+echo $PWD > WHERE_2_RETURN
+
+mv orb_fil_2_ftp $SNXDIR/orb_fil_2_ftp
+
+cd $SNXDIR
+
+
+cat > inputEDC <<EOF2
+bin
+
+case
+
+cd ilrs/products/jcet/daily
+
+EOF2
+
+
+
+
+cat inputEDC orb_fil_2_ftp > inputEDC2
+
+
+echo '-------------------------------------------------'
+echo  inputEDC2
+echo '-------------------------------------------------'
+cat inputEDC2
+echo '-------------------------------------------------'
+echo '-------------------------------------------------'
+
+
+#exit 2014 #mkc
+
+\rm output0 loutput0
+
+if [ "$lout0" = "00000" ]; then
+
+   \rm output0 loutput0
+
+else
+
+   echo " Possible network problem with NEW CDDIS " > 2mail
+   cat output0 >> 2mail
+
+   echo "  "
+
+#   mailx -s URGENT_from_SUBMIT_SNX  epavlis@umbc.edu < 2mail
+#   mailx -s URGENT_from_SUBMIT_SNX  magdak@umbc.edu < 2mail
+
+   \rm 2mail
+
+fi
+
+\rm output0 loutput0
+
+
+# Place SINEX on EDC Archive also:
+
+
+########
+cp /umbc/research/magdak/.netrc_EDC_LOG  /umbc/research/magdak/.netrc
+ftp edc.dgfi.tum.de < inputEDC2 > outputEDC2
+
+\rm output0 loutput0
+/bin/grep -e "Not connected" -e "No control connection for command" outputEDC2 > output0
+sum output0 > loutput0
+read lout0 b c < loutput0
+cat output0 loutput0
+
+if [ "$lout0" = "00000" ]; then
+
+   \rm output0 loutput0
+
+else
+
+   echo " Possible network problem with EDC " > 2mail
+   cat output0 >> 2mail
+
+   echo "  "
+
+   #mailx -s URGENT_from_SUBMIT_SNX  epavlis@umbc.edu < 2mail
+   mailx -s URGENT_from_SUBMIT_SNX  magdak@umbc.edu < 2mail
+
+   \rm 2mail
+
+fi
+
+\rm output0 loutput0

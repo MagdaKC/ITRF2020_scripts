@@ -1,0 +1,1386 @@
+#!/bin/ksh
+#
+
+set -xv
+
+#  RUN_SERIES_IERS_OPS2014_SSEM_220804_NO_HASH_NEW_G
+
+#
+
+SCR_NAME=RUN_SERIES_IERS_OPS2014_SSEM_220804_NO_HASH_NEW_G
+SCR_PARM=5
+SCR_LIST="CASE ETA_IN GROUP JOB_FILE RUN_NUMBER RUN_YEAR MDLS"
+SCR_VERS=220804.0
+
+SCR_DBG="#"
+export SCR_DBG
+
+if [ `expr $#` -lt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+Date=`date +%y%m%d`
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+
+CASE=${1:-WEEKLY}
+ETA_IN=${2:-YES}
+GROUP=${3:-REANAL14}
+JOB_FILE=${4:-}
+RUN_NUMBER=$5
+RUN_YEAR=$6
+#MDLS=${7:-1810}    #      This is the TNM05 set !!!
+TSTN=${7:-TNM01}
+
+exec > /nobackup/mkuzmicz/tmp/${SCR_NAME}.${CASE}.$Date.$$.log 2>&1
+
+EFFORT=POS+EOP
+
+ITRF_APRIORI=SLRF2008
+ITRF_APRIORI=SLRF2014
+
+export GROUP EFFORT ITRF_APRIORI
+
+MAIN_PATH=/nobackup/mkuzmicz
+MAIN_PATH_OLD=/nobackup/mkuzmicz
+SCRIPTS=/nobackup/mkuzmicz/scripts/SSEM
+DISK=nobackup/mkuzmicz/SSEM
+disk_n=nobackup/mkuzmicz
+disk_s=nobackup/mkuzmicz/MISSIONS
+
+TDF2GDYN=tdf0901p0_i64_sun_RM=8.x
+
+
+#GDN_2E=ge1507p6_i64.x #new 2016-03-22
+#GDN_2S=gs1507p1_i64.x   ##new 2016-03-22
+
+GDN_2S=gs1810p1_i64_PLD.x
+GDN_2S=gs1810p2_i64_PLD.x
+#191120 CORRECT MBIAS 300
+GDN_2S=gs1810p3_i64+1.x
+
+GDN_2E=ge1810p07_i64_PLD.x
+GDN_2E=ge1810p09_i64_PLD.x
+
+ #230608 TOSS4
+  GDN_2S=gs1810p3_i64.x
+   GDN_2E=ge1810p09_i64.x
+#GDN_2E=ge1810p09_h-grad_i64.x
+#GDN_2S=PE2_EXECi64/gs1810p1_i64_PE2.x
+#GDN_2E=PE2_EXECi64/ge1810p07_i64_PE2.x
+
+
+#RUN_GDN_SLR_SCR=RUN_GDN_SLR_IERS2014_RESXTND_2017_P2_190315ecp
+
+RUN_GDN_SLR_SCR=RUN_GDN_SLR_IERS2019_RESXTND_062019
+#SSEM 210115
+RUN_GDN_SLR_SCR=RUN_GDN_SLR_IERS2019_RESXTND_210114
+
+RUN_GDN_SLR_SCR=RUN_GDN_SLR_IERS2019_RESXTND_220804
+
+RUN_GDN_SLR_SCR=RUN_GDN_SLR_IERS2019_RESXTND_221013
+
+export TDF2GDYN GDN_2S GDN_2E disk_s disk_n RUN_GDN_SLR_SCR 
+
+
+# This means that the file with the arcs to run, the "JOB_FILE" will be:
+
+#   $MAIN_PATH/INFILES/${JOB_FILE}.${EFFORT}.$GROUP
+
+RUN_FILE=${JOB_FILE}.${EFFORT}.$GROUP
+
+
+
+if [ "$CASE" = "WEEKLY" ]; then
+
+  ARC_LEN=8
+  ARC_LEN=7
+  DELTA=7
+  ACCEL_NUM_L=2
+  ACCEL_NUM_E=1
+  LVER=wv280  
+  TYPE_DR=DRWC
+  TYPE_EMT=EMTWC
+  WEIGHT=100
+  WEIGHT=
+
+#runs 2018-03-21
+  SNX_VER=221
+
+#runs 2019-03-24
+  SNX_VER=231
+#NEW GEODYN 091919
+#  SNX_VER=232
+
+#if [ "$SNX_VER" = "221" ]; then
+#runs 2021-01-15
+  SNX_VER=230
+#runs 2022-10-13 new SLRF2020 with PSD
+  SNX_VER=280
+
+#  ATTENTION:    Is this right for these series?
+
+if [ "$SNX_VER" = "280" ]; then
+
+  BIAS=7
+
+fi
+if [ "$SNX_VER" = "232" ]; then
+
+  BIAS=7
+
+fi
+
+export SNX_VER BIAS
+
+
+#  GRAV_TOP=GRAVTOP_CSR_2014_15d      #   for the 15-day arcs  !!!
+#  GRAV_TOP=GRAVTOP_CSR_2014_7d       #   for the  7-day arcs  !!!
+
+#GRAV_TOP=GRACE/7d_ARCS_2018.01.11/FOR_GEODYN_USERS_ONLY_2018.01.11/GRAVTOP_CSR_2017.10.11+JGF_2017.09.24-2021.0.v2018.01.13
+#GRAV_TOP=GRACE/7d_ARCS_2018.01.11/FOR_GEODYN_USERS_ONLY_2018.02.15/GRAVTOP_CSR_2017.10.11+JGF_2017.09.24-2021.0.v2018.02.15
+#GRAV_TOP=GRAVTOP_CSR_2019.01.16_d      #   This is good up to the 2018.12.23 arc, we will need the JCF file for arcs beyond that!
+#GRAV_TOP=GRAVTOP_CSR_2019.06.17_d      # 190621
+#GRAV_TOP=GRAVTOP_CSR_2019.11.01+JGF_2019.11.03-2021.12.30_d      # 190104
+#20210209
+#GRAV_TOP=GRAVTOP_CSR_2019.11.01+JGF_2019.04.03-2021.12.30_d_210208
+#20210220
+#GRAV_TOP=GRAVTOP_CSR_2019.11.01+JGF_2019.04.03-2021.12.30_d.2021.02.20
+
+#  Under:     /nobackup/mkuzmicz/MISSIONS/d_base/grav
+
+GRAV_TOP=GRAVTOP_JCET@2010.0_G210101-G300108
+  
+
+# GRAVITY_MDL=GGM05S_2.2-120x120
+# GRAVITY_MDL=GGM05S_2.2-30.30
+# GRAVITY_MDL=GGM05C-GRAVTOP_120x120
+
+#  Under:     /nobackup/mkuzmicz/MISSIONS/d_base/grav
+
+  GRAVITY_MDL=GGM05C_30x30
+
+#GRVTIM=GRVTIM_2014_CSR_J2+J3+J4+J5+J6
+#20190401
+# GRVTIM=GRVTIM_2019_CSR_2011+J2+J3+J4+J5+J6
+# GRVTIM=JCET_CSR20181211_GSM+GAC.7d/JCET_6x6
+#20210209
+# GRVTIM=JCET210208_CSR20201115_GSM+GAC_12x12
+
+#  Under:     /nobackup/mkuzmicz/MISSIONS/d_base/grav/GRVTIM/CURRENT
+
+  GRVTIM=JCET_CURRENT_GSM+GAC_20x20            
+
+  export GRAVITY_MDL GRVTIM GRAV_TOP  
+
+
+  if [ "$TSTN" = "TNM00" ]; then
+
+    ETIDE_MDL=etides+poletide.fxd
+    OTIDE_MDL=GOT47/20otides_got4.7.fxd
+    HFEOP_MDL=di+semidiurnal_tidal_EOP_2008
+    HFCOM_MDL=di+semidiurnal_tidal_COM_GOT4.7
+    OLOAD_MDL=SLR_OLOAD_080520_got4.7.gdyn
+
+  elif [ "$TSTN" = "TNM01" ]; then
+
+    ETIDE_MDL=TIDES+etides_RAY_2018.fxd
+
+    OTIDE_MDL=GOT47/20otides_got4.7.fxd
+    HFEOP_MDL=di+semidiurnal_tidal_EOP_2008
+    HFCOM_MDL=di+semidiurnal_tidal_COM_GOT4.7
+    OLOAD_MDL=SLR_OLOAD_080520_got4.7.gdyn
+
+  elif [ "$TSTN" = "TNM02" ]; then
+
+    ETIDE_MDL=TIDES+etides_RAY_2018.fxd
+    OTIDE_MDL=GOT4.10/20otides_got4p10c+Air_Tides_got4.7.fxd
+
+    HFEOP_MDL=di+semidiurnal_tidal_EOP_2008
+    HFCOM_MDL=di+semidiurnal_tidal_COM_GOT4.7
+    OLOAD_MDL=SLR_OLOAD_080520_got4.7.gdyn
+
+  elif [ "$TSTN" = "TNM03" ]; then
+
+    ETIDE_MDL=TIDES+etides_RAY_2018.fxd
+    OTIDE_MDL=GOT4.10/20otides_got4p10c+Air_Tides_got4.7.fxd
+    HFEOP_MDL=di+semidiurnal_tidal_EOP_2018
+
+    HFCOM_MDL=di+semidiurnal_tidal_COM_GOT4.7
+    OLOAD_MDL=SLR_OLOAD_080520_got4.7.gdyn
+
+  elif [ "$TSTN" = "TNM04" ]; then
+
+    ETIDE_MDL=TIDES+etides_RAY_2018.fxd
+    OTIDE_MDL=GOT4.10/20otides_got4p10c+Air_Tides_got4.7.fxd
+    HFEOP_MDL=di+semidiurnal_tidal_EOP_2018
+    HFCOM_MDL=di+semidiurnal_tidal_COM_GOT4.10c
+
+    OLOAD_MDL=SLR_OLOAD_080520_got4.7.gdyn
+
+  elif [ "$TSTN" = "TNM05" ]; then
+
+    ETIDE_MDL=TIDES+etides_RAY_2018.fxd
+    OTIDE_MDL=GOT4.10/20otides_got4p10c+Air_Tides_got4.7.fxd
+    HFEOP_MDL=di+semidiurnal_tidal_EOP_2018
+    HFCOM_MDL=di+semidiurnal_tidal_COM_GOT4.10c
+    OLOAD_MDL=SLR_OLOAD_180118_207NSTA_GOT4.10c.gdyn
+
+  elif [ "$TSTN" = "TNM06" ]; then
+
+    ETIDE_MDL=etides+poletide.fxd
+    OTIDE_MDL=GOT4.10/20otides_got4p10c+Air_Tides_got4.7.fxd
+    HFEOP_MDL=di+semidiurnal_tidal_EOP_2008
+    HFCOM_MDL=di+semidiurnal_tidal_COM_GOT4.7
+    OLOAD_MDL=SLR_OLOAD_080520_got4.7.gdyn
+
+  elif [ "$TSTN" = "TNM07" ]; then
+
+    ETIDE_MDL=etides+poletide.fxd
+    OTIDE_MDL=GOT47/20otides_got4.7.fxd
+    HFEOP_MDL=di+semidiurnal_tidal_EOP_2018
+    HFCOM_MDL=di+semidiurnal_tidal_COM_GOT4.7
+    OLOAD_MDL=SLR_OLOAD_080520_got4.7.gdyn
+
+  elif [ "$TSTN" = "TNM08" ]; then
+
+    ETIDE_MDL=etides+poletide.fxd
+    OTIDE_MDL=GOT47/20otides_got4.7.fxd
+    HFEOP_MDL=di+semidiurnal_tidal_EOP_2008
+    HFCOM_MDL=di+semidiurnal_tidal_COM_GOT4.10c
+    OLOAD_MDL=SLR_OLOAD_080520_got4.7.gdyn
+
+  elif [ "$TSTN" = "TNM09" ]; then
+
+    ETIDE_MDL=etides+poletide.fxd
+    OTIDE_MDL=GOT47/20otides_got4.7.fxd
+    HFEOP_MDL=di+semidiurnal_tidal_EOP_2008
+    HFCOM_MDL=di+semidiurnal_tidal_COM_GOT4.7
+    OLOAD_MDL=SLR_OLOAD_180118_207NSTA_GOT4.10c.gdyn
+
+  elif [ "$TSTN" = "HFEOP00" ]; then
+
+    ETIDE_MDL=TIDES+etides_RAY_2018.fxd
+    OTIDE_MDL=GOT4.10/20otides_got4p10c+Air_Tides_got4.7.fxd
+    OLOAD_MDL=SLR_OLOAD_180118_207NSTA_GOT4.10c.gdyn
+    HFCOM_MDL=HFCOM/HFCOM_GOT4.10c
+
+    HFEOP_MDL=HFEOP/HFEOP_GSFCiers2018
+
+  elif [ "$TSTN" = "HFEOP01" ]; then
+
+    ETIDE_MDL=TIDES+etides_RAY_2018.fxd
+    OTIDE_MDL=GOT4.10/20otides_got4p10c+Air_Tides_got4.7.fxd
+    OLOAD_MDL=SLR_OLOAD_180118_207NSTA_GOT4.10c.gdyn
+    HFCOM_MDL=HFCOM/HFCOM_GOT4.10c
+
+    HFEOP_MDL=HFEOP/HFEOP_DESAI
+
+  elif [ "$TSTN" = "HFEOP02" ]; then
+
+    ETIDE_MDL=TIDES+etides_RAY_2018.fxd
+    OTIDE_MDL=GOT4.10/20otides_got4p10c+Air_Tides_got4.7.fxd
+    OLOAD_MDL=SLR_OLOAD_180118_207NSTA_GOT4.10c.gdyn
+    HFCOM_MDL=HFCOM/HFCOM_GOT4.10c
+
+    HFEOP_MDL=HFEOP/HFEOP_EOT11A
+
+  elif [ "$TSTN" = "HFEOP03" ]; then
+
+    ETIDE_MDL=TIDES+etides_RAY_2018.fxd
+    OTIDE_MDL=GOT4.10/20otides_got4p10c+Air_Tides_got4.7.fxd
+    OLOAD_MDL=SLR_OLOAD_180118_207NSTA_GOT4.10c.gdyn
+    HFCOM_MDL=HFCOM/HFCOM_GOT4.10c
+
+    HFEOP_MDL=HFEOP/HFEOP_FES2012
+
+  elif [ "$TSTN" = "HFEOP04" ]; then
+
+    ETIDE_MDL=TIDES+etides_RAY_2018.fxd
+    OTIDE_MDL=GOT4.10/20otides_got4p10c+Air_Tides_got4.7.fxd
+    OLOAD_MDL=SLR_OLOAD_180118_207NSTA_GOT4.10c.gdyn
+    HFCOM_MDL=HFCOM/HFCOM_GOT4.10c
+
+    HFEOP_MDL=HFEOP/HFEOP_GIPSON
+
+  elif [ "$TSTN" = "HFEOP05" ]; then
+
+    ETIDE_MDL=TIDES+etides_RAY_2018.fxd
+    OTIDE_MDL=GOT4.10/20otides_got4p10c+Air_Tides_got4.7.fxd
+    OLOAD_MDL=SLR_OLOAD_180118_207NSTA_GOT4.10c.gdyn
+    HFCOM_MDL=HFCOM/HFCOM_GOT4.10c
+
+    HFEOP_MDL=HFEOP/HFEOP_GIPSON-L
+
+  elif [ "$TSTN" = "HFEOP06" ]; then
+
+    ETIDE_MDL=TIDES+etides_RAY_2018.fxd
+    OTIDE_MDL=GOT4.10/20otides_got4p10c+Air_Tides_got4.7.fxd
+    OLOAD_MDL=SLR_OLOAD_180118_207NSTA_GOT4.10c.gdyn
+    HFCOM_MDL=HFCOM/HFCOM_GOT4.10c
+
+    HFEOP_MDL=HFEOP/HFEOP_HAMTIDE
+
+  elif [ "$TSTN" = "HFEOP07" ]; then
+
+    ETIDE_MDL=TIDES+etides_RAY_2018.fxd
+    OTIDE_MDL=GOT4.10/20otides_got4p10c+Air_Tides_got4.7.fxd
+    OLOAD_MDL=SLR_OLOAD_180118_207NSTA_GOT4.10c.gdyn
+    HFCOM_MDL=HFCOM/HFCOM_GOT4.10c
+
+    HFEOP_MDL=HFEOP/HFEOP_IERS2010
+
+  elif [ "$TSTN" = "HFEOP08" ]; then
+
+    ETIDE_MDL=TIDES+etides_RAY_2018.fxd
+    OTIDE_MDL=GOT4.10/20otides_got4p10c+Air_Tides_got4.7.fxd
+    OLOAD_MDL=SLR_OLOAD_180118_207NSTA_GOT4.10c.gdyn
+    HFCOM_MDL=HFCOM/HFCOM_GOT4.10c
+
+    HFEOP_MDL=HFEOP/HFEOP_MAZDAK
+
+  elif [ "$TSTN" = "HFEOP09" ]; then
+
+    ETIDE_MDL=TIDES+etides_RAY_2018.fxd
+    OTIDE_MDL=GOT4.10/20otides_got4p10c+Air_Tides_got4.7.fxd
+    OLOAD_MDL=SLR_OLOAD_180118_207NSTA_GOT4.10c.gdyn
+    HFCOM_MDL=HFCOM/HFCOM_GOT4.10c
+
+    HFEOP_MDL=HFEOP/HFEOP_VLBI
+
+  elif [ "$TSTN" = "HFEOP10" ]; then
+
+    ETIDE_MDL=TIDES+etides_RAY_2018.fxd
+    OTIDE_MDL=GOT4.10/20otides_got4p10c+Air_Tides_got4.7.fxd
+    OLOAD_MDL=SLR_OLOAD_180118_207NSTA_GOT4.10c.gdyn
+    HFCOM_MDL=HFCOM/HFCOM_GOT4.10c
+
+    HFEOP_MDL=HFEOP/HFEOP_VLBI+GPS
+
+  elif [ "$TSTN" = "HFEOP11" ]; then
+
+    #ETIDE_MDL=TIDES+etides_RAY_2018.fxd
+    ETIDE_MDL=TIDES+etides_RAY_2018
+    #OTIDE_MDL=GOT4.10/20otides_got4p10c+Air_Tides_got4.7.fxd
+    OTIDE_MDL=GOT4.10/20otides_got4p10c+Air_Tides_got4.7
+    OLOAD_MDL=SLR_OLOAD_180118_207NSTA_GOT4.10c.gdyn
+    HFCOM_MDL=HFCOM/HFCOM_GOT4.10c
+
+    HFEOP_MDL=HFEOP/HFEOP_DESAIwLib
+
+  elif [ "$TSTN" = "HFEOP12" ]; then
+
+    ETIDE_MDL=TIDES+etides_RAY_2018.fxd
+    OTIDE_MDL=GOT4.10/20otides_got4p10c+Air_Tides_got4.7.fxd
+    OLOAD_MDL=SLR_OLOAD_180118_207NSTA_GOT4.10c.gdyn
+    HFCOM_MDL=HFCOM/HFCOM_GOT4.10c
+
+    HFEOP_MDL=HFEOP/HFEOP_EOT11AwLib
+
+  elif [ "$TSTN" = "HFEOP13" ]; then
+
+    ETIDE_MDL=TIDES+etides_RAY_2018.fxd
+    OTIDE_MDL=GOT4.10/20otides_got4p10c+Air_Tides_got4.7.fxd
+    OLOAD_MDL=SLR_OLOAD_180118_207NSTA_GOT4.10c.gdyn
+    HFCOM_MDL=HFCOM/HFCOM_GOT4.10c
+
+    HFEOP_MDL=HFEOP/HFEOP_FES2012wLib
+
+# elif [ "$TSTN" = "HFEOP14" ]; then
+
+#   ETIDE_MDL=TIDES+etides_RAY_2018.fxd
+#   OTIDE_MDL=GOT4.10/20otides_got4p10c+Air_Tides_got4.7.fxd
+#   OLOAD_MDL=SLR_OLOAD_180118_207NSTA_GOT4.10c.gdyn
+#   HFCOM_MDL=HFCOM/HFCOM_GOT4.10c
+
+#   HFEOP_MDL=HFEOP/HFEOP_  NONE
+
+  elif [ "$TSTN" = "HFEOP15" ]; then
+
+    ETIDE_MDL=TIDES+etides_RAY_2018.fxd
+    OTIDE_MDL=GOT4.10/20otides_got4p10c+Air_Tides_got4.7.fxd
+    OLOAD_MDL=SLR_OLOAD_180118_207NSTA_GOT4.10c.gdyn
+    HFCOM_MDL=HFCOM/HFCOM_GOT4.10c
+
+    HFEOP_MDL=HFEOP/HFEOP_GIPSON-LwLib
+
+  elif [ "$TSTN" = "HFEOP16" ]; then
+
+    ETIDE_MDL=TIDES+etides_RAY_2018.fxd
+    OTIDE_MDL=GOT4.10/20otides_got4p10c+Air_Tides_got4.7.fxd
+    OLOAD_MDL=SLR_OLOAD_180118_207NSTA_GOT4.10c.gdyn
+    HFCOM_MDL=HFCOM/HFCOM_GOT4.10c
+
+    HFEOP_MDL=HFEOP/HFEOP_HAMTIDEwLib
+
+  elif [ "$TSTN" = "HFEOP17" ]; then
+
+    ETIDE_MDL=TIDES+etides_RAY_2018.fxd
+    OTIDE_MDL=GOT4.10/20otides_got4p10c+Air_Tides_got4.7.fxd
+    OLOAD_MDL=SLR_OLOAD_180118_207NSTA_GOT4.10c.gdyn
+    HFCOM_MDL=HFCOM/HFCOM_GOT4.10c
+
+    HFEOP_MDL=HFEOP/HFEOP_IERS2010wLib
+
+  elif [ "$TSTN" = "HFEOP18" ]; then
+
+    ETIDE_MDL=TIDES+etides_RAY_2018.fxd
+    OTIDE_MDL=GOT4.10/20otides_got4p10c+Air_Tides_got4.7.fxd
+    OLOAD_MDL=SLR_OLOAD_180118_207NSTA_GOT4.10c.gdyn
+    HFCOM_MDL=HFCOM/HFCOM_GOT4.10c
+
+    HFEOP_MDL=HFEOP/HFEOP_MAZDAKwLib
+
+  elif [ "$TSTN" = "HFEOP19" ]; then
+
+    ETIDE_MDL=TIDES+etides_RAY_2018.fxd
+    OTIDE_MDL=GOT4.10/20otides_got4p10c+Air_Tides_got4.7.fxd
+    OLOAD_MDL=SLR_OLOAD_180118_207NSTA_GOT4.10c.gdyn
+    HFCOM_MDL=HFCOM/HFCOM_GOT4.10c
+
+    HFEOP_MDL=HFEOP/HFEOP_VLBIwLib
+
+  elif [ "$TSTN" = "HFEOP20" ]; then
+
+    ETIDE_MDL=TIDES+etides_RAY_2018.fxd
+    OTIDE_MDL=GOT4.10/20otides_got4p10c+Air_Tides_got4.7.fxd
+    OLOAD_MDL=SLR_OLOAD_180118_207NSTA_GOT4.10c.gdyn
+    HFCOM_MDL=HFCOM/HFCOM_GOT4.10c
+
+    HFEOP_MDL=HFEOP/HFEOP_VLBI+GPSwLib
+
+  elif [ "$TSTN" = "HFEOP21" ]; then
+
+    #ETIDE_MDL=TIDES+etides_RAY_2018.fxd
+    ETIDE_MDL=TIDES+etides_RAY_2018
+    #OTIDE_MDL=GOT4.10/20otides_got4p10c+Air_Tides_got4.7.fxd
+    OTIDE_MDL=GOT4.10/20otides_got4p10c+Air_Tides_got4.7
+    OLOAD_MDL=SLR_OLOAD_180118_207NSTA_GOT4.10c.gdyn
+    HFCOM_MDL=HFCOM/HFCOM_GOT4.10c
+
+    HFEOP_MDL=HFEOP/HFEOP_GIPSON_PM+VLBI+GPS_UT1wLib
+
+fi
+  export ETIDE_MDL OTIDE_MDL HFEOP_MDL HFCOM_MDL OLOAD_MDL
+
+
+  CURRENT_APLO=050210
+
+  export CURRENT_APLO
+
+  IERS_CPP_CENTER=JCT
+  IERS_CPP_TECHNQ=L
+  IERS_CPP_LENGTH=7
+  OUR_VERSION=30
+
+  export IERS_CPP_CENTER IERS_CPP_TECHNQ IERS_CPP_LENGTH OUR_VERSION
+
+elif [ "$CASE" = "MONTHLY" ]; then
+
+  ARC_LEN=28
+  DELTA=28
+  ACCEL_NUM_L=7
+  ACCEL_NUM_E=4
+  LVER=m
+  TYPE_DR=DRM
+  TYPE_EMT=EMTM
+
+  if [ "$MDLS" = "1810" ]; then
+
+    ETIDE_MDL=TIDES+etides_RAY_2018.fxd
+    OTIDE_MDL=GOT4.10/20otides_got4p10c+Air_Tides_got4.7.fxd
+    HFEOP_MDL=di+semidiurnal_tidal_EOP_2018
+    HFCOM_MDL=di+semidiurnal_tidal_COM_GOT4.10c
+    OLOAD_MDL=SLR_OLOAD_180118_207NSTA_GOT4.10c.gdyn
+  
+  fi
+
+  export ETIDE_MDL OTIDE_MDL HFEOP_MDL HFCOM_MDL OLOAD_MDL
+
+  CURRENT_APLO=050210
+
+  export CURRENT_APLO
+
+fi
+
+#while read A1 A2 A3 A4 A5 A6 A7 A8 A9 A10 A11 A12
+#do
+
+cd /nobackup/mkuzmicz/tmp/magda
+wkTmp=$$
+mkdir ${CASE}${wkTmp}$A3
+cd /nobackup/mkuzmicz/tmp/magda/${CASE}${wkTmp}$A3
+TT=${CASE}${wkTmp}$A3
+export TT
+ARC=$A8
+ARCN=v280
+
+#echo "$A1 $A2 $A3 $A4"    > $MAIN_PATH/INFILES/ARC_SETUP_OLD.${CASE}_$ARC
+#echo "$A5 $A6 $A7 $A8"    > $MAIN_PATH/INFILES/ARC_SETUP_NEW.${CASE}_$ARC
+#echo "$A9 $A10 $A11 $A12" > $MAIN_PATH/INFILES/ARC_SETUP_NXT.${CASE}_$ARC
+
+#  Read the CONFIG file to find out the LVPARM and Unit 5 files to use in SOLVE:
+
+read INTPRM INTU5 < $MAIN_PATH/INFILES/${EFFORT}.${GROUP}.CONFIG.${CASE}
+
+export INTPRM INTU5 ARCN
+
+
+echo ${CASE}${wkTmp} > /nobackup/mkuzmicz/tmp/magda/${CASE}_wDIR_$Date
+
+DIR_2_TAR=${CASE}_wDIR_$Date
+CDIR=/nobackup/mkuzmicz/tmp/magda/${CASE}${wkTmp}$A3
+export DIR_2_TAR CDIR
+
+SERVICE=ILRS
+ILRS_AC=jcet
+
+
+ITR=0
+VER=${LVER}e
+GTR=3
+PROJ=.
+SUBSOL=.
+DELETE=OUT
+INSERT=NONE
+
+
+export CASE ARC_LEN ACCEL_NUM_L ACCEL_NUM_E DELTA MAIN_PATH MAIN_PATH_OLD SCRIPTS SNX_VER ETA_IN
+
+export ITR LVER VER GTR PROJ SUBSOL DELETE INSERT SERVICE DISK WEIGHT ILRS_AC wkTmp
+
+
+EPOCH_DIR=$MAIN_PATH/INFILES/EPOCH_BLK_${SERVICE}/${CASE}
+MBIAS_DIR=$MAIN_PATH/INFILES/MBIAS_BLK_${SERVICE}/${CASE}
+
+export EPOCH_DIR MBIAS_DIR
+
+
+
+
+
+#--------------------------------------
+#  Start the process
+#--------------------------------------
+
+
+#  Set the arc name, the start/stop times, and the ACCELs end-times:
+
+$SCRIPTS/ARC_SETUP_PP_BIAS $DELTA $MAIN_PATH $CASE $ARC > o.ARC_SETUP 2>&1 
+
+#
+#  Read year, doy, date and arc-name for the old, current and future arcs:
+#
+
+##read OYEAR ODOY Date_OLD_ARC OLD < $MAIN_PATH/INFILES/ARC_SETUP_OLD.${CASE}_$ARC
+##read NYEAR NDOY Date_NEW_ARC ARC < $MAIN_PATH/INFILES/ARC_SETUP_NEW.${CASE}_$ARC
+##read XYEAR XDOY Date_NXT_ARC NXT < $MAIN_PATH/INFILES/ARC_SETUP_NXT.${CASE}_$ARC
+read OYEAR ODOY Date_OLD_ARC OLD < $MAIN_PATH/INFILES/ARC_SETUP_OLD.${CASE}_$ARCN
+read NYEAR NDOY Date_NEW_ARC ARC < $MAIN_PATH/INFILES/ARC_SETUP_NEW.${CASE}_$ARCN
+read XYEAR XDOY Date_NXT_ARC NXT < $MAIN_PATH/INFILES/ARC_SETUP_NXT.${CASE}_$ARCN
+
+
+$SCRIPTS/ARC_SETUP_SSEM $DELTA $MAIN_PATH $CASE $ARC $ARCN > o.ARC_SETUP 2>&1
+
+read Date_MID_ARC < $MAIN_PATH/INFILES/MID-ARC_INFO.${CASE}_${ARCN}
+read SNX_DATE < $MAIN_PATH/INFILES/SINEX_DATE_INFO.${CASE}_${ARCN}
+
+#
+# Set the version of a LAGEOS-only IERS SINEX = OUR_VERSION as default
+# in the case we have ETALON data added, this will be modified after
+# processing the ETALON data to OUR_VERSION + 10
+#
+
+  L12_VERSION=${OUR_VERSION}
+
+export SNX_DATE L12_VERSION Date_NEW_ARC ARC
+
+#
+#--------------------------------------
+#  Generate the Atmospheric Loading File:
+#--------------------------------------
+#
+
+###$SCRIPTS/MAKE_APLO $NDOY $NYEAR $XDOY $XYEAR $ARC > o.MAKE_APLO 2>&1
+
+
+#
+#--------------------------------------
+#  Get the SLR QL data from CDDIS or EDC:
+#--------------------------------------
+#
+
+YY=`echo $NYEAR | cut -c3-4`
+#YY=13
+#
+##  For analyzing past arcs, do not need to re-get the QL data! But we will need this for the operational script!!!
+#
+
+#$SCRIPTS/4SAT_QL_2_TDF_ARC $NYEAR $YY ${OYEAR}${Date_OLD_ARC} ${NYEAR}${Date_NEW_ARC} > o.4SAT_QL_2_TDF_ARC 2>&1
+
+#
+#------------------------------------------------
+#  Set the name of the Global Solution to be used:
+#------------------------------------------------
+#
+
+GLOBAL_CMAT=${SERVICE}_03
+#GLOBAL_CMAT=${SERVICE}_${YY}
+
+export GLOBAL_CMAT
+
+#
+#------------------------------------------------
+#  Propagate the Sites' file to the Mid-Arc Epoch:
+#------------------------------------------------
+#
+
+## First figure out where you are wrt Arequipa quake:
+#
+#  arc_mmdd=`echo ${Date_NEW_ARC}|cut -c3-6`
+#  arc_date=$NYEAR$arc_mmdd
+#
+#  if [ "$arc_date" -lt "20010624" ];then
+#
+##  pre-Arequipa quake positions:
+#
+#    ITRF_2_PROPAGATE=ITRF2000@970101
+#
+#  elif [ "$arc_date" -ge "20010624" ];then
+#
+##  post-Arequipa quake positions:
+#
+#    ITRF_2_PROPAGATE=ITRF2000@970101q
+#
+#  fi
+
+  ITRF_2_PROPAGATE=$ARC
+
+  export ITRF_2_PROPAGATE
+
+
+# Check with MKC about this !!!
+
+#new mkc 20140105
+## only for OPS runs  ln -s  /umbc/epavlis/data01/LOCAL/magdak/SSEM/d_base/site/SLRF2008/DAILY/o40101.adj.Z /umbc/epavlis/data01/LOCAL/magdak/SSEM/d_base/site/SLRF2008/DAILY/$ARC.adj.Z
+
+#$SCRIPTS/PROPAGATE_SLRF2020 $CASE $ARC > o.PROPAGATE_SITES08.$CASE.$ARC.$SVN 2>&1
+
+#20191121 -didn't work correctly
+#if [ "${NYEAR}" = "2017" -o "${NYEAR}" = "2018" -o "${NYEAR}" = "2019" ];then
+$SCRIPTS/ADD_PSD_CORRECTED_EPOCH_ITRF2020 $ARC > o.ADD_PSD_CORRECTED_EPOCH_ITRF2020 2>&1
+$SCRIPTS/ADD_PSD_CORRECTED_MID_ARC_ITRF2020 $ARC > o.ADD_PSD_CORRECTED_MID_ARC_ITRF2020 2>&1
+#fi
+#exit 100
+
+#
+#----------------------------------------------
+#  Now generate the arc-setups for the new arcs:
+#----------------------------------------------
+#
+#
+#  For each S/C go through the following steps:
+#
+# a) turn last arc (from EMT punch, i.e. EMT2DR) and save ELEMS records
+#
+# b) using above ELEMS and template, make new arc
+#
+# c) run the new arc (DR)
+#
+# d) turn the punch and re-run (DR) the arc
+#
+# e) turn the punch for EMAT and cut two EMATs, one for operational
+#    and one for the re-analysis series
+#
+# f) Update the Solution Number for this week
+#
+#----------------------------------------------
+#
+
+read SOL_NUM_OLD < $MAIN_PATH/INFILES/SOLUTION_NO_FOR_LAST_RUN.${CASE}
+
+  SOL_NUM=`expr $SOL_NUM_OLD + 1`
+
+##
+## Make sure that SOL_NUM comprises 3 digits ONLY and EXACTLY 3 !      
+##
+
+printf "%3.3s\n" $SOL_NUM > ttt
+sed "s/ /0/g" ttt > $MAIN_PATH/INFILES/SOLUTION_NO_FOR_LAST_RUN.${CASE}
+
+read SOL_NUM < $MAIN_PATH/INFILES/SOLUTION_NO_FOR_LAST_RUN.${CASE}
+
+echo $SOL_NUM
+
+PSOL_NUM=${SOL_NUM}
+PSOL_NUM=001
+
+
+#     if [ $SOL_NUM -lt 10 ]; then
+#        PSOL_NUM=00$SOL_NUM
+
+#     elif [ $SOL_NUM -lt 100 -a $SOL_NUM -ge 10 ]; then
+#        PSOL_NUM=0$SOL_NUM
+#     fi
+
+#SOL_NUM=$PSOL_NUM
+
+
+
+#
+# Now generate the solution names for all versions of products:
+#
+
+SOL_L=L12__OPS${YY}${PSOL_NUM}
+SOL_E=LE12_OPS${YY}${PSOL_NUM}
+
+export ARC Date_NEW_ARC SOL_NUM PSOL_NUM NYEAR
+
+#
+#  We MUST change the NXT to NEW below, but when we start all over
+#
+
+SOL_LPP=L12__OPS${Date_NXT_ARC}
+SOL_EPP=LE12_OPS${Date_NXT_ARC}
+
+export Date_NXT_ARC SOL_LPP SOL_EPP
+
+SOL_LN=L12_NEOS${Date_NXT_ARC}
+SOL_EN=LE12NEOS${Date_NXT_ARC}
+
+export SOL_LN SOL_EN
+
+SUBDIR=OPS
+SUBDIR_MB=OPS/v${SNX_VER}
+ export SUBDIR SUBDIR_MB
+
+
+
+#---------------------------------------------------
+
+
+#  Process LAGEOS  1 & 2
+
+
+#---------------------------------------------------
+
+
+
+#  LAGEOS 1 :
+
+SVN=L1
+SAT=GISL1
+
+export PROC_STEP=L1_DR0
+#$SCRIPTS/TURN_SLR_ALL CURRENT_ARC_DR.${CASE}_${ARCN} $SVN 0 wCe $GTR $CASE EMT2DR14 . . $DELETE $INSERT > o.TURN_SLR_ALL_EMT2DR14.$CASE.$SVN 2>&1
+$SCRIPTS/MAKE_SETUP_ARC_SSEM $SAT $SVN $ARC $Date_NEW_ARC $Date_NXT_ARC > o.MAKE_SETUP_ARC_SSE_$SVN  2>&1
+
+$SCRIPTS/$RUN_GDN_SLR_SCR $ARC ${LVER}0 $SAT $YY $TYPE_DR . > o.RUN_GDN_SLR_DR_0.$CASE.${SVN}_${LVER} 2>&1
+#exit 20210114
+$SCRIPTS/TURN_SLR_ALL CURRENT_ARC_DR.${CASE}_${ARCN} $SVN 0 ${LVER}0 $GTR $CASE DR . . $DELETE $INSERT > o.TURN_SLR_ALL_DR0.$CASE.$SVN 2>&1
+#
+#export PROC_STEP=L1_DR1
+
+
+$SCRIPTS/$RUN_GDN_SLR_SCR $ARC ${LVER}1 $SAT $YY $TYPE_DR . > o.RUN_GDN_SLR_DR_2.$CASE.$SVN 2>&1
+
+
+#exit 20190325
+
+
+#  LAGEOS 2 :
+
+SVN=L2
+SAT=GISL2
+
+
+export PROC_STEP=L2_DR0
+#$SCRIPTS/TURN_SLR_ALL CURRENT_ARC_DR.${CASE}_${ARCN} $SVN 0 wCe $GTR $CASE EMT2DR14 . . $DELETE $INSERT > o.TURN_SLR_ALL_EMT2DR14.$CASE.$SVN 2>&1
+$SCRIPTS/MAKE_SETUP_ARC_SSEM $SAT $SVN $ARC $Date_NEW_ARC $Date_NXT_ARC > o.MAKE_SETUP_ARC_SSE_$SVN  2>&1
+
+$SCRIPTS/$RUN_GDN_SLR_SCR $ARC ${LVER}0 $SAT $YY $TYPE_DR . > o.RUN_GDN_SLR_DR_0.$CASE.${SVN}_${LVER} 2>&1
+
+$SCRIPTS/TURN_SLR_ALL CURRENT_ARC_DR.${CASE}_${ARCN} $SVN 0 ${LVER}0 $GTR $CASE DR . . $DELETE $INSERT > o.TURN_SLR_ALL_DR0.$CASE.$SVN 2>&1
+
+export PROC_STEP=L2_DR1
+
+$SCRIPTS/$RUN_GDN_SLR_SCR $ARC ${LVER}1 $SAT $YY $TYPE_DR . > o.RUN_GDN_SLR_DR_1.$CASE.$SVN 2>&1
+
+#
+# Check data distribution, generate DELETEs if necessary and cut EMATs:
+#
+#                                                   Why do you use  3  here in the test script?
+$SCRIPTS/MERGE_DATA_CATALOGS $ARC $CASE DR GISL1 GISL2 GISLV ${LVER}1 $DISK > o.MERGE_DATA_CATALOGS_L12_DR 2>&1 
+$SCRIPTS/MAKE_SINEX_DATA_BLOCK $ARC GISLV $CASE DR $SERVICE ${LVER}1 "" $DISK > o.MAKE_SINEX_DATA_BLOCK_L12_DR 2>&1
+
+
+# Generate the two LAGEOS Emats now:
+#
+
+SVN=L1
+SAT=GISL1
+
+$SCRIPTS/TURN_SLR_ALL CURRENT_ARC_EMT.${CASE}_${ARCN} $SVN 1 ${LVER}1 $GTR $CASE EMT . . IN $INSERT > o.TURN_SLR_ALL_EMTe.$CASE.$SVN 2>&1
+
+export PROC_STEP=L1_EMTe
+
+
+$SCRIPTS/$RUN_GDN_SLR_SCR $ARC ${LVER}e $SAT $YY $TYPE_EMT . > o.RUN_GDN_SLR_EMT_e.$CASE.$SVN 2>&1
+
+export PROC_STEP=L1_EMTx
+
+$SCRIPTS/$RUN_GDN_SLR_SCR $ARC ${LVER}x $SAT $YY EMTW_midC . > o.RUN_GDN_SLR_EMT_x.$CASE.$SVN 2>&1
+
+$SCRIPTS/RMS_OF_FIT_SLR_ALL $ARC.${LVER}e $SVN $CASE EMT > o.RMS_OF_FIT_SLR_ALLe.$CASE.$SVN 2>&1
+
+SVN=L2
+SAT=GISL2
+
+$SCRIPTS/TURN_SLR_ALL CURRENT_ARC_EMT.${CASE}_${ARCN} $SVN 1 ${LVER}1 $GTR $CASE EMT . . IN $INSERT > o.TURN_SLR_ALL_EMTe.$CASE.$SVN 2>&1
+
+export PROC_STEP=L2_EMTe
+
+$SCRIPTS/$RUN_GDN_SLR_SCR $ARC ${LVER}e $SAT $YY $TYPE_EMT . > o.RUN_GDN_SLR_EMT_e.$CASE.$SVN 2>&1
+
+export PROC_STEP=L2_EMTx
+
+$SCRIPTS/$RUN_GDN_SLR_SCR $ARC ${LVER}x $SAT $YY EMTW_midC . > o.RUN_GDN_SLR_EMT_x.$CASE.$SVN 2>&1
+
+$SCRIPTS/RMS_OF_FIT_SLR_ALL $ARC.${LVER}e $SVN $CASE EMT > o.RMS_OF_FIT_SLR_ALLe.$CASE.$SVN 2>&1
+
+#
+# Generate final DATA BLOCK with the actual data (including the DELETEs) used in the EMATs:
+#
+
+SUBSFX=L12
+
+$SCRIPTS/MERGE_DATA_CATALOGS $ARC $CASE EMT GISL1 GISL2 GISLV ${LVER}e $DISK > o.MERGE_DATA_CATALOGS_L12_EMT 2>&1 
+$SCRIPTS/MAKE_SINEX_DATA_BLOCK $ARC GISLV $CASE EMT $SERVICE ${LVER}e $SUBSFX $DISK > o.MAKE_SINEX_DATA_BLOCK_L12_EMT 2>&1
+
+
+
+#
+# Merge the two LAGEOS Emats now into a Cmat:
+#
+
+/bin/sed -e "s/AAAAAA/$ARC/g" -e "s/DDDDDD/$Date_NEW_ARC/g" $MAIN_PATH/INFILES/L12emt_merge_list.tmplt > $MAIN_PATH/INFILES/L12emt_merge_list.${Date_NEW_ARC}_$ARCN
+
+$SCRIPTS/SUB_MKCMAT_v220 LV 1.00 $YY $CASE . ${LVER}e L12emt_merge_list.${Date_NEW_ARC}_$ARCN > o.SUB_MKCMAT_L12.$Date_NEW_ARC 2>&1
+
+$SCRIPTS/SUB_MKCMAT_v220 LVx 1.00 $YY $CASE . ${LVER}x L12emt_merge_list.${Date_NEW_ARC}_$ARCN > o.SUB_MKCMAT_L12x.$Date_NEW_ARC 2>&1
+
+#exit 20190325
+#
+# At this point you can do a LAGEOS-only TRF solution (incremental)
+#
+
+CMAT_VERSION=10
+LCMTV=$CMAT_VERSION
+LCMTVx=11
+
+export CMAT_VERSION LCMTV LCMTVx
+
+SOL=$SOL_L
+
+read GLOBAL_CMAT_OLD < $MAIN_PATH/INFILES/$CASE/CURRENT_GLOBAL.${CMAT_VERSION}_$ARC
+read CURRENT_CMAT_2_ADD < $MAIN_PATH/INFILES/$CASE/CURRENT_L12_CMAT_NO.${CMAT_VERSION}_$ARC
+
+export GLOBAL_CMAT_OLD CURRENT_CMAT_2_ADD SOL
+
+#$SCRIPTS/SUB_TRF_INCRMNTL $SOL $CASE OPS . GISLV SOLVE_TRF_INCRMNTL U4staestMinCon > o.SLV_L12inc 2>&1
+
+
+
+
+
+#
+# At this point you can do a LAGEOS-only WEEKLY-TRF solution 
+#
+
+CMAT_VERSION=11
+
+export CMAT_VERSION
+
+SOL=$SOL_LPP
+
+read CURRENT_CMAT_2_ADD < $MAIN_PATH/INFILES/$CASE/CURRENT_L12_CMAT_NO.${CMAT_VERSION}_$ARC
+
+export CURRENT_CMAT_2_ADD SOL
+
+$SCRIPTS/SUB_TRF_WEEKLY_PP_BIAS_L12 $SOL $CASE OPS . GISLV SOLVE_TRF_WEEKLY_2014_180322 NULL > o.SLV_L12_PP 2>&1
+
+
+
+# First get the list of biases that were solved-for:
+
+
+#
+# Postprocess the LAGEOS-ONLY WEEKLY-TRF solution:
+#
+
+PSOL_NUM=1
+
+$SCRIPTS/POST_PROCESS $SOL $SERVICE GISLV $CASE L12 ${PSOL_NUM} ${SNX_VER} $Date_NEW_ARC $Date_NXT_ARC $Date_MID_ARC $ILRS_AC $WEIGHT > o.POST_PROCESS_L12_PP 2>&1  
+
+# Link the proper EPOCH BLOCK to this solution after removing any old links:
+
+\rm $EPOCH_DIR/${SERVICE}_${SOL}
+ln -s $EPOCH_DIR/${SERVICE}_${ARC}.${LVER}e_${WT}_$SUBSFX $EPOCH_DIR/${SERVICE}_${SOL}
+
+
+
+#
+# At this point you can do a LAGEOS-only Network Check and NEOS EOP solution:
+#
+
+CMAT_VERSION=11
+
+export CMAT_VERSION
+
+SOL=$SOL_LN
+
+read CURRENT_CMAT_2_ADD < $MAIN_PATH/INFILES/$CASE/CURRENT_L12_CMAT_NO.${CMAT_VERSION}_$ARC
+
+export CURRENT_CMAT_2_ADD SOL
+
+#$SCRIPTS/SUB_TRF_NEOS $SOL $CASE OPS . GISLV SOLVE_TRF_WEEKLY NULL > o.SLV_L12_NEOS 2>&1
+
+
+# First get the list of biases that were solved-for:
+
+
+
+#
+# Postprocess the LAGEOS-ONLY ILRS_NEOS solution:
+#
+PSOL_NUM=1
+$SCRIPTS/POST_PROCESS $SOL $SERVICE GISLV $CASE L12NEOS ${PSOL_NUM} ${SNX_VER} $Date_NEW_ARC $Date_NXT_ARC $Date_MID_ARC $ILRS_AC $WEIGHT > o.POST_PROCESS_L12_NEOS 2>&1  
+
+
+# Link the proper EPOCH BLOCK to this solution after removing any old links:
+
+\rm $EPOCH_DIR/${SERVICE}_${SOL}
+ln -s $EPOCH_DIR/${SERVICE}_${ARC}.${LVER}e_${WT}_$SUBSFX $EPOCH_DIR/${SERVICE}_${SOL}
+
+
+
+#
+#
+#  Make a NEOS submission file:
+#
+#
+
+#$SCRIPTS/MAKE_NEOS_EOP $ARC ${SERVICE}_${SOL_LN}_ ${LVER}e GISLV EMT $CASE > o.MAKE_NEOS_EOP_SOL_LN 2>&1
+
+#cat /${DISK}/GISLV/products/$CASE/OPS/${SERVICE}_${SOL_LN}_/${ARC}.JCET >> /${DISK}/GISLV/d_base/data/EOP/NEOS/JCET/LAGEOS12
+
+
+
+#---------------------------------------------------
+
+
+#  Done with LAGEOS  1 & 2
+
+
+#---------------------------------------------------
+#+++++++++++++++++++++++++++++++++++++++++++++++++++
+#---------------------------------------------------
+
+
+
+#  Check if ETALON must be included:
+
+if [ "${ETA_IN}" = "YES" ]; then
+#
+
+
+#---------------------------------------------------
+
+
+#  Process ETALON  1 & 2
+
+
+#---------------------------------------------------
+
+
+
+
+#  ETALON 1 :
+
+SVN=E1
+SAT=ETA1
+
+
+export PROC_STEP=E1_DR0
+#$SCRIPTS/TURN_SLR_ALL CURRENT_ARC_DR.${CASE}_${ARCN} $SVN 0 wCe $GTR $CASE EMT2DR14 . . $DELETE $INSERT > o.TURN_SLR_ALL_EMT2DR14.$CASE.$SVN 2>&1
+$SCRIPTS/MAKE_SETUP_ARC_SSEM $SAT $SVN $ARC $Date_NEW_ARC $Date_NXT_ARC > o.MAKE_SETUP_ARC_SSE_$SVN  2>&1
+
+$SCRIPTS/$RUN_GDN_SLR_SCR $ARC ${LVER}0 $SAT $YY $TYPE_DR . > o.RUN_GDN_SLR_DR_0.$CASE.$SVN 2>&1
+
+$SCRIPTS/TURN_SLR_ALL CURRENT_ARC_DR.${CASE}_${ARCN} $SVN 0 ${LVER}0 $GTR $CASE DR . . $DELETE $INSERT > o.TURN_SLR_ALL_DR0.$CASE.$SVN 2>&1
+
+export PROC_STEP=E1_DR1
+
+$SCRIPTS/$RUN_GDN_SLR_SCR $ARC ${LVER}1 $SAT $YY $TYPE_DR . > o.RUN_GDN_SLR_DR_1.$CASE.$SVN 2>&1
+
+
+
+#  ETALON 2 :
+
+SVN=E2
+SAT=ETA2
+
+
+export PROC_STEP=E2_DR0
+#$SCRIPTS/TURN_SLR_ALL CURRENT_ARC_DR.${CASE}_${ARCN} $SVN 0 wCe $GTR $CASE EMT2DR14 . . $DELETE $INSERT > o.TURN_SLR_ALL_EMT2DR14.$CASE.$SVN 2>&1
+$SCRIPTS/MAKE_SETUP_ARC_SSEM $SAT $SVN $ARC $Date_NEW_ARC $Date_NXT_ARC > o.MAKE_SETUP_ARC_SSE_$SVN  2>&1
+
+$SCRIPTS/$RUN_GDN_SLR_SCR $ARC ${LVER}0 $SAT $YY $TYPE_DR . > o.RUN_GDN_SLR_DR_0.$CASE.$SVN 2>&1
+
+$SCRIPTS/TURN_SLR_ALL CURRENT_ARC_DR.${CASE}_${ARCN} $SVN 0 ${LVER}0 $GTR $CASE DR . . $DELETE $INSERT > o.TURN_SLR_ALL_DR0.$CASE.$SVN 2>&1
+
+export PROC_STEP=E2_DR1
+#
+$SCRIPTS/$RUN_GDN_SLR_SCR $ARC ${LVER}1 $SAT $YY $TYPE_DR . > o.RUN_GDN_SLR_DR_1.$CASE.$SVN 2>&1
+
+
+#
+# Check data distribution, generate DELETEs if necessary and cut EMATs:
+#
+
+SUBSFX=E12
+
+####NEW part 2013-03-15 mkc
+
+$SCRIPTS/MERGE_DATA_CATALOGS $ARC $CASE DR ETA1 ETA2 ETAV ${LVER}1 $DISK > o.MERGE_DATA_CATALOGS_E12_DR 2>&1
+$SCRIPTS/MERGE_DATA_CATALOGS $ARC $CASE DR GISLV ETAV PPV ${LVER}1 $DISK > o.MERGE_DATA_CATALOGS_L12+E12_DR 2>&1
+$SCRIPTS/MAKE_SINEX_DATA_BLOCK $ARC PPV $CASE DR $SERVICE ${LVER}1 $SUBSFX $DISK > o.MAKE_SINEX_DATA_BLOCK_L12+E12_DR  2>&1
+
+###OLD befor 2013
+#$SCRIPTS/MERGE_DATA_CATALOGS $ARC $CASE DR ETA1 ETA2 ETAV ${LVER}1 $DISK > o.MERGE_DATA_CATALOGS_E12_DR 2>&1 
+#$SCRIPTS/MAKE_SINEX_DATA_BLOCK $ARC ETAV $CASE DR $SERVICE ${LVER}1 $SUBSFX $DISK > o.MAKE_SINEX_DATA_BLOCK_E12_DR 2>&1
+
+#
+# For now, we will use the same DELETEs for LAGEOS & ETALON s/c, i.e. the LAGEOS-derived ones,
+# we therefore do NOT edit stations with too few ETALON data! However, we do use need to add
+# the ETALON data in the DATA BLOCK for the combined LAGEOS & ETALON SINEX files.
+#
+
+
+#
+# Generate the two ETALON Emats now:
+#
+
+SVN=E1
+SAT=ETA1
+
+$SCRIPTS/TURN_SLR_ALL CURRENT_ARC_EMT.${CASE}_${ARCN} $SVN 1 ${LVER}1 $GTR $CASE EMT . . IN $INSERT > o.TURN_SLR_ALL_EMTe.$CASE.$SVN 2>&1
+
+export PROC_STEP=E1_EMTe
+
+
+$SCRIPTS/$RUN_GDN_SLR_SCR $ARC ${LVER}e $SAT $YY $TYPE_EMT . > o.RUN_GDN_SLR_EMT_e.$CASE.$SVN 2>&1
+
+export PROC_STEP=E1_EMTx
+
+$SCRIPTS/$RUN_GDN_SLR_SCR $ARC ${LVER}x $SAT $YY EMTW_midC . > o.RUN_GDN_SLR_EMT_x.$CASE.$SVN 2>&1
+
+$SCRIPTS/RMS_OF_FIT_SLR_ALL $ARC.${LVER}e $SVN $CASE EMT > o.RMS_OF_FIT_SLR_ALLe.$CASE.$SVN 2>&1
+
+
+
+SVN=E2
+SAT=ETA2
+
+$SCRIPTS/TURN_SLR_ALL CURRENT_ARC_EMT.${CASE}_${ARCN} $SVN 1 ${LVER}1 $GTR $CASE EMT . . IN $INSERT > o.TURN_SLR_ALL_EMTe.$CASE.$SVN 2>&1
+
+export PROC_STEP=E2_EMTe
+
+$SCRIPTS/$RUN_GDN_SLR_SCR $ARC ${LVER}e $SAT $YY $TYPE_EMT . > o.RUN_GDN_SLR_EMT_e.$CASE.$SVN 2>&1
+
+export PROC_STEP=E2_EMTx
+
+$SCRIPTS/$RUN_GDN_SLR_SCR $ARC ${LVER}x $SAT $YY EMTW_midC . > o.RUN_GDN_SLR_EMT_x.$CASE.$SVN 2>&1
+
+$SCRIPTS/RMS_OF_FIT_SLR_ALL $ARC.${LVER}e $SVN $CASE EMT > o.RMS_OF_FIT_SLR_ALLe.$CASE.$SVN 2>&1
+
+
+#
+# Generate a combined data distribution catalog for the SINEX DATA BLOCK:
+#
+
+SUBSFX=LE12
+
+$SCRIPTS/MERGE_DATA_CATALOGS $ARC $CASE EMT ETA1 ETA2 ETAV ${LVER}e $DISK > o.MERGE_DATA_CATALOGS_E12_EMT 2>&1 
+
+
+$SCRIPTS/MERGE_DATA_CATALOGS $ARC $CASE EMT GISLV ETAV PPV ${LVER}e $DISK > o.MERGE_DATA_CATALOGS_L12+E12_EMT 2>&1 
+
+$SCRIPTS/MAKE_SINEX_DATA_BLOCK $ARC PPV $CASE EMT $SERVICE ${LVER}e $SUBSFX $DISK > o.MAKE_SINEX_DATA_BLOCK_L12+E12_EMT 2>&1
+
+
+
+#
+# Merge the two ETALON Emats now into a Cmat:
+#
+
+CMAT_VERSION=20
+ECMTV=$CMAT_VERSION
+ECMTVx=21
+
+export CMAT_VERSION ECMTV ECMTVx
+
+/bin/sed -e "s/AAAAAA/$ARC/g" -e "s/DDDDDD/$Date_NEW_ARC/g" $MAIN_PATH/INFILES/E12emt_merge_list.tmplt > $MAIN_PATH/INFILES/E12emt_merge_list.${Date_NEW_ARC}_$ARCN
+
+
+$SCRIPTS/SUB_MKCMAT_v220 EV 1.00 $YY $CASE . ${LVER}e E12emt_merge_list.${Date_NEW_ARC}_$ARCN > o.SUB_MKCMAT_v220_E12.$Date_NEW_ARC 2>&1
+#
+$SCRIPTS/SUB_MKCMAT_v220 EVx 1.00 $YY $CASE . ${LVER}x E12emt_merge_list.${Date_NEW_ARC}_$ARCN > o.SUB_MKCMAT_v220_E12x.$Date_NEW_ARC 2>&1
+
+#
+
+#
+# Merge the two LAGEOS and ETALON Cmats now into a single Cmat:
+#
+
+
+ rm $MAIN_PATH/INFILES/LE12emt_merge_list.${Date_NEW_ARC}_$ARCN
+/bin/sed -e "s/AAAAAA/$ARC/g" -e "s/DDDDDD/$Date_NEW_ARC/g" -e "s/YY/$YY/g" -e "s/LL/$LCMTV/g" -e "s/EE/$ECMTV/g" $MAIN_PATH/INFILES/LE12emt_merge_list.tmplt > $MAIN_PATH/INFILES/LE12emt_merge_list.${Date_NEW_ARC}_$ARCN
+
+
+#$SCRIPTS/SUB_MKCMAT_v220 LE 0.25 $YY $CASE . ${LVER}e LE12emt_merge_list.$Date_NEW_ARC > o.SUB_MKCMAT_v220_LE12.$Date_NEW_ARC 2>&1
+
+$SCRIPTS/SUB_MKCMAT_v220 LE 1.00 $YY $CASE . ${LVER}e LE12emt_merge_list.${Date_NEW_ARC}_$ARCN > o.SUB_MKCMAT_v220_LE12.$Date_NEW_ARC 2>&1
+
+
+ rm $MAIN_PATH/INFILES/LE12emt_merge_list.${Date_NEW_ARC}_$ARCN
+/bin/sed -e "s/AAAAAA/$ARC/g" -e "s/DDDDDD/$Date_NEW_ARC/g" -e "s/YY/$YY/g" -e "s/LL/$LCMTVx/g" -e "s/EE/$ECMTVx/g" $MAIN_PATH/INFILES/LE12emt_merge_list.tmplt > $MAIN_PATH/INFILES/LE12emt_merge_list.${Date_NEW_ARC}_$ARCN
+
+
+#$SCRIPTS/SUB_MKCMAT_v220 LEx 0.25 $YY $CASE . ${LVER}x LE12emt_merge_list.$Date_NEW_ARC > o.SUB_MKCMAT_v220_LE12x.$Date_NEW_ARC 2>&1
+
+$SCRIPTS/SUB_MKCMAT_v220 LEx 1.00 $YY $CASE . ${LVER}x LE12emt_merge_list.${Date_NEW_ARC}_$ARCN > o.SUB_MKCMAT_v220_LE12x.$Date_NEW_ARC 2>&1
+
+
+
+
+
+#
+# At this point we do a LAGEOS+ETALON TRF solution (incremental)
+#
+
+CMAT_VERSION=30
+
+export CMAT_VERSION
+
+SOL=$SOL_E
+
+read GLOBAL_CMAT_OLD < $MAIN_PATH/INFILES/$CASE/CURRENT_GLOBAL.${CMAT_VERSION}_$ARC
+read CURRENT_CMAT_2_ADD < $MAIN_PATH/INFILES/$CASE/CURRENT_LE12_CMAT_NO.${CMAT_VERSION}_$ARC
+
+export GLOBAL_CMAT_OLD CURRENT_CMAT_2_ADD SOL
+
+
+#$SCRIPTS/SUB_TRF_INCRMNTL $SOL $CASE OPS . PPV SOLVE_TRF_INCRMNTL U4staestMinCon > o.SLV_LE12inc 2>&1
+
+
+
+
+
+#
+# At this point we do a LAGEOS+ETALON WEEKLY-TRF solution (Mid-arc referenced)
+#
+
+CMAT_VERSION=31
+
+export CMAT_VERSION
+
+SOL=$SOL_EPP
+
+read CURRENT_CMAT_2_ADD < $MAIN_PATH/INFILES/$CASE/CURRENT_LE12_CMAT_NO.${CMAT_VERSION}_$ARC
+
+export CURRENT_CMAT_2_ADD SOL
+
+$SCRIPTS/SUB_TRF_WEEKLY_PP_BIAS $SOL $CASE OPS . PPV SOLVE_TRF_WEEKLY_2014_180322 NULL > o.SLV_LE12_PP 2>&1
+
+
+# First get the list of biases that were solved-for:
+
+
+
+#
+# Postprocess the LAGEOS+ETALON WEEKLY-TRF solution:
+#
+
+PSOL_NUM=1
+
+$SCRIPTS/POST_PROCESS $SOL $SERVICE PPV $CASE LE12 ${PSOL_NUM} ${SNX_VER} $Date_NEW_ARC $Date_NXT_ARC $Date_MID_ARC $ILRS_AC $WEIGHT > o.POST_PROCESS_LE12_PP 2>&1  
+
+
+# Link the proper EPOCH BLOCK to this solution after removing any old links:
+
+\rm $EPOCH_DIR/${SERVICE}_${SOL}
+ln -s $EPOCH_DIR/${SERVICE}_${ARC}.${LVER}e_${WT}_$SUBSFX $EPOCH_DIR/${SERVICE}_${SOL}
+
+# Save the solution filename for postprocessing and orbit file creation:
+
+SOL_FILE=${SERVICE}_${SOL}_
+
+
+# Read and process the PARM file of this solution:
+
+$SCRIPTS/PARMRDR_OPS_TRF $SOL_FILE PPV $DISK $CASE OPS > o.PARMRDR_OPS_TRF_$SOL_FILE_PPV_$CASE 2>&1 
+
+#
+# At this point you can do a LAGEOS+ETALON Network Check and NEOS EOP solution:
+#
+
+CMAT_VERSION=31
+
+export CMAT_VERSION
+
+SOL=$SOL_EN
+
+read CURRENT_CMAT_2_ADD < $MAIN_PATH/INFILES/$CASE/CURRENT_LE12_CMAT_NO.${CMAT_VERSION}_$ARC
+
+export CURRENT_CMAT_2_ADD SOL
+
+$SCRIPTS/SUB_TRF_NEOS $SOL $CASE OPS . PPV SOLVE_TRF_WEEKLY_2014 NULL > o.SLV_LE12_NEOS 2>&1
+
+
+# First get the list of biases that were solved-for:
+
+
+
+#
+# Postprocess the LAGEOS+ETALON ILRS_NEOS solution:
+#
+
+PSOL_NUM=1
+
+$SCRIPTS/POST_PROCESS $SOL $SERVICE PPV $CASE LE12NEOS ${PSOL_NUM} ${SNX_VER} $Date_NEW_ARC $Date_NXT_ARC $Date_MID_ARC $ILRS_AC $WEIGHT > o.POST_PROCESS_LE12_NEOS 2>&1  
+#
+
+# Link the proper EPOCH BLOCK to this solution after removing any old links:
+
+\rm $EPOCH_DIR/${SERVICE}_${SOL}
+ln -s $EPOCH_DIR/${SERVICE}_${ARC}.${LVER}e_${WT}_$SUBSFX $EPOCH_DIR/${SERVICE}_${SOL}
+
+
+
+
+#
+#
+#  Make a NEOS submission file:
+#
+#
+
+mkdir -p /${DISK}/PPV/d_base/data/EOP/NEOS/JCET
+
+$SCRIPTS/MAKE_NEOS_EOP $ARC ${SERVICE}_${SOL_EN}_ ${LVER}e PPV EMT $CASE > o.MAKE_NEOS_EOP_SOL_EN 2>&1
+
+#cat /${DISK}/PPV/products/$CASE/OPS/${SERVICE}_${SOL_EN}_/${ARC}.JCET >> /${DISK}/PPV/d_base/data/EOP/NEOS/JCET/LAGEOS12+ETALON12_REANAL2014
+
+
+
+#---------------------------------------------------
+
+
+#  Done with ETALON  1 & 2
+
+
+#---------------------------------------------------
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++
+
+#
+#  Mail the file to ECP:
+#
+
+echo "NEW P-SERIES2020 2022 RESULTS FOR ARC: " $ARC > thdr
+cat thdr /${DISK}/PPV/products/$CASE/OPS/${SERVICE}_${SOL_EN}_/${ARC}.JCET > 2mail
+
+#mailx -s NEOS-p epavlis@umbc.edu < 2mail
+#mailx -s NEOS-p_rerun_7105 epavlis@umbc.edu < 2mail
+mailx -s NEOS-p_v280 magdak@umbc.edu < 2mail
+#mailx -s NEOS-p_rerun_7105 magdak@umbc.edu < 2mail
+#mail Johnson.Thomas@usno.navy.mil < 2mail
+####mail RSG@LOGOS.JPL.NASA.GOV < 2mail
+#mailx -s NEOS-p richard.s.gross@jpl.nasa.gov < 2mail
+
+###mail epavlis@umbc.edu < /${DISK}/PPV/products/$CASE/OPS/${SERVICE}_${SOL_EN}_/${ARC}.JCET 
+###mail Johnson.Thomas@usno.navy.mil < /${DISK}/PPV/products/$CASE/OPS/${SERVICE}_${SOL_EN}_/${ARC}.JCET 
+###mail RSG@LOGOS.JPL.NASA.GOV < /${DISK}/PPV/products/$CASE/OPS/${SERVICE}_${SOL_EN}_/${ARC}.JCET 
+#exit 2222
+#---------------------------------------------------
+
+
+#  Make SINEX files 
+
+
+#---------------------------------------------------
+$SCRIPTS/MAKE_POS+VEL_APRIORI_FROM_STAPOS_FILE_${ITRF_APRIORI}_PP_BIAS $ARC.adj x > o.MAKE_POS+VEL_APRIORI_FROM_STAPOS_FILE_${ITRF_APRIORI}_OPS_x_$ARC.adj 2>&1
+
+
+$SCRIPTS/SUB_MAKE_SINEX ${SERVICE}_${SOL_EPP}_fnames.snx  PPV  $SERVICE $CASE $WT > o.SUB_MAKE_SINEX_${SERVICE}_${SOL_EPP} 2>&1
+
+L12_VERSION=` expr ${OUR_VERSION} + 10 `
+
+fi
+
+$SCRIPTS/SUB_MAKE_SINEX ${SERVICE}_${SOL_LPP}_fnames.snx GISLV $SERVICE $CASE $WT > o.SUB_MAKE_SINEX_${SERVICE}_${SOL_LPP} 2>&1
+#exit 0
+$SCRIPTS/SHIFT_FILES_FORWARD $CASE $MAIN_PATH
+
+rm $MAIN_PATH/INFILES/2_turn_4_run_series.${CASE}_$ARC
+rm $MAIN_PATH/INFILES/ARC_INFO_E.${CASE}_$ARC
+rm $MAIN_PATH/INFILES/ARC_INFO_L.${CASE}_$ARC
+rm $MAIN_PATH/INFILES/ARC_SETUP_EPOCHS.${CASE}_$ARC
+rm $MAIN_PATH/INFILES/ARC_SETUP_NEW.${CASE}_$ARC
+rm $MAIN_PATH/INFILES/ARC_SETUP_NXT.${CASE}_$ARC
+rm $MAIN_PATH/INFILES/ARC_SETUP_OLD.${CASE}_$ARC
+rm $MAIN_PATH/INFILES/CURRENT_ARC_DR.${CASE}_$ARC
+rm $MAIN_PATH/INFILES/CURRENT_ARC_EMT.${CASE}_$ARC
+rm $MAIN_PATH/INFILES/MID-ARC_INFO.${CASE}_$ARC
+rm $MAIN_PATH/INFILES/SINEX_DATE_INFO.${CASE}_$ARC
+rm $MAIN_PATH/INFILES/WEEKLY/CURRENT_E12_CMAT_NO.20_$ARC
+rm $MAIN_PATH/INFILES/WEEKLY/CURRENT_E12_CMAT_NO.21_$ARC
+rm $MAIN_PATH/INFILES/WEEKLY/CURRENT_L12_CMAT_NO.10_$ARC
+rm $MAIN_PATH/INFILES/WEEKLY/CURRENT_L12_CMAT_NO.11_$ARC
+rm $MAIN_PATH/INFILES/WEEKLY/CURRENT_LE12_CMAT_NO.30_$ARC
+rm $MAIN_PATH/INFILES/WEEKLY/CURRENT_LE12_CMAT_NO.31_$ARC
+#rm $MAIN_PATH/INFILES/ILRS_L12__OPS${Date_NEW_ARC}_fnames.sp3 
+#rm $MAIN_PATH/INFILES/ILRS_L12_NEO${Date_NEW_ARC}_fnames.sp3
+#rm $MAIN_PATH/INFILES/ILRS_LE12NEO${Date_NEW_ARC}_fnames.sp3
+#rm $MAIN_PATH/INFILES/ILRS_LE12_OPS${Date_NEW_ARC}_fnames.sp3
+#rm $MAIN_PATH/INFILES/L12emt_merge_list.${Date_NEW_ARC}
+#rm $MAIN_PATH/INFILES/LE12emt_merge_list.${Date_NEW_ARC}
+#rm $MAIN_PATH/INFILES/E12emt_merge_list.${Date_NEW_ARC}
+#rm $MAIN_PATH/INFILES/ILRS_L12_NEOS${Date_NEW_ARC}_fnames.snx  
+#rm $MAIN_PATH/INFILES/ILRS_L12__OPS${Date_NEW_ARC}_fnames.snx
+#rm $MAIN_PATH/INFILES/ILRS_LE12NEOS${Date_NEW_ARC}_fnames.snx  
+#rm $MAIN_PATH/INFILES/ILRS_LE12_OPS${Date_NEW_ARC}_fnames.snx
+
+
+
+#done < /nobackup/mkuzmicz/INFILES/START-STOP_DATES/RR_${RUN_YEAR}_${RUN_NUMBER}
+
+
+
+
+
+#print "THE END RUN PP_BIAS WEEKLY L&E" > END_txt
+#mailx -s "RUN PP_BIAS WEEKLY END L&E" magdak@umbc.edu < END_txt
+
+exit 0
+

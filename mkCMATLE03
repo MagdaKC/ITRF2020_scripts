@@ -1,0 +1,121 @@
+#!/bin/ksh
+#
+
+set -vx                                                                 
+
+SCR_NAME=mkCMATLE03
+SCR_PARM=1
+SCR_LIST="FILE_IN"
+SCR_VERS=040119.0
+
+
+if [ `expr $#` -lt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+
+##########################
+#
+#  mkCMATLE03
+#
+##########################
+
+
+FILE_IN=${1:-LE12emt_merge_list.PP6B}
+
+
+while read arc emat1 emat2 ematN   
+do
+
+mkdir /${MAIN_PATH}/tmp/$$
+cd /${MAIN_PATH}/tmp/$$
+
+cat > filelist <<EOF
+ 61 /${MAIN_PATH}/MISSIONS/GISLV/emat/$STAGE/v${SNX_VER}/${arc}.${SUFL}
+ 62 /${MAIN_PATH}/MISSIONS/ETAV/emat/$STAGE/v${SNX_VER}/${arc}.${SUFE}
+EOF
+
+RDATE=`date +%y%m%d`
+
+#
+#  SOLVE CONTROL RECORDS :
+#  
+
+cat >slvin<<EOF                                                         
+TITLE  20EDT2  $sat Year $Y  ($RDATE)  cmat${sat}_$Y$V                        
+                                                                        
+NEWLAB 1
+APRINT       12                                                         
+CPRINT       11                                                         
+CSTAT     1   1        .9                                               
+EDIT       21  1                                                        
+GEOID                          6378136.3               298.257          
+PROCES      1     1                                                     
+DATA   2                                                                
+CMATRIX    $ematN$N$Y$V.                    1                           
+EOF
+#
+
+cat >> slvin <<EOF
+MATRIX   $emat1.  61 LV          1.0000000000000 1       40000000000000.
+MATRIX   $emat2.  62 EV          ${FAC}00000000000 1       40000000000000.
+END                                                                     
+EOF
+
+grep CMATRIX slvin > cmtxtmp
+read adum cmtnumb cdum < cmtxtmp
+echo $cmtnumb > $MAIN_PATH/INFILES/INF_OPS_ITRF2020/$STAGE/CURRENT_LE12_CMAT_NO.${V}_v${SNX_VER}
+
+#
+#  SATELLITE LIST :
+#
+
+cat $MAIN_PATH/INFILES/unit1             >                                satids
+
+##
+
+#
+#  Run SOLVE II
+#
+
+#time  /u/epavlis/EXECUTABLES/Vsolve_090308.x  <slvin 1>slvft6 2>errout
+#time  /${MAIN_PATH}/EXECUTABLES/Vsolve_090308.x   <slvin 1>slvft6 2>errout
+#time  $MAIN_PATH/EXECUTABLES/V+solve_G.x   <slvin 1>slvft6 2>errout
+ time  /umbc/research/epavlis/EXECUTABLES/PE2_EXEC/Vsolve_101906_180307_m8_PE2.x   <slvin 1>slvft6 2>errout
+
+
+cat errout                                                              
+
+sum cmat > sum_out
+read chcksm blks fname < sum_out
+if [ "$blks" -lt "50000" ]; then
+
+  echo "Error with mkCMATLE03.${CASE}.$STAGE.${arc}" > 2mail
+  mail -m mkCMATLE03 -t magdak@umbc.edu < 2mail
+
+fi
+mv cmat $MAIN_PATH/MISSIONS/PPV/emat/$STAGE/$CASE/v${SNX_VER}/${arc}.$V
+
+
+#mv cmat /${MAIN_PATH}/MISSIONS/PPV/emat/$STAGE/$CASE/${arc}.$V                                
+cat summary                                                              
+cat slvft6                                                              
+
+#                                                                       
+cd ..
+\rm -R /${MAIN_PATH}/tmp/$$
+
+done < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/$FILE_IN
+
+exit 0

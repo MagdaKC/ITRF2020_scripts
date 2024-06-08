@@ -1,0 +1,48 @@
+#!/bin/ksh
+#
+
+${SCR_DBG}set -vx
+set -vx
+
+SCR_NAME=GET_CORR_OF_PARMS
+SCR_PARM=4
+SCR_LIST="infile SAT STEP CASE"
+SCR_VERS=050928.0
+
+
+if [ `expr $#` -lt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+
+
+infile=$1
+SAT=$2
+STEP=${3:-WEEKLY}
+CASE=${4:-OPS}
+
+disk=/$DISK/$SAT/output/$STEP/$CASE
+
+
+file=$disk/v${SNX_VER}/SLV.$infile
+
+strtline=`sed -n '/^0                                              DISTRIBUTION OF CORRELATION COEFFICIENTS/=' $file`
+
+nextline=`expr $strtline + 94`
+
+sed -n "${strtline},${nextline}p" $file > ${disk}/CORRELATIONS/CORR.$infile
+
+
+
+exit 0

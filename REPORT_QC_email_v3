@@ -1,0 +1,79 @@
+#!/bin/ksh
+#
+${SCR_DBG}set -xv
+set -xv
+
+
+#  RUN_STR
+
+#
+
+SCR_NAME=REPORT_BiAS_ALL
+SCR_LIST="CASE ETA_IN"
+SCR_VERS=070928.0
+
+SCR_DBG="#"
+export SCR_DBG
+
+
+Date=`date +%y%m%d`
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+#CASE=DAILY
+#ARC=z70925
+ARC=$1
+diskC=$disk_n
+
+cp /$diskC/MISSIONS/PPV/qc_report/${CASE}/v${SNX_VER}/${ARC}_LEAS.txt test_ALL
+
+ read NYEAR2 NDOY2 Date_NEW_ARC2 NEW_ARC2 < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_NEW.${CASE}_v${SNX_VER}
+  #WEEKLY
+   if [ "$CASE" = "WEEKLY"  ]; then
+    read EYEAR2 EDOY2 Date_END_ARC2 END_ARC2 < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_NXT.${CASE}_v${SNX_VER}
+   elif [ "$CASE" = "DAILY"  ]; then
+    read EYEAR2 EDOY2 Date_END_ARC2 END_ARC2 < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_END.${CASE}_v${SNX_VER}
+   fi
+
+
+XDOY2=`expr $XDOY - 1`
+EDOY3=`expr $EDOY2 - 1`
+
+
+/$diskC/scripts/ydoy2ymd $NYEAR2 $NDOY2 > D1a
+/$diskC/scripts/ydoy2ymd $EYEAR2 $EDOY2 > D2a
+/$diskC/scripts/ydoy2ymd $EYEAR2 $EDOY3 > D3a
+read D1 < D1a
+read D2 < D2a
+read D3 < D3a
+Date_ENDO_ARC=$D3
+#CREAT files:
+while read STAT_QC
+do 
+grep  --text "^$STAT_QC" test_ALL > test_ALL_1
+grep --text -v -e "S1" -e  "A1" -e "E1" -e "E2" test_ALL_1 > test_ALL_2
+cp test_ALL_2 /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/qc_report/${CASE}/v${SNX_VER}/jcet.qc7day.${Date_ENDO_ARC}_${STAT_QC}.slr.v01.rpt
+rm test_ALL_1 test_ALL_2
+
+
+if [  -s /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/qc_report/${CASE}/v${SNX_VER}/jcet.qc7day.${Date_ENDO_ARC}_${STAT_QC}.slr.v01.rpt  ]; then
+mail -s "Report_BIAS_SLRF2020_$ARC for ${STAT_QC} " magdak@umbc.edu < /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/qc_report/${CASE}/v${SNX_VER}/jcet.qc7day.${Date_ENDO_ARC}_${STAT_QC}.slr.v01.rpt
+#mail -s "Report_BIAS_SLRF2020_$ARC for ${STAT_QC} " epavlis@umbc.edu < /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/qc_report/${CASE}/v${SNX_VER}/jcet.qc7day.${Date_ENDO_ARC}_${STAT_QC}.slr.v01.rpt
+mail -s "Report_BIAS_SLRF2020_$ARC for ${STAT_QC} " frank.g.lemoine@nasa.gov < /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/qc_report/${CASE}/v${SNX_VER}/jcet.qc7day.${Date_ENDO_ARC}_${STAT_QC}.slr.v01.rpt
+mail -s "Report_BIAS_SLRF2020_$ARC for ${STAT_QC} " alexandre.belli@ssaihq.com < /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/qc_report/${CASE}/v${SNX_VER}/jcet.qc7day.${Date_ENDO_ARC}_${STAT_QC}.slr.v01.rpt
+else 
+rm /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/qc_report/${CASE}/v${SNX_VER}/jcet.qc7day.${Date_ENDO_ARC}_${STAT_QC}.slr.v01.rpt
+
+fi
+done < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/QC_STATION
+
+
+exit 0
+

@@ -1,0 +1,408 @@
+#  RUN_SERIES_DAILY2005
+
+#
+
+SCR_NAME=RUN_SERIES_DAILY2005
++ SCR_NAME=RUN_SERIES_DAILY2005
+SCR_PARM=0
++ SCR_PARM=0
+SCR_LIST="CASE ETA_IN GROUP JOB_FILE"
++ SCR_LIST='CASE ETA_IN GROUP JOB_FILE'
+SCR_VERS=100622.0
+
++ SCR_VERS=100622.0
+SCR_DBG="#"
++ SCR_DBG='#'
+export SCR_DBG
+
++ export SCR_DBG
+if [ `expr $#` -lt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+expr $#
++ expr 0
++ [ 0 -lt 0 ]
+Date=`date +%y%m%d`
+
+date +%y%m%d
++ date +%y%m%d
++ Date=240427
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+date '+DATE: %m/%d/%y  TIME: %H:%M:%S'
++ date '+DATE: %m/%d/%y  TIME: %H:%M:%S'
++ DateTime='DATE: 04/27/24  TIME: 17:46:07'
+echo " # "
++ echo ' # '
+ # 
+echo " #  $SCR_NAME $* "
++ echo ' #  RUN_SERIES_DAILY2005  '
+ #  RUN_SERIES_DAILY2005  
+echo " # "
++ echo ' # '
+ # 
+echo " #  Version $SCR_VERS "
++ echo ' #  Version 100622.0 '
+ #  Version 100622.0 
+echo " # "
++ echo ' # '
+ # 
+echo " #  Run Date $DateTime "
++ echo ' #  Run Date DATE: 04/27/24  TIME: 17:46:07 '
+ #  Run Date DATE: 04/27/24  TIME: 17:46:07 
+echo " # "
+
+
++ echo ' # '
+ # 
+CASE=CRD2TDF
+
++ CASE=CRD2TDF
+#exec > /umbc/epavlis/data01/LOCAL/magdak/tmp/magda/RUN_SERIES_IERS_OPS2005.${CASE}.$Date.$$.log 2>&1
+
+MAIN_PATH=/umbc/epavlis/data01/LOCAL/magdak
++ MAIN_PATH=/umbc/epavlis/data01/LOCAL/magdak
+SCRIPTS=/umbc/epavlis/data01/LOCAL/magdak/scripts/OPS_DATA_CRD
++ SCRIPTS=/umbc/epavlis/data01/LOCAL/magdak/scripts/OPS_DATA_CRD
+DISK=umbc/epavlis/data01/LOCAL/magdak/MISSIONS
+
++ DISK=umbc/epavlis/data01/LOCAL/magdak/MISSIONS
+TDF2GDYN=tdf0901p0_i64_sun_RM=8.x
++ TDF2GDYN=tdf0901p0_i64_sun_RM=8.x
+CENTER=CDDIS
++ CENTER=CDDIS
+export CENTER TDF2GDYN DISK SCRIPTS MAIN_PATH
+
+
++ export CENTER TDF2GDYN DISK SCRIPTS MAIN_PATH
+cd /umbc/epavlis/data01/LOCAL/magdak/tmp/magda
++ cd /umbc/epavlis/data01/LOCAL/magdak/tmp/magda
+wkTmp=$$
++ wkTmp=1591
+mkdir ${CASE}${wkTmp}
++ mkdir CRD2TDF1591
+cd ${CASE}${wkTmp}
++ cd CRD2TDF1591
+CDIR=/umbc/epavlis/data01/LOCAL/magdak/tmp/magda/${CASE}${wkTmp}
++ CDIR=/umbc/epavlis/data01/LOCAL/magdak/tmp/magda/CRD2TDF1591
+echo ${CASE}${wkTmp} > /umbc/epavlis/data01/LOCAL/magdak/tmp/magda/${CASE}_wDIR_$Date
+
++ echo CRD2TDF1591
++ 1> /umbc/epavlis/data01/LOCAL/magdak/tmp/magda/CRD2TDF_wDIR_240427
+DIR_2_TAR=${CASE}_wDIR_$Date
+
++ DIR_2_TAR=CRD2TDF_wDIR_240427
+export DIR_2_TAR CDIR
+
+
++ export DIR_2_TAR CDIR
+export CDIR CASE 
+
+
++ export CDIR CASE
+#--------------------------------------
+#  Start the process
+#--------------------------------------
+
+
+ CASED=DAILY_v180
+
++ CASED=DAILY_v180
+ #
+ #  Read year, doy, date and arc-name for the old, current and future arcs:
+ #
+
+ read OYEAR ODOY Date_OLD_ARC OLD < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_OLD.$CASED
++ read OYEAR ODOY Date_OLD_ARC OLD
++ 0< /umbc/epavlis/data01/LOCAL/magdak/INFILES/INF_OPS_ITRF2020/ARC_SETUP_OLD.DAILY_v180
+ read NYEAR NDOY Date_NEW_ARC ARC < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_NEW.$CASED
++ read NYEAR NDOY Date_NEW_ARC ARC
++ 0< /umbc/epavlis/data01/LOCAL/magdak/INFILES/INF_OPS_ITRF2020/ARC_SETUP_NEW.DAILY_v180
+ read XYEAR XDOY Date_NXT_ARC NXT < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_NXT.$CASED
+
+
++ read XYEAR XDOY Date_NXT_ARC NXT
++ 0< /umbc/epavlis/data01/LOCAL/magdak/INFILES/INF_OPS_ITRF2020/ARC_SETUP_NXT.DAILY_v180
+export NYEAR Date_NEW_ARC  Date_OLD_ARC
+
++ export NYEAR Date_NEW_ARC Date_OLD_ARC
+#--------------------------------------
+#  Get the SLR CRD data from CDDIS or EDC:
+#--------------------------------------
+#
+
+YY=`echo $NYEAR | cut -c3-4`
+echo $NYEAR | cut -c3-4
++ echo 2024
++ cut -c3-4
++ YY=24
+#
+##  For analyzing past arcs, do not need to re-get the QL data! But we will need this for the operational script!!!
+#
+
+
+$SCRIPTS/8SAT_QL_2_TDF_ARC_CDDIS_P2_CRD2 $NYEAR $YY ${OYEAR}${Date_OLD_ARC} ${NYEAR}${Date_NEW_ARC} > o.8SAT_QL_2_TDF_ARC 2>&1
+
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/OPS_DATA_CRD/8SAT_QL_2_TDF_ARC_CDDIS_P2_CRD2 2024 24 2024240419 2024240420
++ 1> o.8SAT_QL_2_TDF_ARC 2>& 1
+#--------------------------------------
+#remove old files CRD, MRT2 and TDF
+#--------------------------------------
+
+chmod 775 $CDIR/clean_list
++ chmod 775 /umbc/epavlis/data01/LOCAL/magdak/tmp/magda/CRD2TDF1591/clean_list
+#$CDIR/clean_list
+#--------------------------------------
+
+# FTP merit files do GEODESY server 161105
+#--------------------------------------
+#$SCRIPTS/8SAT_QL_2_TDF_ARC_FTP_P2  > o.8SAT_QL_2_TDF_ARC_FTP_P2 2>&1
+
+#--------------------------------------
+#Send email that job is done
+#--------------------------------------
+
+
+YEARC=`date '+%y'`
+date '+%y'
++ date +%y
++ YEARC=24
+YEARCC=`date '+%Y'`
+date '+%Y'
++ date +%Y
++ YEARCC=2024
+rm MAIL? TDF_ALL
+
++ rm 'MAIL?' TDF_ALL
+rm: cannot remove ‘MAIL?’: No such file or directory
+rm: cannot remove ‘TDF_ALL’: No such file or directory
+#CHECK TDF
+OLD_ARC=${OYEAR}${Date_OLD_ARC}
++ OLD_ARC=2024240419
+NEW_ARC=${NYEAR}${Date_NEW_ARC}
++ NEW_ARC=2024240420
+$SCRIPTS/CHECK_TDF_ALL $YY $OLD_ARC $NEW_ARC ETA1 CDDIS > o.E1_TDF 2>&1
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/OPS_DATA_CRD/CHECK_TDF_ALL 24 2024240419 2024240420 ETA1 CDDIS
++ 1> o.E1_TDF 2>& 1
+$SCRIPTS/CHECK_TDF_ALL $YY $OLD_ARC $NEW_ARC ETA2 CDDIS > o.E2_TDF 2>&1
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/OPS_DATA_CRD/CHECK_TDF_ALL 24 2024240419 2024240420 ETA2 CDDIS
++ 1> o.E2_TDF 2>& 1
+$SCRIPTS/CHECK_TDF_ALL $YY $OLD_ARC $NEW_ARC GISL1 CDDIS > o.L1_TDF 2>&1
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/OPS_DATA_CRD/CHECK_TDF_ALL 24 2024240419 2024240420 GISL1 CDDIS
++ 1> o.L1_TDF 2>& 1
+$SCRIPTS/CHECK_TDF_ALL $YY $OLD_ARC $NEW_ARC GISL2 CDDIS > o.L2_TDF 2>&1
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/OPS_DATA_CRD/CHECK_TDF_ALL 24 2024240419 2024240420 GISL2 CDDIS
++ 1> o.L2_TDF 2>& 1
+$SCRIPTS/CHECK_TDF_ALL $YY $OLD_ARC $NEW_ARC LARES CDDIS > o.LR_TDF 2>&1
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/OPS_DATA_CRD/CHECK_TDF_ALL 24 2024240419 2024240420 LARES CDDIS
++ 1> o.LR_TDF 2>& 1
+$SCRIPTS/CHECK_TDF_ALL $YY $OLD_ARC $NEW_ARC LARES2 CDDIS > o.LR2_TDF 2>&1
+
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/OPS_DATA_CRD/CHECK_TDF_ALL 24 2024240419 2024240420 LARES2 CDDIS
++ 1> o.LR2_TDF 2>& 1
+ls -la /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/output/TDFout/crddata.*${Date_NEW_ARC}*${YEARC}.tdf_${CENTER}.gz >> MAIL1
++ ls -la /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/output/TDFout/crddata.2024240420.GISL1_24.tdf_CDDIS.gz
++ 1>> MAIL1
+ls -la /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/output/TDFout/crddata.*${Date_NEW_ARC}*${YEARC}.tdf_${CENTER}.gz >> MAIL1
++ ls -la /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/output/TDFout/crddata.2024240420.GISL2_24.tdf_CDDIS.gz
++ 1>> MAIL1
+ls -la /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/output/TDFout/crddata.*${Date_NEW_ARC}*${YEARC}.tdf_${CENTER}.gz >> MAIL1
++ ls -la /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/output/TDFout/crddata.2024240420.ETA1_24.tdf_CDDIS.gz
++ 1>> MAIL1
+ls -la /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/output/TDFout/crddata.*${Date_NEW_ARC}*${YEARC}.tdf_${CENTER}.gz >> MAIL1
++ ls -la /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/output/TDFout/crddata.2024240420.ETA2_24.tdf_CDDIS.gz
++ 1>> MAIL1
+ls -la /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/output/TDFout/crddata.*${Date_NEW_ARC}*${YEARC}.tdf_${CENTER}.gz >> MAIL1
++ ls -la /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/output/TDFout/crddata.2024240420.STARL_24.tdf_CDDIS.gz
++ 1>> MAIL1
+ls -la /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/output/TDFout/crddata.*${Date_NEW_ARC}*${YEARC}.tdf_${CENTER}.gz >> MAIL1
++ ls -la /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/output/TDFout/crddata.2024240420.AJISI_24.tdf_CDDIS.gz
++ 1>> MAIL1
+ls -la /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/output/TDFout/crddata.*${Date_NEW_ARC}*${YEARC}.tdf_${CENTER}.gz >> MAIL1
++ ls -la /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/output/TDFout/crddata.2024240420.LARES_24.tdf_CDDIS.gz
++ 1>> MAIL1
+ls -la /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/output/TDFout/crddata.*${Date_NEW_ARC}*${YEARC}.tdf_${CENTER}.gz >> MAIL1
+
+
++ ls -la /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/output/TDFout/crddata.2024240420.LARES2_24.tdf_CDDIS.gz
++ 1>> MAIL1
+ls -l  /$DISK/GISL1/d_base/data/TDF/crddata.*${Date_NEW_ARC}*${YEARC}.tdf_${CENTER}.gz > new_TDF0
++ ls -l /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/d_base/data/TDF/crddata.2024240420.GISL1_24.tdf_CDDIS.gz
++ 1> new_TDF0
+ls -l  /$DISK/GISL2/d_base/data/TDF/crddata.*${Date_NEW_ARC}*${YEARC}.tdf_${CENTER}.gz >> new_TDF0
++ ls -l /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/d_base/data/TDF/crddata.2024240420.GISL2_24.tdf_CDDIS.gz
++ 1>> new_TDF0
+ls -l  /$DISK/ETA1/d_base/data/TDF/crddata.*${Date_NEW_ARC}*${YEARC}.tdf_${CENTER}.gz >> new_TDF0
++ ls -l /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/d_base/data/TDF/crddata.2024240420.ETA1_24.tdf_CDDIS.gz
++ 1>> new_TDF0
+ls -l  /$DISK/ETA2/d_base/data/TDF/crddata.*${Date_NEW_ARC}*${YEARC}.tdf_${CENTER}.gz >> new_TDF0
++ ls -l /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/d_base/data/TDF/crddata.2024240420.ETA2_24.tdf_CDDIS.gz
++ 1>> new_TDF0
+ls -l  /$DISK/LARES2/d_base/data/TDF/crddata.*${Date_NEW_ARC}*${YEARC}.tdf_${CENTER}.gz >> new_TDF0
++ ls -l /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/d_base/data/TDF/crddata.2024240420.LARES2_24.tdf_CDDIS.gz
++ 1>> new_TDF0
+ls -l  /$DISK/STARL/d_base/data/TDF/crddata.*${Date_NEW_ARC}*${YEARC}.tdf_${CENTER}.gz >> new_TDF0
++ ls -l /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/d_base/data/TDF/crddata.2024240420.STARL_24.tdf_CDDIS.gz
++ 1>> new_TDF0
+ls -l  /$DISK/AJISI/d_base/data/TDF/crddata.*${Date_NEW_ARC}*${YEARC}.tdf_${CENTER}.gz >> new_TDF0
++ ls -l /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/d_base/data/TDF/crddata.2024240420.AJISI_24.tdf_CDDIS.gz
++ 1>> new_TDF0
+#EMAIL 
+cat TDF_ALL  >> new_TDF
++ cat TDF_ALL
++ 1>> new_TDF
+echo "---" >> new_TDF
++ echo ---
++ 1>> new_TDF
+echo "TDF files" >> new_TDF
++ echo 'TDF files'
++ 1>> new_TDF
+cat new_TDF0  >> new_TDF
++ cat new_TDF0
++ 1>> new_TDF
+echo "---" >> new_TDF
++ echo ---
++ 1>> new_TDF
+echo "TDF OUTPUT files" >> new_TDF
++ echo 'TDF OUTPUT files'
++ 1>> new_TDF
+cat MAIL1  >> new_TDF
++ cat MAIL1
++ 1>> new_TDF
+echo "CRD DATA DONE" >> new_TDF
+
++ echo 'CRD DATA DONE'
++ 1>> new_TDF
+echo "CRD DATA DONE from CDDIS" > mm
++ echo 'CRD DATA DONE from CDDIS'
++ 1> mm
+cat new_TDF >> mm
++ cat new_TDF
++ 1>> mm
+mailx -s "CRD DATA DONE from CDDIS PERSEUS2 ${YEARC}"  magdak@umbc.edu < new_TDF
++ mailx -s 'CRD DATA DONE from CDDIS PERSEUS2 24' magdak@umbc.edu
++ 0< new_TDF
+#mailx -s "CRD DATA DONE from CDDIS PERSEUS2 ${YEARC}"  epavlis@umbc.edu < new_TDF
+cd /tmp/
++ cd /tmp/
+#chmod 777 -R /tmp/magdak/plots*
+#chmod 777 -R /tmp/magda/stapropg*
+#  \rm -r /tmp/gdyn*
+  \rm -r /tmp/getSLR*
++ rm -r '/tmp/getSLR*'
+rm: cannot remove ‘/tmp/getSLR*’: No such file or directory
+rm -rf /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/d_base/data/CRD/temp*
++ rm -rf /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/d_base/data/CRD/temp1607
+rm -rf /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/d_base/data/CRD/temp*
++ rm -rf /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/d_base/data/CRD/temp1977
+rm -rf /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/d_base/data/CRD/temp*
++ rm -rf /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/d_base/data/CRD/temp2313
+rm -rf /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/d_base/data/CRD/temp*
++ rm -rf /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/d_base/data/CRD/temp2644
+rm -rf /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/d_base/data/CRD/temp*
++ rm -rf /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/d_base/data/CRD/temp4344
+rm -rf /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/d_base/data/CRD/temp*
++ rm -rf /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/d_base/data/CRD/temp3669
+rm -rf /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STELLA/d_base/data/CRD/temp*
++ rm -rf /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STELLA/d_base/data/CRD/temp4010
+rm -rf /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/d_base/data/CRD/temp*
++ rm -rf /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/d_base/data/CRD/temp2978
+rm -rf /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/d_base/data/CRD/temp*
++ rm -rf /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/d_base/data/CRD/temp3335
+rm -rf /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/MLTSAT/d_base/data/CRD/temp*
+
+
++ rm -rf '/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/MLTSAT/d_base/data/CRD/temp*'
+ OLD_ARC=${OYEAR}${Date_OLD_ARC}
++ OLD_ARC=2024240419
+  NEXT_DATE=$(date +%y%m%d -d "$Date_OLD_ARC - 2 day")
++ date +%y%m%d -d '240419 - 2 day'
++ NEXT_DATE=240417
+  L_DATE=$(date +%m%d -d "$Date_OLD_ARC - 2 day")
++ date +%m%d -d '240419 - 2 day'
++ L_DATE=0417
+ if [ "$L_DATE" -ne "1231" ]; then
+rm  /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/output/TDFout/crddata.*${NEXT_DATE}*${YEARC}.tdf_${CENTER}.gz 
+rm  /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/output/TDFout/crddata.*${NEXT_DATE}*${YEARC}.tdf_${CENTER}.gz 
+rm  /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/output/TDFout/crddata.*${NEXT_DATE}*${YEARC}.tdf_${CENTER}.gz 
+rm  /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/output/TDFout/crddata.*${NEXT_DATE}*${YEARC}.tdf_${CENTER}.gz 
+rm  /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/output/TDFout/crddata.*${NEXT_DATE}*${YEARC}.tdf_${CENTER}.gz 
+rm  /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/output/TDFout/crddata.*${NEXT_DATE}*${YEARC}.tdf_${CENTER}.gz 
+rm  /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/output/TDFout/crddata.*${NEXT_DATE}*${YEARC}.tdf_${CENTER}.gz 
+rm  /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/output/TDFout/crddata.*${NEXT_DATE}*${YEARC}.tdf_${CENTER}.gz 
+rm  /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/d_base/data/TDF/crddata.*${NEXT_DATE}.*.tdf_${CENTER}.gz 
+rm  /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/d_base/data/TDF/crddata.*${NEXT_DATE}.*.tdf_${CENTER}.gz 
+rm  /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/d_base/data/TDF/crddata.*${NEXT_DATE}.*.tdf_${CENTER}.gz 
+rm  /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/d_base/data/TDF/crddata.*${NEXT_DATE}.*.tdf_${CENTER}.gz 
+rm  /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/d_base/data/TDF/crddata.*${NEXT_DATE}.*.tdf_${CENTER}.gz 
+rm  /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/d_base/data/TDF/crddata.*${NEXT_DATE}.*.tdf_${CENTER}.gz 
+rm  /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/d_base/data/TDF/crddata.*${NEXT_DATE}.*.tdf_${CENTER}.gz 
+rm  /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/d_base/data/TDF/crddata.*${NEXT_DATE}.*.tdf_${CENTER}.gz 
+rm  /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/d_base/data/CRD/crddata.*${NEXT_DATE}.GISL1
+rm  /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/d_base/data/CRD/crddata.*${NEXT_DATE}.GISL2
+rm  /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/d_base/data/CRD/crddata.*${NEXT_DATE}.ETA1
+rm  /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/d_base/data/CRD/crddata.*${NEXT_DATE}.ETA2
+rm  /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/d_base/data/CRD/crddata.*${NEXT_DATE}.AJ*
+rm  /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/d_base/data/CRD/crddata.*${NEXT_DATE}.S*
+rm  /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STELLA/d_base/data/CRD/crddata.*${NEXT_DATE}.S*
+rm  /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/d_base/data/CRD/crddata.*${NEXT_DATE}.LARES
+rm  /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/d_base/data/CRD/crddata.*${NEXT_DATE}.LARES2
+rm  /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/MLTSAT/d_base/data/CRD/crddata.*${NEXT_DATE}.*
+fi
++ [ 0417 -ne 1231 ]
++ rm '/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/output/TDFout/crddata.*240417*24.tdf_CDDIS.gz'
+rm: cannot remove ‘/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/output/TDFout/crddata.*240417*24.tdf_CDDIS.gz’: No such file or directory
++ rm '/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/output/TDFout/crddata.*240417*24.tdf_CDDIS.gz'
+rm: cannot remove ‘/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/output/TDFout/crddata.*240417*24.tdf_CDDIS.gz’: No such file or directory
++ rm '/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/output/TDFout/crddata.*240417*24.tdf_CDDIS.gz'
+rm: cannot remove ‘/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/output/TDFout/crddata.*240417*24.tdf_CDDIS.gz’: No such file or directory
++ rm '/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/output/TDFout/crddata.*240417*24.tdf_CDDIS.gz'
+rm: cannot remove ‘/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/output/TDFout/crddata.*240417*24.tdf_CDDIS.gz’: No such file or directory
++ rm '/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/output/TDFout/crddata.*240417*24.tdf_CDDIS.gz'
+rm: cannot remove ‘/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/output/TDFout/crddata.*240417*24.tdf_CDDIS.gz’: No such file or directory
++ rm '/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/output/TDFout/crddata.*240417*24.tdf_CDDIS.gz'
+rm: cannot remove ‘/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/output/TDFout/crddata.*240417*24.tdf_CDDIS.gz’: No such file or directory
++ rm '/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/output/TDFout/crddata.*240417*24.tdf_CDDIS.gz'
+rm: cannot remove ‘/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/output/TDFout/crddata.*240417*24.tdf_CDDIS.gz’: No such file or directory
++ rm '/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/output/TDFout/crddata.*240417*24.tdf_CDDIS.gz'
+rm: cannot remove ‘/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/output/TDFout/crddata.*240417*24.tdf_CDDIS.gz’: No such file or directory
++ rm '/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/d_base/data/TDF/crddata.*240417.*.tdf_CDDIS.gz'
+rm: cannot remove ‘/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/d_base/data/TDF/crddata.*240417.*.tdf_CDDIS.gz’: No such file or directory
++ rm '/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/d_base/data/TDF/crddata.*240417.*.tdf_CDDIS.gz'
+rm: cannot remove ‘/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/d_base/data/TDF/crddata.*240417.*.tdf_CDDIS.gz’: No such file or directory
++ rm '/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/d_base/data/TDF/crddata.*240417.*.tdf_CDDIS.gz'
+rm: cannot remove ‘/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/d_base/data/TDF/crddata.*240417.*.tdf_CDDIS.gz’: No such file or directory
++ rm '/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/d_base/data/TDF/crddata.*240417.*.tdf_CDDIS.gz'
+rm: cannot remove ‘/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/d_base/data/TDF/crddata.*240417.*.tdf_CDDIS.gz’: No such file or directory
++ rm '/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/d_base/data/TDF/crddata.*240417.*.tdf_CDDIS.gz'
+rm: cannot remove ‘/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/d_base/data/TDF/crddata.*240417.*.tdf_CDDIS.gz’: No such file or directory
++ rm '/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/d_base/data/TDF/crddata.*240417.*.tdf_CDDIS.gz'
+rm: cannot remove ‘/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/d_base/data/TDF/crddata.*240417.*.tdf_CDDIS.gz’: No such file or directory
++ rm '/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/d_base/data/TDF/crddata.*240417.*.tdf_CDDIS.gz'
+rm: cannot remove ‘/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/d_base/data/TDF/crddata.*240417.*.tdf_CDDIS.gz’: No such file or directory
++ rm '/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/d_base/data/TDF/crddata.*240417.*.tdf_CDDIS.gz'
+rm: cannot remove ‘/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/d_base/data/TDF/crddata.*240417.*.tdf_CDDIS.gz’: No such file or directory
++ rm '/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/d_base/data/CRD/crddata.*240417.GISL1'
+rm: cannot remove ‘/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/d_base/data/CRD/crddata.*240417.GISL1’: No such file or directory
++ rm '/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/d_base/data/CRD/crddata.*240417.GISL2'
+rm: cannot remove ‘/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/d_base/data/CRD/crddata.*240417.GISL2’: No such file or directory
++ rm '/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/d_base/data/CRD/crddata.*240417.ETA1'
+rm: cannot remove ‘/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/d_base/data/CRD/crddata.*240417.ETA1’: No such file or directory
++ rm '/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/d_base/data/CRD/crddata.*240417.ETA2'
+rm: cannot remove ‘/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/d_base/data/CRD/crddata.*240417.ETA2’: No such file or directory
++ rm '/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/d_base/data/CRD/crddata.*240417.AJ*'
+rm: cannot remove ‘/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/AJISI/d_base/data/CRD/crddata.*240417.AJ*’: No such file or directory
++ rm '/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/d_base/data/CRD/crddata.*240417.S*'
+rm: cannot remove ‘/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STARL/d_base/data/CRD/crddata.*240417.S*’: No such file or directory
++ rm '/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STELLA/d_base/data/CRD/crddata.*240417.S*'
+rm: cannot remove ‘/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/STELLA/d_base/data/CRD/crddata.*240417.S*’: No such file or directory
++ rm '/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/d_base/data/CRD/crddata.*240417.LARES'
+rm: cannot remove ‘/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES/d_base/data/CRD/crddata.*240417.LARES’: No such file or directory
++ rm '/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/d_base/data/CRD/crddata.*240417.LARES2'
+rm: cannot remove ‘/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/d_base/data/CRD/crddata.*240417.LARES2’: No such file or directory
++ rm '/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/MLTSAT/d_base/data/CRD/crddata.*240417.*'
+rm: cannot remove ‘/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/MLTSAT/d_base/data/CRD/crddata.*240417.*’: No such file or directory
+exit 0
++ exit 0

@@ -1,0 +1,86 @@
+#!/bin/ksh
+#
+
+set -xv
+
+if [ `expr $#` -gt 4 ]; then
+   echo "Usage: MAKE_POS+VEL_APRIORI_FROM_STAPOS_FILE_SLRF2020_PP_BIAS infile [CASE] [TRF] [YMD_MJD] \007"
+   exit 101
+fi
+
+infile=$1
+CASE=${2:-e}
+TRF=${3:-ITRF2020}
+YMD_MJD=${4:-150101 57023}
+DISKNF=/umbc/epavlis/data01/LOCAL/magdak
+diskn=/umbc/epavlis/data01/LOCAL/magdak
+
+
+if [ "$CASE" = "e" ]; then
+
+disk=umbc/epavlis/data01/LOCAL/magdak/MISSIONS/d_base/site/DAILY/SLRF2020/EPOCH_2015.0
+#disk=/${diskn}/d_base/site/DAILY/$ITRF_APRIORI/EPOCH_2015.0
+disk=/${diskn}/MISSIONS/d_base/site/DAILY/$ITRF_APRIORI/EPOCH_2015.0
+
+elif [ "$CASE" = "x" ]; then
+
+disk=umbc/epavlis/data01/LOCAL/magdak/MISSIONS/d_base/site/DAILY/SLRF2020/MID-ARC_EPOCH
+#disk=/${diskn}/d_base/site/DAILY/$ITRF_APRIORI/MID-ARC_EPOCH
+disk=/${diskn}/MISSIONS/d_base/site/DAILY/$ITRF_APRIORI/MID-ARC_EPOCH
+
+fi
+#DSK=${4:-umbc/epavlis/data01/LOCAL/magdak}
+
+#
+# make sure you have everything you need
+#
+
+#disk=$DSK/SSEM
+Date=`date +%y%m%d`
+
+if [ ! -d /$disk/d_base ]; then
+      mkdir /$disk/d_base
+fi
+if [ ! -d /$disk/d_base/site ]; then
+      mkdir /$disk/d_base/site
+fi
+
+mkdir -p /umbc/epavlis/data01/LOCAL/magdak/tmp/magda/REM$$
+cd /umbc/epavlis/data01/LOCAL/magdak/tmp/magda/REM$$
+
+zcat /$disk/${infile}.Z > T00                 
+
+grep -v "INSTRMN" T00 > T0
+
+#grep  "^.............................................................................................02 " T0 > T1
+#grep  "^.............................................................................................03 " T0 > T2
+
+grep  "^......................................................................................02 " T0 > T1
+#grep  "^......................................................................................02 " T0 > T11
+#grep -v " INSTRMN " T11 > T1
+grep  "^......................................................................................03 " T0 > T2
+#grep  "^......................................................................................03 " T0 > T22
+#grep -v " INSTRMN " T22 > T2
+
+cut -c1-7 T1 > Name
+cut -c13-20 T1 > SOD
+cut -c21-65 T1 > POS
+cut -c13-16 T1 > CDP
+cut -c90-98 T1 > DOMES
+
+cut -c22-65 T2 > VEL
+cut -c71-78 T2 > YMD+MJD
+
+sed "s/......../$YMD_MJD/g" YMD+MJD > YYMMDD_MJD
+
+paste -d" " CDP SOD DOMES Name POS VEL YYMMDD_MJD DOMES > New_a_priori
+
+cat ${diskn}/INFILES/CURRENT_ITRF_title  New_a_priori > ${DISKNF}/MISSIONS/d_base/site/${ARC}.$CASE.apr
+
+gzip -f /${DISKNF}/MISSIONS/d_base/site/${ARC}.$CASE.apr
+
+
+cd ..
+\rm -r REM$$
+
+exit 0

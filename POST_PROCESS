@@ -1,0 +1,158 @@
+#!/bin/ksh
+#
+
+${SCR_DBG}set -xv
+set -xv
+
+SCR_NAME=POST_PROCESS
+SCR_PARM=12
+SCR_LIST="CASE PROJ SAT STEP SUBSFX solN vM BGN END MID INST WT"
+SCR_VERS=230706.0
+
+
+if [ `expr $#` -gt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+#MAIN_PATH=/space/users/epavlis
+#SCRIPTS=$MAIN_PATH/scripts/OPS/POST
+#DISK=space/REPRO
+#SERVICE=ILRS
+#
+#export MAIN_PATH SCRIPTS DISK SERVICE
+
+CASE=$1
+PROJ=${2:-ILRS}
+SAT=${3:-GISLV}
+STEP=${4:-WEEKLY}
+SUBSFX=${5:-L12}
+solN=${6:-A}
+vM=${7:-1}
+BGN=${8:-930103}
+END=${9:-040103}
+MID=${10:-980704}
+INST=${11:-jcet}
+WT=${12:-}
+
+SOL=${PROJ}_${CASE}   
+
+SNX=${INST}.pos+eop.${SNX_DATE}.v${vM}.snx
+
+SP3=${INST}.orb.CDDIS_SAT.${SNX_DATE}.v${vM}.sp3
+
+
+echo $SOL $SNX > $MAIN_PATH/INFILES/INF_OPS_ITRF2020/${PROJ}_${CASE}_fnames.snx
+chmod 664 $MAIN_PATH/INFILES/INF_OPS_ITRF2020/${PROJ}_${CASE}_fnames.snx
+
+echo $SP3 > $MAIN_PATH/INFILES/INF_OPS_ITRF2020/${PROJ}_${CASE}_fnames.sp3
+chmod 664 $MAIN_PATH/INFILES/INF_OPS_ITRF2020/${PROJ}_${CASE}_fnames.sp3
+
+export STEP CASE SOL SAT PROJ SNX  SP3 BGN
+
+
+gzip  -f /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/$SAT/pgscov/$STEP/$SUBDIR/v${SNX_VER}/${SOL}_${WT}cov
+
+gzip  -f /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/$SAT/punchdout/$STEP/$SUBDIR/v${SNX_VER}/${SOL}_${WT}pnc
+
+
+
+# Generate BIAS BLOCK:
+if [ "$SNX_VER" = "280" ]; then
+$SCRIPTS/MAKE_BIAS_LIST_v${SNX_VER} $SOL $SAT ${STEP} OPS 4051 we $WT > o.MAKE_BIAS_LIST_4051.$SOL 2>&1
+
+$SCRIPTS/MAKE_BIAS_LIST_v${SNX_VER} $SOL $SAT ${STEP} OPS 4500 we $WT > o.MAKE_BIAS_LIST_4500.$SOL 2>&1
+
+else
+$SCRIPTS/MAKE_BIAS_LIST $SOL $SAT ${STEP} OPS 4051 we $WT > o.MAKE_BIAS_LIST_4051.$SOL 2>&1
+
+$SCRIPTS/MAKE_BIAS_LIST $SOL $SAT ${STEP} OPS 4500 we $WT > o.MAKE_BIAS_LIST_4500.$SOL 2>&1
+
+fi 
+# Combine all BIAS BLOCKS into one:
+
+MBS=$MAIN_PATH/INFILES/INF_OPS_ITRF2020/MBIAS_BLK_$PROJ/$STEP
+
+cat $MBS/$SUBDIR/v${SNX_VER}/${SOL}.4051 $MBS/$SUBDIR/v${SNX_VER}/${SOL}.4500 > $MBS/v${SNX_VER}/${SOL}
+
+
+
+#UN4=$MAIN_PATH/INFILES/INF_OPS_PP_BIAS/unit4_$PROJ/$STEP/v${SNX_VER}
+
+UN4=$MAIN_PATH/INFILES/INF_OPS_ITRF2020/unit4_$PROJ/$STEP/v${SNX_VER}
+
+# Create appropriate template:
+
+if [ "$SUBSFX" = "L12" -o "$SUBSFX" = "LE12" -o "$SUBSFX" = "LER2" ]; then
+
+SUBSFX0=${SUBSFX}
+
+/bin/grep -v -e "^MADRNG       41"                       -e "^MADRNG       49" -e "^MADRNG      13" $UN4/unit4.ILRS_templt > eee000
+  sed -e "s/CCCCC/SE   /g" -e "s/TTTTTT/$SUBSFX0/g" eee000 > eee111
+
+elif [ "$SUBSFX" = "L12NEOS" -o "$SUBSFX" = "LE12NEOS"  -o "$SUBSFX" = "LER2NEOS" ]; then
+
+SUBSFX0=${SUBSFX}
+
+/bin/grep -v -e "^MADRNG      11" -e "^MADRNG      13" $UN4/unit4.ILRS_templt > eee000
+  sed -e "s/SXVR/${vM}/g" -e "s/CCCCC/E    /g" -e "s/TTTTTT/$SUBSFX0/g" eee000 > eee111
+
+fi
+
+#230626 & 230706_ecp
+sed -e "s/SXVR/${vM}/g" -e "s/DDDDDD/$MID/g" -e "s/BBBBBB/$BGN/g" -e "s/EEEEEE/$SNX_DATE/g" -e "s/AAAAAA/$SAT/g" eee111 > $UN4/unit4.${SOL}
+
+
+
+REF=$MAIN_PATH/INFILES/fileref_$PROJ/$STEP
+
+if [ "$SUBSFX" = "L12" -o "$SUBSFX" = "L12NEOS" ]; then
+
+SUBSFX0=${SUBSFX}
+sed -e "s/IIII/$INST/g" -e "s/PPPP/$PROJ/g" -e "s/NNNN/$solN/g" -e "s/MMMM/$vM/g" -e "s/BBBBBB/$BGN/g" -e "s/EEEEEE/$SNX_DATE/g" -e "s/DDDDDD/$MID/g" -e "s/YYMMDD/$BGN/g" $REF/${vM}.fileref.${PROJ}_LAGEOS_templt > $REF/${vM}.fileref.${SOL}
+
+elif [ "$SUBSFX" = "LE12" -o "$SUBSFX" = "LE12NEOS" ]; then
+
+SUBSFX=${SUBSFX}
+sed -e "s/IIII/$INST/g" -e "s/PPPP/$PROJ/g" -e "s/NNNN/$solN/g" -e "s/MMMM/$vM/g" -e "s/BBBBBB/$BGN/g" -e "s/EEEEEE/$SNX_DATE/g" -e "s/DDDDDD/$MID/g" -e "s/YYMMDD/$BGN/g" $REF/${vM}.fileref.${PROJ}_LAGEOS+ETALON_templt > $REF/${vM}.fileref.${SOL}
+
+fi
+
+
+
+
+$SCRIPTS/CULL_SITES ${SOL} $SAT $STEP OPS 
+
+cp $UN4/unit4.${SOL} xxx000
+
+while read label lab1 lab2
+do
+
+  /bin/grep -v -e $lab1 -e $lab2   xxx000 > xxx111
+
+  mv xxx111 xxx000
+
+done < MATSUP.${SOL}
+
+mv MATSUP.${SOL} $MAIN_PATH/INFILES/INF_OPS_ITRF2020/MATSUP_${PROJ}/$STEP/v${SNX_VER}/MATSUP.${SOL}
+mv xxx000 $UN4/unit4.${SOL}
+
+
+$SCRIPTS/PUNCH_PREP ${CASE} ${SAT} ${PROJ} $STEP OPS 
+
+
+
+$SCRIPTS/GET_SOL_STATS ${SOL} ${SAT} $STEP OPS
+
+
+exit 0

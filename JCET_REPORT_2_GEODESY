@@ -1,0 +1,29 @@
+
+#!/bin/ksh
+#
+
+set -xv
+
+#  RUN_SERIES_DAILY2010
+
+#
+
+MAIN_PATH=/umbc/epavlis/data01/LOCAL/magdak
+CASE=DAILY
+
+DateTime=`date '+DATE:%m/%d/%y%H:%M:%S'`
+
+read OYEAR ODOY Date_OLD_ARC OLD < $MAIN_PATH/INFILES/INF_OPS_D/ARC_SETUP_OLD.$CASE
+
+chmod -R 777 /afs/umbc.edu/public/www/geodesy/DAILY_PDF
+cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/DAILY/
+#240110# cp D_REPORT_${Date_OLD_ARC}_SHORT.pdf existing.pdf
+#240110# 
+#240110# gs -o D_REPORT_${Date_OLD_ARC}_S1.pdf -meta.pdf -sDEVICE=pdfwrite -f existing.pdf -c " [ /Title (${Date_OLD_ARC} JCET SUMMARY REPORT FOR OPERATIONAL SLR PRODUCT ANALYSIS) /Author (JCET) /Subject (${Date_OLD_ARC} JCET SUMMARY REPORT FOR OPERATIONAL SLR PRODUCT ANALYSIS) /Creator (JCET/UMBC) /ModDate (D:19700101000000+01'00') /Producer (A 'pdfmark' trick with Ghostscript) /Keywords (Metadata, Ghostscript, PDF, Linux) /CreationDate (D:${DateTime}) /DOCINFO pdfmark"
+#240110# 
+#240110# cd /afs/umbc.edu/public/www/geodesy/DAILY_PDF
+#240110# cp /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/DAILY/D_REPORT_${Date_OLD_ARC}_S1.pdf /afs/umbc.edu/public/www/geodesy/DAILY_PDF/D_REPORT_${Date_OLD_ARC}.pdf
+
+cd /afs/umbc.edu/public/www/geodesy/DAILY_PDF
+cp /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/DAILY/JCET_AC_Station_Performance_Metrics.pdf /afs/umbc.edu/public/www/geodesy/DAILY_PDF/.
+exit 2000

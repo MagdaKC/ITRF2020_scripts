@@ -1,0 +1,16 @@
+ grep --with-filename  SCRIPTS CULL_SITES
+ grep --with-filename  SCRIPTS GEODYN_II_ALL_SLRF2020_2023
+ grep --with-filename  SCRIPTS GET_CORR_OF_PARMS
+ grep --with-filename  SCRIPTS GET_SOL_STATS
+ grep --with-filename  SCRIPTS MAKE_1_ARC_DATES
+ grep --with-filename  SCRIPTS MAKE_4MBIAS
+ grep --with-filename  SCRIPTS MAKE_BIAS_LIST
+ grep --with-filename  SCRIPTS MAKE_SINEX_230102_EOP20C04
+ grep --with-filename  SCRIPTS NAME_NUMBER
+ grep --with-filename  SCRIPTS PUNCH_PREP
+ grep --with-filename  SCRIPTS RES_PLOTS_PL_ver
+ grep --with-filename  SCRIPTS SOLVE_TRF_WEEKLY_2020
+ grep --with-filename  SCRIPTS THIRD SCRIPT
+ grep --with-filename  SCRIPTS mkCMATEC03
+ grep --with-filename  SCRIPTS mkCMATLC03
+ grep --with-filename  SCRIPTS mkCMATLE03

@@ -1,0 +1,34 @@
+# @240102
+# @Data span -
+# @contact epavlis@umbc.edu
+# @website  http://geodesy.jcet.umbc.edu/
+# @version 1.0
+#    
+# each line contains:
+#    
+# STA ID           = site name  
+# YY/MM/DD HH:MM   = pass starting time 
+# SAT              = satellite name (L1: LAGEOS1; L2: LAGEOS2; E1: ETALON1; E2:ETALON2; LR LARES; R2: LARES2 S1: STARLETTE; A1: AJISAI) 
+# GOD OBS          = number of good normal points  
+# RAW RMS          = residual RMS before editing & bias application 
+# PREC EST         = post-fit scattering rms  
+# RANGE BIAS       = estimated range bias  
+# RANGE BIAS SIGMA = estimated range bias sigma 
+# TIME BIAS        = estimated time bias  
+# TIME BIAS SIGMA  = estimated time bias sigma
+# PASS DUR         = pass duration  
+# EDIT OBS         = number of bad normal points  
+# CALIB+ MEAN      = mean Applied System Delay (ILRS FR format cols 97-104)  
+# CALIB SDEV       = mean System Calibration Method (ILRS FR format cols 126) 
+# CALIB SHIFT+     = mean Root Mean Square (ILRS FR format cols 111-114) 
+# STPASS RMS       = mean Pass RMS (ILRS FR format cols 58-64) 
+# TEMP             = mean surface temperature [K]  
+# HUM              = mean relative humidity of surface %  
+# PRES             = mean pressure [hPa]  
+# WLEN             = walelength [nm]  
+# SCH              = System Change Indicator (ILRS FR format cols 127) 
+# SCI              = System Configuration (ILRS FR format cols 128)  
+# DRF              = Data Release Flag (ILRS FR format cols 130)
+# ELEVATION MAX    = maximum elevation for pass [degrees]  
+# ELEVATION MIN    = minimum elevation for pass [degrees]  
+#    

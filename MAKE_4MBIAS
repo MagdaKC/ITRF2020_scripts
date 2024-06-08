@@ -1,0 +1,192 @@
+#!/bin/ksh
+#                                                               ecp 000203      
+# Usage: MAKE_4MBIAS svn 
+#
+ 
+${SCR_DBG}set -vx
+set -xv
+
+#if [ `expr $#` -gt 1 ]; then
+#   echo "Usage: MAKE_4MBIAS svn 2> script_out \007"
+#   exit 100
+#fi
+
+SCR_NAME=MAKE_4MBIAS
+SCR_PARM=1
+SCR_LIST="svn"
+SCR_VERS=030825.0
+
+
+if [ `expr $#` -lt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+
+svn=$1
+diskC=$disk_n
+
+if [ "$svn" = "GISL1" ]; then
+
+   no=7603901
+   disk=${diskC}/MISSIONS
+
+   sat=${svn}
+
+elif [ "$svn" = "GISL2" ]; then
+
+   no=9207002
+   disk=${diskC}/MISSIONS
+
+   sat=${svn}
+
+elif [ "$svn" = "ETA1" ]; then
+
+   no=8900103
+   disk=${diskC}/MISSIONS
+
+   sat=${svn}
+
+elif [ "$svn" = "ETA2" ]; then
+
+   no=8903903
+   disk=${diskC}/MISSIONS
+
+   sat=${svn}
+elif [ "$svn" = "LARES2" ]; then
+no=2208001
+   disk=${diskC}/MISSIONS
+
+   sat=${svn}
+
+elif [ "$svn" = "CHAMP" ]; then
+
+   no=0003902
+   disk=space/MISSIONS
+
+   sat=${svn}
+
+elif [ "$svn" = "STARL" ]; then
+
+   no=7501001
+   disk=space/MISSIONS
+
+   sat=${svn}
+
+elif [ "$svn" = "AJISI" ]; then
+
+   no=8606101
+   disk=space/MISSIONS
+
+   sat=${svn}
+
+elif [ "$svn" = "ERS1" ]; then
+
+   no=9105001
+   disk=space/MISSIONS
+
+   sat=${svn}
+
+elif [ "$svn" = "TP" ]; then
+
+   no=9205201
+   disk=space/MISSIONS
+
+   sat=${svn}
+
+fi
+
+site_file=SITE.4mbias
+site_file=SITE.4mbias_current_ALL_ITRF2020
+
+#
+# execute job
+#
+
+path0=/$disk/$sat/d_base
+where=${path0}/bias
+
+\rm b051 b151 b500 b900
+
+#if [ "${SNX_VER}" = "280" ];then
+ cat $path0/data/SITE/$site_file > b0
+
+ cat $MAIN_PATH/INFILES/INF_OPS_ITRF2020/MAKE_4MBIAS.in    > btmplt
+
+ while read site sigma
+ do
+
+ sed -e "s/CCCCCCCC/$site/g" -e "s/TTT/ 51/g" -e "s/AAAAAAA/$sigma/g" -e "s/BBBBBBB/$no/g"  btmplt >> b051
+# sed -e "s/CCCCCCCC/$site/g" -e "s/TTT/151/g" -e "s/AAAAAAA/.10D-20/g"  -e "s/BBBBBBB/$no/g" btmplt >> b151
+# sed -e "s/CCCCCCCC/$site/g" -e "s/TTT/900/g" -e "s/AAAAAAA/.10D-15/g"  -e "s/BBBBBBB/$no/g" btmplt >> b900
+
+ done < b0
+
+ #cat b051 b151 b900 > b_ALL0
+ cat b051  > b_ALL0
+#  Set the start/stop dates now:
+
+if [ "$CASE" = "WEEKLY" ]; then
+ sed -e "s/600101000000.002012310000../${Date_NEW_ARC}000000.00${Date_NXT_ARC}000000/" b_ALL0 > b_ALL1
+ fi
+if [ "$CASE" = "DAILY" ]; then
+ sed -e "s/600101000000.002012310000../${Date_NEW_ARC}000000.00${Date_END_ARC}000000/" b_ALL0 > b_ALL1
+ fi
+ cat b_ALL1 /nobackup/mkuzmicz/REPRO/d_base/bias/mkMBIAS300_TB_T2L2_2_APPLY_dup.180525 > m3
+#fi
+if [ "${svn}" = "LARES2" ];then
+ cat $path0/data/SITE/$site_file > b0
+
+ cat $MAIN_PATH/INFILES/INF_OPS_ITRF2020/MAKE_4MBIAS.in    > btmplt
+
+ while read site sigma
+ do
+
+ sed -e "s/CCCCCCCC/$site/g" -e "s/TTT/ 51/g" -e "s/AAAAAAA/$sigma/g" -e "s/BBBBBBB/$no/g"  btmplt >> b051
+ sed -e "s/CCCCCCCC/$site/g" -e "s/TTT/151/g" -e "s/AAAAAAA/.10D-20/g"  -e "s/BBBBBBB/$no/g" btmplt >> b151
+ sed -e "s/CCCCCCCC/$site/g" -e "s/TTT/900/g" -e "s/AAAAAAA/.10D-15/g"  -e "s/BBBBBBB/$no/g" btmplt >> b900
+
+ done < b0
+
+ cat b051 b151 b900 > b_ALL0
+#  Set the start/stop dates now:
+
+if [ "$CASE" = "WEEKLY" ]; then
+ sed -e "s/600101000000.002012310000../${Date_NEW_ARC}000000.00${Date_NXT_ARC}000000/" b_ALL0 > b_ALL1
+ fi
+if [ "$CASE" = "DAILY" ]; then
+ sed -e "s/600101000000.002012310000../${Date_NEW_ARC}000000.00${Date_END_ARC}000000/" b_ALL0 > b_ALL1
+ fi
+ cat b_ALL1 /nobackup/mkuzmicz/REPRO/d_base/bias/mkMBIAS300_TB_T2L2_2_APPLY_dup.180525 > m3
+fi
+
+##cat ${diskC}/MISSIONS/d_base/bias/ITRF2020/RANGE_MBIAS_230328_CARDS_${sat} > m0
+#NEW DHF 240213
+cat ${diskC}/MISSIONS/d_base/bias/ITRF2020/RANGE_MBIAS_240213_CARDS_${sat} > m0
+cat ${diskC}/MISSIONS/d_base/bias/ITRF2020/EST_RANGE_MBIAS_240213_AFTER202301_CARDS > m1
+#230821
+#if [ "${SNX_VER}" = "80" -o "${SNX_VER}" = "180" -o  "${SNX_VER}" = "320" ];then
+#cat ${diskC}/MISSIONS/d_base/bias/ITRF2020/EST_RANGE_MBIAS_230713_EXTRA_${sat} >> m1
+#fi
+if [ "$CASE" = "WEEKLY" ]; then
+sed -e "s/600101000000.00300101000000/${Date_NEW_ARC}000000.00${Date_NXT_ARC}000000/" m1 > m2    #  This should be done ONLY for the 51 MBIAS, NOT for the MBIAS300 !!!
+fi
+if [ "$CASE" = "DAILY" ]; then
+sed -e "s/600101000000.00300101000000/${Date_NEW_ARC}000000.00${Date_END_ARC}000000/" m1 > m2    #  This should be done ONLY for the 51 MBIAS, NOT for the MBIAS300 !!!
+fi
+cat m2 m3 | sort -u > m4 
+cat m0 m4 > all_bias.MASTER
+
+\rm m0 m1 m2  btmplt b0 b051 b151 b500 b900  b_ALL0 b_ALL1
+
+exit 0

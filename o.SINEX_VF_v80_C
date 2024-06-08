@@ -1,0 +1,855 @@
+
+ Date=`date +%y%m%d`
+date +%y%m%d
+++ date +%y%m%d
++ Date=240604
+ver=80
++ ver=80
+#DEL=China+Russia_DEL
+#DEL=Russia_DEL
+#DEL=China_DEL
+#DEL=ALL
+disk=/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v${ver}/
++ disk=/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
+cd $disk
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
+while read DEL
+do
+echo $DEL
+ls -1 jcet.pos+eop.??????.v${DEL}.snx.gz > LIST_${DEL}
+
+while read file
+do
+zgrep "VARIANCE FACTOR(S)" $file > TP
+cat TP
+ARC=$(echo "$file" | grep -o -E '[0-9]+' | head -n 1)
+#VARIANCE FACTOR(S)              0.388870038845858E-04
+read A1 A2 VF < TP
+DISK=PPV
+echo "$file $ARC $VF">> VF_v${ver}_LE12_ALL_${DEL}_${Date}.txt
+rm TP TG T0
+cd $disk
+ #exit 0
+done < $disk/LIST_${DEL}
+done < /umbc/epavlis/data01/LOCAL/magdak/scripts/RMS/CASE_DEL
++ read DEL
++ echo 80_RUS
+80_RUS
++ ls -1 'jcet.pos+eop.??????.v80_RUS.snx.gz'
+ls: cannot access jcet.pos+eop.??????.v80_RUS.snx.gz: No such file or directory
++ read file
++ read DEL
++ echo 80_CHI
+80_CHI
++ ls -1 'jcet.pos+eop.??????.v80_CHI.snx.gz'
+ls: cannot access jcet.pos+eop.??????.v80_CHI.snx.gz: No such file or directory
++ read file
++ read DEL
++ echo 80_CHI+RUS
+80_CHI+RUS
++ ls -1 'jcet.pos+eop.??????.v80_CHI+RUS.snx.gz'
+ls: cannot access jcet.pos+eop.??????.v80_CHI+RUS.snx.gz: No such file or directory
++ read file
++ read DEL
++ echo 80_ALL
+80_ALL
++ ls -1 jcet.pos+eop.230107.v80_ALL.snx.gz jcet.pos+eop.230114.v80_ALL.snx.gz jcet.pos+eop.230121.v80_ALL.snx.gz jcet.pos+eop.230128.v80_ALL.snx.gz jcet.pos+eop.230204.v80_ALL.snx.gz jcet.pos+eop.230211.v80_ALL.snx.gz jcet.pos+eop.230218.v80_ALL.snx.gz jcet.pos+eop.230225.v80_ALL.snx.gz jcet.pos+eop.230304.v80_ALL.snx.gz jcet.pos+eop.230311.v80_ALL.snx.gz jcet.pos+eop.230318.v80_ALL.snx.gz jcet.pos+eop.230325.v80_ALL.snx.gz jcet.pos+eop.230401.v80_ALL.snx.gz jcet.pos+eop.230408.v80_ALL.snx.gz jcet.pos+eop.230415.v80_ALL.snx.gz jcet.pos+eop.230422.v80_ALL.snx.gz jcet.pos+eop.230429.v80_ALL.snx.gz jcet.pos+eop.230506.v80_ALL.snx.gz jcet.pos+eop.230513.v80_ALL.snx.gz jcet.pos+eop.230520.v80_ALL.snx.gz jcet.pos+eop.230527.v80_ALL.snx.gz jcet.pos+eop.230603.v80_ALL.snx.gz jcet.pos+eop.230610.v80_ALL.snx.gz jcet.pos+eop.230617.v80_ALL.snx.gz jcet.pos+eop.230624.v80_ALL.snx.gz jcet.pos+eop.230701.v80_ALL.snx.gz jcet.pos+eop.230708.v80_ALL.snx.gz jcet.pos+eop.230715.v80_ALL.snx.gz jcet.pos+eop.230722.v80_ALL.snx.gz jcet.pos+eop.230729.v80_ALL.snx.gz jcet.pos+eop.230805.v80_ALL.snx.gz jcet.pos+eop.230812.v80_ALL.snx.gz jcet.pos+eop.230819.v80_ALL.snx.gz jcet.pos+eop.230826.v80_ALL.snx.gz jcet.pos+eop.230902.v80_ALL.snx.gz jcet.pos+eop.230909.v80_ALL.snx.gz jcet.pos+eop.230916.v80_ALL.snx.gz jcet.pos+eop.230923.v80_ALL.snx.gz jcet.pos+eop.230930.v80_ALL.snx.gz jcet.pos+eop.231007.v80_ALL.snx.gz jcet.pos+eop.231014.v80_ALL.snx.gz jcet.pos+eop.231021.v80_ALL.snx.gz jcet.pos+eop.231028.v80_ALL.snx.gz jcet.pos+eop.231104.v80_ALL.snx.gz jcet.pos+eop.231111.v80_ALL.snx.gz jcet.pos+eop.231118.v80_ALL.snx.gz jcet.pos+eop.231125.v80_ALL.snx.gz jcet.pos+eop.231202.v80_ALL.snx.gz jcet.pos+eop.231209.v80_ALL.snx.gz jcet.pos+eop.231216.v80_ALL.snx.gz jcet.pos+eop.231223.v80_ALL.snx.gz jcet.pos+eop.231230.v80_ALL.snx.gz jcet.pos+eop.240106.v80_ALL.snx.gz
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230107.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.437600026673243E-04                          
+++ echo jcet.pos+eop.230107.v80_ALL.snx.gz
+++ head -n 1
+++ grep -o -E '[0-9]+'
++ ARC=230107
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230107.v80_ALL.snx.gz 230107 0.437600026673243E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230114.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.536560598820043E-04                          
+++ grep -o -E '[0-9]+'
+++ head -n 1
+++ echo jcet.pos+eop.230114.v80_ALL.snx.gz
++ ARC=230114
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230114.v80_ALL.snx.gz 230114 0.536560598820043E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230121.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.402540786823471E-04                          
+++ echo jcet.pos+eop.230121.v80_ALL.snx.gz
+++ head -n 1
+++ grep -o -E '[0-9]+'
++ ARC=230121
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230121.v80_ALL.snx.gz 230121 0.402540786823471E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230128.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.324895757541765E-04                          
+++ echo jcet.pos+eop.230128.v80_ALL.snx.gz
+++ head -n 1
+++ grep -o -E '[0-9]+'
++ ARC=230128
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230128.v80_ALL.snx.gz 230128 0.324895757541765E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230204.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.380711115676587E-04                          
+++ echo jcet.pos+eop.230204.v80_ALL.snx.gz
+++ head -n 1
+++ grep -o -E '[0-9]+'
++ ARC=230204
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230204.v80_ALL.snx.gz 230204 0.380711115676587E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230211.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.431093461471507E-04                          
+++ echo jcet.pos+eop.230211.v80_ALL.snx.gz
+++ head -n 1
+++ grep -o -E '[0-9]+'
++ ARC=230211
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230211.v80_ALL.snx.gz 230211 0.431093461471507E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230218.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.431382597080004E-04                          
+++ echo jcet.pos+eop.230218.v80_ALL.snx.gz
+++ grep -o -E '[0-9]+'
+++ head -n 1
++ ARC=230218
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230218.v80_ALL.snx.gz 230218 0.431382597080004E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230225.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.493101781191634E-04                          
+++ echo jcet.pos+eop.230225.v80_ALL.snx.gz
+++ head -n 1
+++ grep -o -E '[0-9]+'
++ ARC=230225
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230225.v80_ALL.snx.gz 230225 0.493101781191634E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230304.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.343245843566660E-04                          
+++ echo jcet.pos+eop.230304.v80_ALL.snx.gz
+++ head -n 1
+++ grep -o -E '[0-9]+'
++ ARC=230304
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230304.v80_ALL.snx.gz 230304 0.343245843566660E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230311.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.452339754259013E-04                          
+++ echo jcet.pos+eop.230311.v80_ALL.snx.gz
+++ head -n 1
+++ grep -o -E '[0-9]+'
++ ARC=230311
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230311.v80_ALL.snx.gz 230311 0.452339754259013E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230318.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.468914291634445E-04                          
+++ echo jcet.pos+eop.230318.v80_ALL.snx.gz
+++ head -n 1
+++ grep -o -E '[0-9]+'
++ ARC=230318
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230318.v80_ALL.snx.gz 230318 0.468914291634445E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230325.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.481090766451079E-04                          
+++ head -n 1
+++ grep -o -E '[0-9]+'
+++ echo jcet.pos+eop.230325.v80_ALL.snx.gz
++ ARC=230325
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230325.v80_ALL.snx.gz 230325 0.481090766451079E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230401.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.402630594968526E-04                          
+++ echo jcet.pos+eop.230401.v80_ALL.snx.gz
+++ head -n 1
+++ grep -o -E '[0-9]+'
++ ARC=230401
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230401.v80_ALL.snx.gz 230401 0.402630594968526E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230408.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.366115749885020E-04                          
+++ echo jcet.pos+eop.230408.v80_ALL.snx.gz
+++ head -n 1
+++ grep -o -E '[0-9]+'
++ ARC=230408
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230408.v80_ALL.snx.gz 230408 0.366115749885020E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230415.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.566752439395442E-04                          
+++ echo jcet.pos+eop.230415.v80_ALL.snx.gz
+++ head -n 1
+++ grep -o -E '[0-9]+'
++ ARC=230415
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230415.v80_ALL.snx.gz 230415 0.566752439395442E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230422.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.597285787722281E-04                          
+++ echo jcet.pos+eop.230422.v80_ALL.snx.gz
+++ grep -o -E '[0-9]+'
+++ head -n 1
++ ARC=230422
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230422.v80_ALL.snx.gz 230422 0.597285787722281E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230429.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.446459673542950E-04                          
+++ echo jcet.pos+eop.230429.v80_ALL.snx.gz
+++ grep -o -E '[0-9]+'
+++ head -n 1
++ ARC=230429
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230429.v80_ALL.snx.gz 230429 0.446459673542950E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230506.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.434873868050407E-04                          
+++ echo jcet.pos+eop.230506.v80_ALL.snx.gz
+++ head -n 1
+++ grep -o -E '[0-9]+'
++ ARC=230506
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230506.v80_ALL.snx.gz 230506 0.434873868050407E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230513.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.845030430785945E-04                          
+++ echo jcet.pos+eop.230513.v80_ALL.snx.gz
+++ grep -o -E '[0-9]+'
+++ head -n 1
++ ARC=230513
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230513.v80_ALL.snx.gz 230513 0.845030430785945E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230520.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.685233560273656E-04                          
+++ echo jcet.pos+eop.230520.v80_ALL.snx.gz
+++ grep -o -E '[0-9]+'
+++ head -n 1
++ ARC=230520
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230520.v80_ALL.snx.gz 230520 0.685233560273656E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230527.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.443020114775496E-04                          
+++ echo jcet.pos+eop.230527.v80_ALL.snx.gz
+++ grep -o -E '[0-9]+'
+++ head -n 1
++ ARC=230527
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230527.v80_ALL.snx.gz 230527 0.443020114775496E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230603.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.468778125368749E-04                          
+++ echo jcet.pos+eop.230603.v80_ALL.snx.gz
+++ head -n 1
+++ grep -o -E '[0-9]+'
++ ARC=230603
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230603.v80_ALL.snx.gz 230603 0.468778125368749E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230610.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.424310932390708E-04                          
+++ echo jcet.pos+eop.230610.v80_ALL.snx.gz
+++ grep -o -E '[0-9]+'
+++ head -n 1
++ ARC=230610
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230610.v80_ALL.snx.gz 230610 0.424310932390708E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230617.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.437544059731660E-04                          
+++ echo jcet.pos+eop.230617.v80_ALL.snx.gz
+++ grep -o -E '[0-9]+'
+++ head -n 1
++ ARC=230617
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230617.v80_ALL.snx.gz 230617 0.437544059731660E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230624.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.379125219307598E-04                          
+++ echo jcet.pos+eop.230624.v80_ALL.snx.gz
+++ head -n 1
+++ grep -o -E '[0-9]+'
++ ARC=230624
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230624.v80_ALL.snx.gz 230624 0.379125219307598E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230701.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.342287314058876E-04                          
+++ echo jcet.pos+eop.230701.v80_ALL.snx.gz
+++ head -n 1
+++ grep -o -E '[0-9]+'
++ ARC=230701
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230701.v80_ALL.snx.gz 230701 0.342287314058876E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230708.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.376563038440040E-04                          
+++ echo jcet.pos+eop.230708.v80_ALL.snx.gz
+++ head -n 1
+++ grep -o -E '[0-9]+'
++ ARC=230708
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230708.v80_ALL.snx.gz 230708 0.376563038440040E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230715.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.494294965275074E-04                          
+++ echo jcet.pos+eop.230715.v80_ALL.snx.gz
+++ grep -o -E '[0-9]+'
+++ head -n 1
++ ARC=230715
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230715.v80_ALL.snx.gz 230715 0.494294965275074E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230722.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.493384407261060E-04                          
+++ echo jcet.pos+eop.230722.v80_ALL.snx.gz
+++ head -n 1
+++ grep -o -E '[0-9]+'
++ ARC=230722
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230722.v80_ALL.snx.gz 230722 0.493384407261060E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230729.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.295764019880334E-04                          
+++ echo jcet.pos+eop.230729.v80_ALL.snx.gz
+++ head -n 1
+++ grep -o -E '[0-9]+'
++ ARC=230729
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230729.v80_ALL.snx.gz 230729 0.295764019880334E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230805.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.518018801651196E-04                          
+++ echo jcet.pos+eop.230805.v80_ALL.snx.gz
+++ head -n 1
+++ grep -o -E '[0-9]+'
++ ARC=230805
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230805.v80_ALL.snx.gz 230805 0.518018801651196E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230812.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.338144620703625E-04                          
+++ echo jcet.pos+eop.230812.v80_ALL.snx.gz
+++ grep -o -E '[0-9]+'
+++ head -n 1
++ ARC=230812
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230812.v80_ALL.snx.gz 230812 0.338144620703625E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230819.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.409870495770735E-04                          
+++ echo jcet.pos+eop.230819.v80_ALL.snx.gz
+++ head -n 1
+++ grep -o -E '[0-9]+'
++ ARC=230819
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230819.v80_ALL.snx.gz 230819 0.409870495770735E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230826.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)                           Infinity                          
+++ echo jcet.pos+eop.230826.v80_ALL.snx.gz
+++ head -n 1
+++ grep -o -E '[0-9]+'
++ ARC=230826
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230826.v80_ALL.snx.gz 230826 Infinity'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230902.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.580424678593733E-04                          
+++ echo jcet.pos+eop.230902.v80_ALL.snx.gz
+++ grep -o -E '[0-9]+'
+++ head -n 1
++ ARC=230902
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230902.v80_ALL.snx.gz 230902 0.580424678593733E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230909.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.477268906572279E-04                          
+++ echo jcet.pos+eop.230909.v80_ALL.snx.gz
+++ grep -o -E '[0-9]+'
+++ head -n 1
++ ARC=230909
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230909.v80_ALL.snx.gz 230909 0.477268906572279E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230916.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.482679888237952E-04                          
+++ echo jcet.pos+eop.230916.v80_ALL.snx.gz
+++ head -n 1
+++ grep -o -E '[0-9]+'
++ ARC=230916
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230916.v80_ALL.snx.gz 230916 0.482679888237952E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230923.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.488190999195110E-04                          
+++ echo jcet.pos+eop.230923.v80_ALL.snx.gz
+++ grep -o -E '[0-9]+'
+++ head -n 1
++ ARC=230923
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230923.v80_ALL.snx.gz 230923 0.488190999195110E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.230930.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.441435263384346E-04                          
+++ echo jcet.pos+eop.230930.v80_ALL.snx.gz
+++ head -n 1
+++ grep -o -E '[0-9]+'
++ ARC=230930
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.230930.v80_ALL.snx.gz 230930 0.441435263384346E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.231007.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.436341616670385E-04                          
+++ echo jcet.pos+eop.231007.v80_ALL.snx.gz
+++ head -n 1
+++ grep -o -E '[0-9]+'
++ ARC=231007
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.231007.v80_ALL.snx.gz 231007 0.436341616670385E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.231014.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.433880473587966E-04                          
+++ echo jcet.pos+eop.231014.v80_ALL.snx.gz
+++ grep -o -E '[0-9]+'
+++ head -n 1
++ ARC=231014
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.231014.v80_ALL.snx.gz 231014 0.433880473587966E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.231021.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.461058928272286E-04                          
+++ grep -o -E '[0-9]+'
+++ head -n 1
+++ echo jcet.pos+eop.231021.v80_ALL.snx.gz
++ ARC=231021
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.231021.v80_ALL.snx.gz 231021 0.461058928272286E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.231028.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.438089466296945E-04                          
+++ echo jcet.pos+eop.231028.v80_ALL.snx.gz
+++ head -n 1
+++ grep -o -E '[0-9]+'
++ ARC=231028
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.231028.v80_ALL.snx.gz 231028 0.438089466296945E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.231104.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.454686482725053E-03                          
+++ echo jcet.pos+eop.231104.v80_ALL.snx.gz
+++ head -n 1
+++ grep -o -E '[0-9]+'
++ ARC=231104
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.231104.v80_ALL.snx.gz 231104 0.454686482725053E-03'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.231111.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.544474547301688E-04                          
+++ grep -o -E '[0-9]+'
+++ head -n 1
+++ echo jcet.pos+eop.231111.v80_ALL.snx.gz
++ ARC=231111
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.231111.v80_ALL.snx.gz 231111 0.544474547301688E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.231118.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.725466618181228E-04                          
+++ echo jcet.pos+eop.231118.v80_ALL.snx.gz
+++ grep -o -E '[0-9]+'
+++ head -n 1
++ ARC=231118
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.231118.v80_ALL.snx.gz 231118 0.725466618181228E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.231125.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.479569230751210E-04                          
+++ echo jcet.pos+eop.231125.v80_ALL.snx.gz
+++ head -n 1
+++ grep -o -E '[0-9]+'
++ ARC=231125
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.231125.v80_ALL.snx.gz 231125 0.479569230751210E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.231202.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.645201963924956E-04                          
+++ echo jcet.pos+eop.231202.v80_ALL.snx.gz
+++ head -n 1
+++ grep -o -E '[0-9]+'
++ ARC=231202
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.231202.v80_ALL.snx.gz 231202 0.645201963924956E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.231209.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.358093043611095E-04                          
+++ echo jcet.pos+eop.231209.v80_ALL.snx.gz
+++ grep -o -E '[0-9]+'
+++ head -n 1
++ ARC=231209
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.231209.v80_ALL.snx.gz 231209 0.358093043611095E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.231216.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.197364399767583E-03                          
+++ grep -o -E '[0-9]+'
+++ head -n 1
+++ echo jcet.pos+eop.231216.v80_ALL.snx.gz
++ ARC=231216
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.231216.v80_ALL.snx.gz 231216 0.197364399767583E-03'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.231223.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.518641785410779E-04                          
+++ echo jcet.pos+eop.231223.v80_ALL.snx.gz
+++ grep -o -E '[0-9]+'
+++ head -n 1
++ ARC=231223
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.231223.v80_ALL.snx.gz 231223 0.518641785410779E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.231230.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.575328049247191E-04                          
+++ echo jcet.pos+eop.231230.v80_ALL.snx.gz
+++ head -n 1
+++ grep -o -E '[0-9]+'
++ ARC=231230
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.231230.v80_ALL.snx.gz 231230 0.575328049247191E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ zgrep 'VARIANCE FACTOR(S)' jcet.pos+eop.240106.v80_ALL.snx.gz
++ cat TP
+ VARIANCE FACTOR(S)              0.293329299429669E-04                          
+++ echo jcet.pos+eop.240106.v80_ALL.snx.gz
+++ grep -o -E '[0-9]+'
+++ head -n 1
++ ARC=240106
++ read A1 A2 VF
++ DISK=PPV
++ echo 'jcet.pos+eop.240106.v80_ALL.snx.gz 240106 0.293329299429669E-04'
++ rm TP TG T0
+rm: cannot remove ‘TG’: No such file or directory
+rm: cannot remove ‘T0’: No such file or directory
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ read file
++ read DEL
+exit 0
++ exit 0

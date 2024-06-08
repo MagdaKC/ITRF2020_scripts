@@ -1,0 +1,74 @@
+#!/bin/ksh
+#
+
+${SCR_DBG}set -xv 
+set -vx
+
+
+SCR_NAME=DHFile_SLCT
+SCR_PARM=5
+SCR_LIST="DHFin sol [bias_type] [STEP] [disk]"
+SCR_VERS=210709.0
+
+
+if [ `expr $#` -gt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+#MAIN_PATH=/nobackup/mkuzmicz
+
+DHFin=$1
+sol=$2
+bias_type=${3:-T}
+STEP=${4:-WEEKLY}
+disk=${5:-umbc/epavlis/data01/LOCAL/magdak/MISSIONS}
+
+
+if [ ! -d /${disk}/d_base/DHFile ]; then
+   mkdir -p /${disk}/d_base/DHFile
+fi
+
+dirTB=/${disk}/d_base/DHFile
+
+
+#
+# execute job
+#
+
+mkdir MKTB$$
+cd MKTB$$
+
+cat $dirTB/$DHFin > t0
+
+#upto=`sed -n '/SECTION WITH MANDATORY CORRECTIONS/=' t0`
+
+upto=`sed -n '/list of mandatory systematic errors/=' t0`
+sed -n "${upto},\$p" t0 > t1 
+grep -v ^"*" t1 > t2
+grep "^ ........................................ T" t2 >  t3
+grep "^ ........................................ U" t2 >> t3
+
+# now select ONLY the sites present in THIS arc (4-digit siteID# are in fort.52):
+
+while read site
+do
+
+grep ^" $site " t3 >> t4
+
+done < ../fort.52
+
+mv t4 /umbc/epavlis/data01/LOCAL/magdak/INFILES/INF_OPS_ITRF2020/TBIAS_BLK_ILRS/$STEP/v${SNX_VER}/${sol}.fort62
+
+cd ..
+\rm -r MKTB$$

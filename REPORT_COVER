@@ -1,0 +1,42 @@
+#!/bin/ksh
+#
+
+set -xv
+#                                                               ecp       110204
+# Usage: REPORT_COVER
+#
+# This script extracts the top of the SINEX file
+# to create a cover for the DAILY/WEEKLY rersidual
+# report and plots.
+
+if [ `expr $#` -ne 0 ]; then
+   echo "Usage: REPORT_COVER \007"
+   exit 99
+fi
+
+
+filein=/$DISK/PPV/sinex/ILRS/$CASE/v${SNX_VER}/${SINEX_FILE}.gz
+
+TYPE=`echo ${CASE}|cut -c1-1`
+
+zcat $filein > tmpsss$$
+
+dirout=/$DISK/PPV/reference
+
+frstline=`sed -n /+FILE.REFERENCE/= tmpsss$$`
+nextline=`sed -n /-SITE.ID/= tmpsss$$`
+
+strtline=`expr $frstline + 1`
+stopline=`expr $nextline - 1`
+
+sed -n "${strtline},${stopline}p" tmpsss$$ > tmpfile$$
+sed "s/^/                    /g" tmpfile$$ > ppp
+
+#cat ${dirout}/top ppp > ${dirout}/${TYPE}_REPORT_COVER_PAGE
+cat ${dirout}/top ppp > ${dirout}/${CASE}_REPORT_COVER_PAGE_v${SNX_VER}
+
+\rm tmpsss$$ tmpfile$$ ppp
+
+exit 0
+
+

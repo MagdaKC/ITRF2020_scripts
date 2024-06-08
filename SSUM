@@ -1,0 +1,32 @@
+if [ ! -s ${daily_fil} ]; then
+
+   echo Bias file $daily_fil doesn\'t exist !
+
+   echo "Bias file $daily_fil doesn\'t exist  !!!  " > 2mail.d
+
+   mail -s URGENT_DAILY_BIASreport_DOES_NOT_EXIST magdak@umbc.edu < 2mail.d
+
+   \rm 2mail.d
+
+else
+
+# Check for a reasonable size report:
+
+  sum $daily_fil > s_cur
+  read d_cur l_cur f_cur < s_cur
+  
+  if [ "$l_cur" -lt "4" ]; then
+  
+  #
+  # It looks like the report is empty or we have a VERY bad week!
+  #
+  
+    echo "Possible problem with DAILY bias report: $daily_fil" > 2mail.d
+    mail -s URGENT_DAILY_BIASreport_SEEMS_EMPTY magdak@umbc.edu < 2mail.d
+  
+  else
+  
+    echo "ALL OK !!!"
+    echo "eMail the report !!!"
+  
+  fi

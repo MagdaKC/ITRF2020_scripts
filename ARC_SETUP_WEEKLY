@@ -1,0 +1,289 @@
+#!/bin/ksh
+#
+
+${SCR_DBG}set -xv
+set -xv
+
+#      ARC_SETUP [DELTA] [MAIN_PATH] [CASE]
+
+########################################################################
+#                                                                      #
+# OLD_ARC is retrieved and incremented by the desired number of days,  #
+# DELTA.  The result, NEW_ARC, is converted into yearmonthday-format   #
+# in order to build an SLR filename.                                   #
+#                                                                      #
+########################################################################
+
+
+SCR_NAME=ARC_SETUP
+SCR_PARM=3
+SCR_LIST="DELTA MAIN_PATH CASE"
+SCR_VERS=210309.0
+
+
+if [ `expr $#` -lt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+
+# Set variables.                                                       #
+
+DELTA=${1:-7}
+MAIN_PATH=${2:-/space/users/magda}
+CASE=${3:-WEEKLY}
+SNX_VER=$4
+
+mkdir /umbc/epavlis/data01/LOCAL/magdak/tmp/ARC_SET_$$
+cd /umbc/epavlis/data01/LOCAL/magdak/tmp/ARC_SET_$$
+# The name convention for the implicated arcs is:
+
+## OLD_ARC    #  The arc we did in the previous round (we use its PUNCH-file here)
+## NEW_ARC    #  The current arc we are running this week, it becomes OLD_ARC later
+## NXT_ARC    #  Next round's arc which will be used for setting the end-date of current arc
+
+# Retrieve the information for the last, new, and next arcs:
+
+read OYEAR ODOY Date_OLD_ARC OLD_ARC < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_OLD.${CASE}_v${SNX_VER}
+read NYEAR NDOY Date_NEW_ARC NEW_ARC < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_NEW.${CASE}_v${SNX_VER}
+read XYEAR XDOY Date_NXT_ARC NXT_ARC < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_NXT.${CASE}_v${SNX_VER}
+
+# Save END_DATE info for SINEX "end-date" computation:
+
+SDOY=$XDOY
+SYEAR=$XYEAR
+
+# Set the proper dates for this run:
+
+YR=`echo $NYEAR | cut -c3-4 `
+
+echo $NEW_ARC $YR > $MAIN_PATH/INFILES/INF_OPS_ITRF2020/CURRENT_ARC_DR.${CASE}_v${SNX_VER}
+echo $NEW_ARC $Date_NEW_ARC > $MAIN_PATH/INFILES/INF_OPS_ITRF2020/CURRENT_ARC_EMT.${CASE}_v${SNX_VER}
+
+EPOCH_DATE=$Date_OLD_ARC
+START_DATE=$Date_NEW_ARC
+END_DATE=$Date_NXT_ARC
+
+echo $EPOCH_DATE $START_DATE $END_DATE 
+
+sed -e "s/RRRRRR/$Date_OLD_ARC/g" -e "s/BBBBBB/$Date_NEW_ARC/g" -e "s/EEEEEE/$Date_NXT_ARC/g" $MAIN_PATH/INFILES/INF_OPS_ITRF2020/EPOCH_MASTER > $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_EPOCHS.${CASE}_v${SNX_VER}
+
+
+# Generate the file with the EPOCH, START, STOP and ACCEL dates:
+
+# First for LAGEOS arcs:
+
+$SCRIPTS/MAKE_1_ARC_DATES $START_DATE $END_DATE $ARC_LEN $DELTA $ACCEL_NUM_L > o.MAKE_1_ARC_DATES_L 2>&1
+
+# The results are locally in the files "newepochs" and "midepochs".
+ 
+cp newepochs $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_INFO_L.${CASE}_v${SNX_VER}
+cp midepochs $MAIN_PATH/INFILES/INF_OPS_ITRF2020/MID-ARC_INFO.${CASE}_v${SNX_VER}
+#LARES2
+cp newepochs $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_INFO_R.${CASE}_v${SNX_VER}
+
+# Now for ETALON arcs:
+
+$SCRIPTS/MAKE_1_ARC_DATES $START_DATE $END_DATE $ARC_LEN $DELTA $ACCEL_NUM_E > o.MAKE_1_ARC_DATES_E 2>&1
+
+# The results are locally in the files "newepochs" and "midepochs".
+ 
+cp newepochs $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_INFO_E.${CASE}_v${SNX_VER}
+cp midepochs $MAIN_PATH/INFILES/INF_OPS_ITRF2020/MID-ARC_INFO.${CASE}_v${SNX_VER}
+
+#
+#  Make input for turning the OLD_ARC punch to get the elements for the current arc:
+#
+
+echo $OLD_ARC $NEW_ARC > $MAIN_PATH/INFILES/INF_OPS_ITRF2020/2_turn_4_run_series.${CASE}_v${SNX_VER}
+
+
+# Calculate "new" NXT_ARC, whose date will also be the END_DATE of next round's arc:                                   
+XDOY=`expr $XDOY + $DELTA`
+
+# Leap years: 1980, 1984, 1988, 1992, 1996, 2000, 2004, 2008, 2012, 2016, 2020, 2024, 2028
+
+#
+case $XYEAR in
+
+   1980) ndays=366 ;;       #  Leap year
+   1984) ndays=366 ;;       #  Leap year
+   1988) ndays=366 ;;       #  Leap year
+   1992) ndays=366 ;;       #  Leap year
+   1996) ndays=366 ;;       #  Leap year
+   2000) ndays=366 ;;       #  Leap year
+   2004) ndays=366 ;;       #  Leap year
+   2008) ndays=366 ;;       #  Leap year
+   2012) ndays=366 ;;       #  Leap year
+   2016) ndays=366 ;;       #  Leap year
+   2020) ndays=366 ;;       #  Leap year
+   2024) ndays=366 ;;       #  Leap year
+   2028) ndays=366 ;;       #  Leap year
+   2032) ndays=366 ;;       #  Leap year
+   2036) ndays=366 ;;       #  Leap year
+   2046) ndays=366 ;;       #  Leap year
+
+      *) ndays=365 ;;       #  Default
+
+esac
+
+#echo $XYEAR
+
+if [ "$XDOY" -le "$ndays" ]; then
+
+  XYEAR=$XYEAR
+
+elif [ "$XDOY" -gt "ndays" ]; then
+
+  XDOY=` expr $XDOY - $ndays `
+  XYEAR=` expr $XYEAR + 1 `
+
+fi
+
+#echo $XYEAR $XDOY
+
+# Convert Date_NXT_ARC to yearmonthday:
+
+$MAIN_PATH/scripts/ydoy2ymd $XYEAR $XDOY > tempo
+
+
+# Convert to our file-name convention:
+
+read Date_NXT_ARC < tempo
+
+Y=`echo $Date_NXT_ARC|cut -c1-1`
+MD=`echo $Date_NXT_ARC|cut -c2-6`
+
+if [ "$Y" -eq "0" ]; then
+
+  Y=z
+
+elif [ "$Y" -eq "9" ]; then
+
+  Y=n
+
+elif [ "$Y" -eq "8" ]; then
+
+  Y=e
+
+elif [ "$Y" -eq "7" ]; then
+
+  Y=s
+
+elif [ "$Y" -eq "6" ]; then
+
+  Y=x
+
+elif [ "$Y" -eq "1" ]; then
+
+  Y=o
+
+elif [ "$Y" -eq "2" ]; then
+
+  Y=w
+
+fi
+
+  NXT_ARC=${Y}${MD}
+
+  echo $XYEAR $XDOY $Date_NXT_ARC $NXT_ARC > tempo
+
+mv tempo $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_FTR.${CASE}_v${SNX_VER}
+
+#echo $XYEAR $XDOY " = " $NXT_ARC
+
+
+
+# Calculate the current SNX_DATE, which is the date = END_DATE - 1 day:
+
+SDOY=`expr $SDOY - 1`
+
+if [ "$SDOY" -eq "0" ]; then
+
+  SYEAR=` expr $SYEAR - 1 `
+
+case $SYEAR in
+
+   1980) ndays=366 ;;       #  Leap year
+   1984) ndays=366 ;;       #  Leap year
+   1988) ndays=366 ;;       #  Leap year
+   1992) ndays=366 ;;       #  Leap year
+   1996) ndays=366 ;;       #  Leap year
+   2000) ndays=366 ;;       #  Leap year
+   2004) ndays=366 ;;       #  Leap year
+   2008) ndays=366 ;;       #  Leap year
+   2012) ndays=366 ;;       #  Leap year
+   2016) ndays=366 ;;       #  Leap year
+   2020) ndays=366 ;;       #  Leap year
+   2024) ndays=366 ;;       #  Leap year
+   2028) ndays=366 ;;       #  Leap year
+   2032) ndays=366 ;;       #  Leap year
+   2036) ndays=366 ;;       #  Leap year
+   2040) ndays=366 ;;       #  Leap year
+
+      *) ndays=365 ;;       #  Default
+
+esac
+
+  SDOY=$ndays
+
+fi
+
+#
+case $SYEAR in
+
+   1980) ndays=366 ;;       #  Leap year
+   1984) ndays=366 ;;       #  Leap year
+   1988) ndays=366 ;;       #  Leap year
+   1992) ndays=366 ;;       #  Leap year
+   1996) ndays=366 ;;       #  Leap year
+   2000) ndays=366 ;;       #  Leap year
+   2004) ndays=366 ;;       #  Leap year
+   2008) ndays=366 ;;       #  Leap year
+   2012) ndays=366 ;;       #  Leap year
+   2016) ndays=366 ;;       #  Leap year
+   2020) ndays=366 ;;       #  Leap year
+   2024) ndays=366 ;;       #  Leap year
+   2028) ndays=366 ;;       #  Leap year
+   2032) ndays=366 ;;       #  Leap year
+   2036) ndays=366 ;;       #  Leap year
+   2040) ndays=366 ;;       #  Leap year
+
+      *) ndays=365 ;;       #  Default
+
+esac
+
+#echo $SYEAR
+
+if [ "$SDOY" -le "$ndays" ]; then
+
+  SYEAR=$SYEAR
+
+elif [ "$SDOY" -gt "$ndays" ]; then
+
+  SDOY=` expr $SDOY - $ndays `
+  SYEAR=` expr $SYEAR + 1 `
+
+fi
+
+#echo $SYEAR $SDOY
+
+# Convert Date_NXT_ARC to yearmonthday:
+
+$MAIN_PATH/scripts/ydoy2ymd $SYEAR $SDOY > stempo
+
+mv stempo $MAIN_PATH/INFILES/INF_OPS_ITRF2020/SINEX_DATE_INFO.${CASE}_v${SNX_VER}
+cd ..
+#2001014 rm -rf ARC_SET_$$
+cd /umbc/epavlis/data01/LOCAL/magdak/tmp/magda/$TT
+exit

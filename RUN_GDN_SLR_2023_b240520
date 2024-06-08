@@ -1,0 +1,558 @@
+#!/bin/ksh
+#
+#
+#    RUN_GDN_SLR_2023 ARC [LABEL]  [SAT]  [YR]  [CASE] [SUBSOL]\007"
+#                                   
+#    ORIGINAL:  RUN_GDN_SLR_IERS2019_RESXTND_210114
+#
+#
+#
+
+${SCR_DBG}set -xv
+set -vx
+
+
+#  if [ `expr $#` -lt 1 ]; then
+#     echo "Usage: RUN_GDN_SLR_2023 ARC [LABEL] [SAT] [YR] [CASE] [SUBSOL]\007"
+#     exit 100
+#  fi
+
+#
+#echo "  #  "
+#echo "  #    Begin  'RUN_GDN_SLR_2023'    "
+#echo "  #  "
+
+SCR_NAME=RUN_GDN_SLR_2023
+SCR_PARM=7
+SCR_LIST="ARC LABEL SAT YR CASE SUBSOL"
+SCR_VERS=230208.0
+
+
+if [ `expr $#` -lt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+
+ARC=$1
+LABEL=${2:-1}
+SAT=${3:-GISL1}
+YR=${4:-99}
+CASE=${5:-DRW}
+SUBSOL=${6:-A}
+CASEDIR=$7
+SITEFILE=NONE
+
+
+
+
+if [ "${CASE}" = "DRW" ]; then
+
+  PROG=GEODYN_II_ALL
+  TCASE=DR
+
+elif [ "${CASE}" = "DRWcpp" ]; then
+
+  PROG=GEODYN_II_ALL_IERS
+  TCASE=DR
+  SITEFILE=$ARC
+
+elif [ "${CASE}" = "DRWC" ]; then
+
+  PROG=GEODYN_II_ALL_SLRF2020_2023
+  TCASE=DR
+elif [ "${CASE}" = "DRWC2" ]; then
+
+  PROG=GEODYN_II_ALL_SLRF2020_2023_2
+  TCASE=DR
+elif [ "${CASE}" = "DRWC_TEST" ]; then
+
+  PROG=GEODYN_II_ALL_SLRF2020_2023
+  TCASE=DR
+#elif [ "${CASE}" = "DRWC_PB_2017" ]; then
+
+elif [ "${CASE}" = "DR_SIM" ]; then
+
+CASEDIR=DAILY
+PROG=GEODYN_II_ALL_SLRF2020_2023_SIM
+TCASE=DR
+CASE=DR
+CASES=DR_SIM
+STAGE=DAILY
+export STAGE CASES
+elif [ "${CASE}" = "DR_SIM1" ]; then
+
+CASEDIR=DAILY
+PROG=GEODYN_II_ALL_SLRF2020_2023_SIM1
+PROG=GEODYN_II_ALL_SLRF2020_2023_SIM
+TCASE=DR
+CASE=DR
+CASES=DR_SIM1
+STAGE=DAILY
+export STAGE CASES
+
+
+elif [ "${CASE}" = "DRWC_TEST_F" ]; then
+
+  CASEDIR=FORTNTLY
+   PROG=GEODYN_II_ALL_SLRF2020_RESXTND_2017MP_2220509
+  TCASE=DR
+    elif [ "${CASE}" = "DRWC_PB" ]; then
+
+  PROG=GEODYN_II_ALL_SLRF2020_2023
+  TCASE=DR
+    elif [ "${CASE}" = "DRWC_PBR" ]; then
+
+  PROG=GEODYN_II_ALL_SLRF2020_2023_R
+  TCASE=DR
+
+
+
+elif [ "${CASE}" = "DRWC_JEMadj" ]; then
+
+  PROG=GEODYN_II_ALL_IERS
+  PROG=GEODYN_II_ALL_IERS2010_RESXTND_JEMadj
+  TCASE=DR
+
+elif [ "${CASE}" = "DRWC_JEMadj_Gf" ]; then
+
+  PROG=GEODYN_II_ALL_IERS
+  PROG=GEODYN_II_ALL_IERS2010_RESXTND_JEMadj_Gfix
+  TCASE=DR
+elif [ "${CASE}" = "DRWbs" ]; then
+
+  PROG=GEODYN_II_ALL_BAKSUB
+  TCASE=DR
+  export GRVTIM=$SUBSOL
+  export SUBSOL=.
+
+elif [ "${CASE}" = "DRWx" ]; then
+
+  PROG=GEODYN_IIx
+  TCASE=DR
+
+elif [ "${CASE}" = "DRWy" ]; then
+
+  PROG=GEODYN_IIy
+  TCASE=DR
+
+elif [ "${CASE}" = "DRWM" ]; then
+
+  PROG=GEODYN_II_MM
+  TCASE=DR
+
+elif [ "${CASE}" = "DRWN" ]; then
+
+  PROG=GEODYN_II_NMF
+  TCASE=DR
+
+elif [ "$CASE" = "DRM" ]; then
+
+  CASEDIR=MONTHLY
+  PROG=GEODYN_II_ALL
+  TCASE=DR
+
+elif [ "$CASE" = "DRFC" ]; then
+
+  CASEDIR=FORTNTLY
+  PROG=GEODYN_II_ALL_IERS_pre93_15D
+  PROG=GEODYN_II_ALL_IERS2014_RESXTND
+  PROG=GEODYN_II_ALL_IERS2014_RESXTND_2017MP_2019
+  PROG=GEODYN_II_ALL_IERS2014_RESXTND_2017MP_210114
+  PROG=GEODYN_II_ALL_IERS2014_RESXTND_2017MP_220807
+PROG=GEODYN_II_ALL_IERS2014_RESXTND_2017MP_230102_EOP20C04
+  TCASE=DR
+
+elif [ "$CASE" = "DRMC" ]; then
+
+  CASEDIR=MONTHLY
+  PROG=GEODYN_II_ALL_IERS_pre93
+  PROG=GEODYN_II_ALL_IERS2014_RESXTND
+  PROG=GEODYN_II_ALL_IERS2014_RESXTND_2017MP_2019
+  PROG=GEODYN_II_ALL_IERS2014_RESXTND_2017MP_220807
+
+  PROG=GEODYN_II_ALL_IERS2014_RESXTND_2017MP_230102_EOP20C04
+  TCASE=DR
+
+elif [ "$CASE" = "DRQC" ]; then
+
+  CASEDIR=QUARTERLY
+  PROG=GEODYN_II_ALL_IERS_pre93
+  PROG=GEODYN_II_ALL_IERS2014_RESXTND
+  PROG=GEODYN_II_ALL_IERS2014_RESXTND_2017MP_2019
+  PROG=GEODYN_II_ALL_IERS2014_RESXTND_2017MP_220807
+  PROG=GEODYN_II_ALL_IERS2014_RESXTND_2017MP_230102_EOP20C04
+  TCASE=DR
+
+elif [ "$CASE" = "EMTW" ]; then
+
+  PROG=GEODYN_II_ALL_SLRF2020_2023
+  TCASE=EMT
+
+elif [ "$CASE" = "EMTWC" ]; then
+
+  PROG=GEODYN_II_ALL_SLRF2020_2023
+  TCASE=EMT
+elif [ "$CASE" = "EMTWC_TEST" ]; then
+
+ PROG=GEODYN_II_ALL_SLRF2020_RESXTND_2017MP_2220509
+  TCASE=EMT
+elif [ "$CASE" = "EMTW_midC_TEST" ]; then
+
+ PROG=GEODYN_II_ALL_SLRF2020_RESXTND_2017MP_2220509
+  TCASE=EMT
+  elif [ "$CASE" = "EMTWC_TEST_F" ]; then
+
+    CASEDIR=FORTNTLY
+   PROG=GEODYN_II_ALL_SLRF2020_RESXTND_2017MP_2220509
+    TCASE=EMT
+  elif [ "$CASE" = "EMTW_midC_TEST_F" ]; then
+
+    CASEDIR=FORTNTLY
+   PROG=GEODYN_II_ALL_SLRF2020_RESXTND_2017MP_2220509
+    TCASE=EMT
+  TCASE=EMT
+
+elif [ "$CASE" = "EMTWC_v271" ]; then
+
+  PROG=GEODYN_II_ALL_IERS
+  PROG=GEODYN_II_ALL_IERS2014_RESXTND
+  PROG=GEODYN_II_ALL_IERS2014_RESXTND_2017_v271
+  TCASE=EMT
+elif [ "$CASE" = "EMTWC_v272" ]; then
+
+  PROG=GEODYN_II_ALL_IERS
+  PROG=GEODYN_II_ALL_IERS2014_RESXTND
+  PROG=GEODYN_II_ALL_IERS2014_RESXTND_2017_v272
+  TCASE=EMT
+
+elif [ "$CASE" = "EMTWC_site" ]; then
+
+  PROG=GEODYN_II_ALL_IERS
+  PROG=GEODYN_II_ALL_IERS2014_RESXTND_by_SITE
+  TCASE=EMT
+elif [ "${CASE}" = "EMTWC_JEMadj" ]; then
+
+  PROG=GEODYN_II_ALL_IERS
+  PROG=GEODYN_II_ALL_IERS2010_RESXTND_JEMadj
+  TCASE=EMT
+elif [ "$CASE" = "EMTM" ]; then
+
+  CASEDIR=MONTHLY
+  PROG=GEODYN_II_ALL
+  TCASE=EMT
+
+elif [ "$CASE" = "EMTW_mid" ]; then
+
+  PROG=GEODYN_II_ALL_SLRF2020_2023
+  TCASE=EMT
+  SITEFILE=$ARC
+
+elif [ "$CASE" = "EMTW_midC" ]; then
+
+  PROG=GEODYN_II_ALL_SLRF2020_2023
+
+#  PROG=GEODYN_II_ALL_IERS2014_RESXTND_2017MP_091919
+  TCASE=EMT
+  SITEFILE=$ARC
+elif [ "$CASE" = "EMTW_midC_v271" ]; then
+
+  PROG=GEODYN_II_ALL_IERS
+  PROG=GEODYN_II_ALL_IERS2014_RESXTND
+  PROG=GEODYN_II_ALL_IERS2014_RESXTND_2017_v271
+  TCASE=EMT
+  SITEFILE=$ARC
+elif [ "$CASE" = "EMTW_midC_v272" ]; then
+
+  PROG=GEODYN_II_ALL_IERS
+  PROG=GEODYN_II_ALL_IERS2014_RESXTND
+  PROG=GEODYN_II_ALL_IERS2014_RESXTND_2017_v272
+  TCASE=EMT
+  SITEFILE=$ARC
+
+elif [ "$CASE" = "ORBWC" ]; then
+
+  PROG=GEODYN_II_ALL_IERS
+  PROG=GEODYN_II_ALL_IERS2010_ORB
+  TCASE=ORB
+
+elif [ "$CASE" = "EMTM_mid" ]; then
+
+  CASEDIR=MONTHLY
+  PROG=GEODYN_II_ALL_SLRF2020_2023
+  TCASE=EMT
+  SITEFILE=$ARC
+
+elif [ "$CASE" = "EMTFC" ]; then
+
+  CASEDIR=FORTNTLY
+  PROG=GEODYN_II_ALL_SLRF2020_2023
+  TCASE=EMT
+
+elif [ "$CASE" = "EMTQC" ]; then
+
+  CASEDIR=QUARTERLY
+  PROG=GEODYN_II_ALL_SLRF2020_2023
+  TCASE=EMT
+
+elif [ "$CASE" = "EMTMC" ]; then
+
+  CASEDIR=MONTHLY
+  PROG=GEODYN_II_ALL_SLRF2020_2023
+  TCASE=EMT
+
+elif [ "$CASE" = "EMTF_midC" ]; then
+
+  CASEDIR=FORTNTLY
+  PROG=GEODYN_II_ALL_SLRF2020_2023
+  TCASE=EMT
+  SITEFILE=$ARC
+
+elif [ "$CASE" = "EMTM_midC" ]; then
+
+  CASEDIR=MONTHLY
+  PROG=GEODYN_II_ALL_SLRF2020_2023
+  TCASE=EMT
+  SITEFILE=$ARC
+
+elif [ "$CASE" = "EMTQ_midC" ]; then
+
+  CASEDIR=QUARTERLY
+  PROG=GEODYN_II_ALL_SLRF2020_2023
+  TCASE=EMT
+  SITEFILE=$ARC
+
+elif [ "$CASE" = "drG" ]; then
+
+  PROG=HP2HP_LT_SLR_GFZ
+  TCASE=DR
+
+elif [ "$CASE" = "PP6A" ]; then
+
+  CASEDIR=MONTHLY/PP6
+  PROG=HP2HP_LT_SLR_PP
+  TCASE=EMT
+  TCASE=DR
+
+elif [ "$CASE" = "PP6B" ]; then
+
+  CASEDIR=MONTHLY/PP6
+  PROG=HP2HP_LT_SLR_PP
+  TCASE=EMT
+  TCASE=DR
+
+elif [ "$CASE" = "PP6Ae" ]; then
+
+  CASEDIR=MONTHLY/PP6
+  PROG=HP2HP_LT_SLR_PP
+  TCASE=DR
+  TCASE=EMT
+
+elif [ "$CASE" = "PP6Be" ]; then
+
+  CASEDIR=MONTHLY/PP6
+  PROG=HP2HP_LT_SLR_PP
+  TCASE=DR
+  TCASE=EMT
+
+elif [ "$CASE" = "PP6d" ]; then
+
+  CASEDIR=MONTHLY/PP6
+  PROG=HP2HP_LT_SLR_PP
+  TCASE=DR
+
+elif [ "$CASE" = "PP6e" ]; then
+
+  CASEDIR=MONTHLY/PP6
+  PROG=HP2HP_LT_SLR_PP
+  TCASE=EMT
+
+elif [ "$CASE" = "PP6o" ]; then
+
+  CASEDIR=ORBIT/PP6
+  PROG=HP2HP_LT_SLR_PP
+  TCASE=DR
+
+elif [ "$CASE" = "" ]; then
+
+  CASEDIR=.
+  PROG=GEODYN_II_ALL
+  TCASE=DR
+
+elif [ "$CASE" = "og" ]; then
+
+  CASEDIR=.
+  PROG=HP2HP_LT_og
+
+fi
+
+STAGE=$CASEDIR
+
+export CASEDIR STAGE
+
+
+if [ "$SAT" = "GISL1" ];then
+   LOCALDSK=tmp
+   SV=L1
+   HPENGN=gravity
+
+elif [ "$SAT" = "GISL2" ];then
+   LOCALDSK=tmp
+   SV=L2
+   HPENGN=gravity
+elif [ "$SAT" = "LARES" ];then
+   LOCALDSK=tmp
+   SV=LARES
+   HPENGN=gravity
+elif [ "$SAT" = "LARES2" ];then
+   LOCALDSK=tmp
+   SV=R2
+   HPENGN=gravity
+
+elif [ "$SAT" = "CHAMP" ];then
+  PROG=HP2HP_LT_dr_4CH
+   LOCALDSK=tmp
+   SV=CH
+   HPENGN=gravity
+
+elif [ "$SAT" = "STARL" ];then
+   LOCALDSK=tmp
+   SV=STR
+   HPENGN=gravity
+
+elif [ "$SAT" = "GFZ" ];then
+   LOCALDSK=tmp
+   SV=GFZ
+   HPENGN=gravity
+
+elif [ "$SAT" = "AJISI" ];then
+   LOCALDSK=tmp
+   SV=AJI
+   HPENGN=gravity
+
+elif [ "$SAT" = "ERS1" ];then
+   LOCALDSK=tmp
+   SV=ERS
+   HPENGN=gravity
+
+elif [ "$SAT" = "TP" ];then
+   LOCALDSK=tmp
+   SV=TOP
+   HPENGN=gravity
+
+elif [ "$SAT" = "ETA1" ];then
+   LOCALDSK=tmp
+   SV=E1
+   HPENGN=gravity
+
+elif [ "$SAT" = "ETA2" ];then
+   LOCALDSK=tmp
+   SV=E2
+   HPENGN=gravity
+
+   fi
+
+
+mkdir /$LOCALDSK/gdyn$$
+chmod 700 /$LOCALDSK/gdyn$$
+cd /$LOCALDSK/gdyn$$
+
+#  ATTENTION:  Why are you doing these tests? What is so special for 2014?
+
+#DATA=${SV}_${YR}.tdf.Z
+#if [ "${YR}" = "14" ];then
+#DATA=${SV}_${YR}_NQ.tdf.Z
+#else
+DATA=${SV}_${YR}.tdf.Z
+#fi
+#DATA=${SV}_13.tdf.Z
+if [ "${ARC}" = "o21230" ];then
+DATA=${SV}_13.tdf.Z
+#NEW TDF with 8834 and 7827 wit pressure corrections
+#ARTER 2012
+#   DATA=NEW_TDF_190712/${SV}_13.tdf.Z
+
+else
+    #230215
+DATA=${SV}_${YR}.tdf.gz
+#NEW TDF with 8834 and 7827 wit pressure corrections
+#ARTER 2012
+#   DATA=NEW_TDF_190712/${SV}_${YR}.tdf.Z
+
+fi
+ if [ "${NYEAR}" -lt "1993"  ];then
+      DATA=L1y7693.v931104.tdf.Z
+       fi
+
+
+#if [ "${SV}" = "AJI" -o "${SV}"="STR" ];then
+if [ "${NYEAR}" = "2012" ];then
+if [ "${Date_NEW_ARC}" = "120101" -o "${Date_NEW_ARC}" = "120108" -o "${Date_NEW_ARC}" = "120115" -o "${Date_NEW_ARC}" = "120122" -o "${Date_NEW_ARC}" = "120129" -o "${Date_NEW_ARC}" = "120205" -o "${Date_NEW_ARC}" = "120212" -o "${Date_NEW_ARC}" = "120219" -o "${Date_NEW_ARC}" = "120226" -o "${Date_NEW_ARC}" = "120304" -o "${Date_NEW_ARC}" = "120311" -o "${Date_NEW_ARC}" = "120318" -o "${Date_NEW_ARC}" = "120325" -o "${Date_NEW_ARC}" = "120401" -o "${Date_NEW_ARC}" = "120408" -o "${Date_NEW_ARC}" = "120415" -o "${Date_NEW_ARC}" = "120422" ];then
+DATA=${SV}_12_QL.tdf.Z
+elif [ "${Date_NEW_ARC}" = "121216" -o "${Date_NEW_ARC}" = "121223" ];then 
+    DATA=${SV}_13.tdf.Z
+else
+DATA=${SV}_12_CRD.tdf.Z
+fi
+if [ "${Date_NEW_ARC}" = "121230" ];then
+DATA=${SV}_13.tdf.Z
+fi
+fi
+#fi
+
+if [ "$CASE" = "PP6d" ];then
+
+   DATA=qldata.1999.020306.GISL1_99.tdf.Z
+   DATA=qldata.991010-991106.lageos1_sp_99.tdf.Z
+   DATA=DEP.tdf.Z
+
+elif [ "$CASE" = "PP6e" ];then
+
+   DATA=qldata.1999.020306.GISL1_99.tdf.Z
+   DATA=qldata.991010-991106.lageos1_sp_99.tdf.Z
+   DATA=DEP.tdf.Z
+
+elif [ "$CASE" = "PP6o" ];then
+
+   DATA=qldata.1999.020306.GISL1_99.tdf.Z
+   DATA=qldata.991010-991106.lageos1_sp_99.tdf.Z
+   DATA=DEP.tdf.Z
+
+elif [ "$CASE" = "PP6A" -o "$CASE" = "PP6Ae" ];then
+
+   DATA=${SV}_${YR}_PP6A.tdf.Z
+
+elif [ "$CASE" = "PP6B" -o "$CASE" = "PP6Be" ];then
+
+   DATA=L2tst2001_01.tdf.Z
+
+   DATA=${SV}_${YR}.tdf.Z
+#NEW TDF with 8834 and 7827 wit pressure corrections
+   DATA=NEW_TDF_190712/${SV}_${YR}.tdf.Z
+
+fi
+
+CASE=$TCASE
+
+export SV YR CASE DATA LOCALDSK HPENGN  SUBSOL SITEFILE
+
+echo " SV YR CASE STAGE DATA         LOCALDSK HPENGN " 
+echo " $SV $YR $CASE $STAGE $DATA $LOCALDSK $HPENGN "
+
+nohup time sh $SCRIPTS/$PROG $ARC $LABEL $SAT $DATA $$ 
+
+#
+echo "  #  "
+echo "  #    End of 'RUN_GDN_SLR_IERS2019_RESXTND_230102_EOP20C04'    "
+echo "  #  "
+

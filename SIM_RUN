@@ -1,0 +1,10 @@
+cd /umbc/epavlis/data01/LOCAL/magdak/tmp/magda/${CASE}${wkTmp}
+#no updated DB 20180928 /umbc/epavlis/data01/LOCAL/magdak/scripts/SIMULATIONS/SLR/RUN_REAL_ONE_ARC_2_DB > o.RUN_REAL_ONE_ARC_2_DB 2>&1 
+#no updated DB 20180928 /umbc/epavlis/data01/LOCAL/magdak/scripts/SIMULATIONS/SLR/RUN_SIM_ONE_ARC_2_DB > o.RUN_SIM_ONE_ARC_2_DB 2>&1 
+#/umbc/epavlis/data01/LOCAL/magdak/scripts/SIMULATIONS/SLR/RUN_REAL_ONE_ARC_2_DB > o.RUN_REAL_ONE_ARC_2_DB 2>&1
+#/umbc/epavlis/data01/LOCAL/magdak/scripts/SIMULATIONS/SLR/RUN_SIM_ONE_ARC_2_DB > o.RUN_SIM_ONE_ARC_2_DB 2>&1
+/umbc/epavlis/data01/LOCAL/magdak/scripts/SIMULATIONS/SLR/RUN_SIM_ONE_ARC_2_DB_180905_P2_part1 > o.RUN_SIM_ONE_ARC_2_DB 2>&1
+/umbc/epavlis/data01/LOCAL/magdak/scripts/SIMULATIONS/SLR/RUN_SIM+REAL_ONE_ARC_220516_3 > o.RUN_SIM+REAL_ONE_ARC_220516_3 2>&1
+ /umbc/epavlis/data01/LOCAL/magdak/scripts/SIMULATIONS/SLR/RUN_SIM_ONE_ARC_2_DB_181204_P2_part2 > o.RUN_SIM_ONE_ARC_2_DB_181204_P2_part2 2>&1
+ /umbc/epavlis/data01/LOCAL/magdak/scripts/job_JCETDB/RUN_SIM+REAL_ONE_ARC_1 > o.RUN_SIM+REAL_ONE_ARC_1 2>&1 
+ /umbc/epavlis/data01/LOCAL/magdak/scripts/job_JCETDB/RUN_SIM+REAL_ONE_ARC_2 > o.RUN_SIM+REAL_ONE_ARC_2 2>&1 

@@ -1,0 +1,162 @@
+#!/bin/sh
+#                                                               ecp 950926      
+# Usage: PARMRDR_OPS_TRF sol sat [disk] [STAGE] [CASE] 
+#
+set -xv 
+
+# PARMRDR_OPS_TRF (based on "parmrdr03_TRF" and tuned to the WEEKLY/OPS products)
+
+if [ `expr $#` -gt 5 ]; then
+   echo "Usage: PARMRDR_OPS_TRF sol sat [disk] [STAGE] [CASE] 2> script_out \007"
+   exit 100
+fi
+
+sol=$1
+sat=${2:-PPV}
+disk=${3:-umbc/epavlis/data01/LOCAL/magdak/MISSIONS}
+STAGE=${4:-WEEKLY}
+CASE=${5:-OPS}
+
+infile=${sol}pnc
+HOME=/umbc/epavlis/data01/LOCAL/magdak
+
+if [ ! -d /${disk}/${sat}/products ]; then
+   mkdir /${disk}/${sat}/products
+fi
+#
+if [ ! -d /${disk}/${sat}/products/COMPARE ]; then
+   mkdir /${disk}/${sat}/products/COMPARE
+fi
+#
+if [ ! -d /${disk}/${sat}/products/COMPARE/$STAGE ]; then
+   mkdir /${disk}/${sat}/products/COMPARE/$STAGE
+fi
+#
+if [ ! -d /${disk}/${sat}/products/COMPARE/$STAGE/$CASE ]; then
+   mkdir /${disk}/${sat}/products/COMPARE/$STAGE/$CASE
+fi
+#
+#if [ ! -d /${disk}/${sat}/products/COMPARE/$STAGE/$CASE/CASE_$SUBCASE ]; then
+#   mkdir /${disk}/${sat}/products/COMPARE/$STAGE/$CASE/CASE_$SUBCASE
+#fi
+#
+if [ ! -d /${disk}/${sat}/products/$STAGE ]; then
+   mkdir /${disk}/${sat}/products/$STAGE
+fi
+#
+if [ ! -d /${disk}/${sat}/products/$STAGE/$CASE ]; then
+   mkdir /${disk}/${sat}/products/$STAGE/$CASE
+fi
+#
+if [ ! -d /${disk}/${sat}/products/$STAGE/$CASE/${sol} ]; then
+   mkdir /${disk}/${sat}/products/$STAGE/$CASE/${sol}
+fi
+#
+#if [ ! -d /${disk}/${sat}/products/$STAGE/$CASE/CASE_$SUBCASE ]; then
+#   mkdir /${disk}/${sat}/products/$STAGE/$CASE/CASE_$SUBCASE
+#fi
+#
+#if [ ! -d /${disk}/${sat}/products/$STAGE/$CASE/CASE_$SUBCASE/${sol} ]; then
+#   mkdir /${disk}/${sat}/products/$STAGE/$CASE/CASE_$SUBCASE/${sol}
+#fi
+#
+if [ ! -d /${disk}/${sat}/parmvl/$STAGE ]; then
+   mkdir /${disk}/${sat}/parmvl/$STAGE
+fi
+#
+if [ ! -d /${disk}/${sat}/parmvl/$STAGE/$CASE ]; then
+   mkdir /${disk}/${sat}/parmvl/$STAGE/$CASE
+fi
+#
+#if [ ! -d /${disk}/${sat}/parmvl/$STAGE/$CASE/CASE_$SUBCASE ]; then
+#   mkdir /${disk}/${sat}/parmvl/$STAGE/$CASE/CASE_$SUBCASE
+#fi
+#
+# execute job
+#
+mkdir /tmp/parmrdr$$
+cd /tmp/parmrdr$$
+
+
+cat $HOME/INFILES/parmrdr01.$sat > fort.5 
+
+
+
+cat /$disk/d_base/site/newall > fort.9
+cat /$disk/d_base/site/INSTRMNT > fort.8
+zcat /$disk/$sat/parmvl/$STAGE/$CASE/v${SNX_VER}/$infile.gz > temp  
+
+grep 'RMS....E...' temp > fort.10
+
+grep 'PARM..' temp > temp1
+grep 'PARM..    95' temp1 > t85
+grep 'PARM..    96' temp1 > t86
+
+grep 'PARM..   11........3' temp1 > t-8
+grep 'PARM..   13.........' temp1 >> t-8
+
+#OLD STYLE: grep 'PARM..   1' temp1 > t-8
+
+echo 'PARMSM99999' > lst
+
+cat t85 t86 t-8 lst >> fort.10
+
+sed "1,\$s/PARMSM/PARMVL/g" fort.10 > $infile.PARMVL
+gzip  -f $infile.PARMVL
+mv $infile.PARMVL.gz /$disk/$sat/parmvl/$STAGE/$CASE/v${SNX_VER}/$infile.PARMVL.gz
+
+
+
+#exit 99
+
+
+#/nobackup/mkuzmicz/EXECUTABLES/parmrdr01.x  < fort.5 > /$disk/$sat/products/$STAGE/$CASE/${sol}/PRM.$infile               
+/umbc/research/epavlis/EXECUTABLES/parmrdr01.x  < fort.5 > /$disk/$sat/products/$STAGE/$CASE/${sol}/PRM.$infile
+
+#----------------------------------
+
+ls -la
+
+#----------------------------------
+cp fort.11 /$disk/$sat/products/$STAGE/$CASE/$sol/state
+cp fort.12 /$disk/$sat/products/$STAGE/$CASE/$sol/accel
+cp fort.13 /$disk/$sat/products/$STAGE/$CASE/$sol/solrd
+cp fort.14 /$disk/$sat/products/$STAGE/$CASE/$sol/xypmaI
+cp fort.15 /$disk/$sat/products/$STAGE/$CASE/$sol/xypm0I
+cp fort.16 /$disk/$sat/products/$STAGE/$CASE/$sol/a1utaI
+cp fort.17 /$disk/$sat/products/$STAGE/$CASE/$sol/a1ut0I
+cp fort.18 /$disk/$sat/products/$STAGE/$CASE/$sol/sprdct
+cp fort.19 /$disk/$sat/products/$STAGE/$CASE/$sol/stagdt.gdn1
+cp fort.20 /$disk/$sat/products/$STAGE/$CASE/$sol/stagdt.gdn2
+cp fort.21 /$disk/$sat/products/$STAGE/$CASE/$sol/stacrt.gdn1
+cp fort.22 /$disk/$sat/products/$STAGE/$CASE/$sol/stacrt.gdn2
+cp fort.23 /$disk/$sat/products/$STAGE/$CASE/$sol/tcscoms
+cp fort.24 /$disk/$sat/products/$STAGE/$CASE/$sol/tcseops
+cp fort.25 /$disk/$sat/products/$STAGE/$CASE/$sol/tsort1
+cp fort.26 /$disk/$sat/products/$STAGE/$CASE/$sol/tsort2
+cp fort.27 /$disk/$sat/products/$STAGE/$CASE/$sol/xyutaG
+cp fort.28 /$disk/$sat/products/$STAGE/$CASE/$sol/xyut0G
+cp fort.29 /$disk/$sat/products/$STAGE/$CASE/$sol/iers_sub
+cp fort.30 /$disk/$sat/products/$STAGE/$CASE/$sol/trfxfrm
+cp fort.34 /$disk/$sat/products/$STAGE/$CASE/$sol/xypmaIr
+cp fort.35 /$disk/$sat/products/$STAGE/$CASE/$sol/xypm0Ir
+cp fort.36 /$disk/$sat/products/$STAGE/$CASE/$sol/a1utaIr
+cp fort.37 /$disk/$sat/products/$STAGE/$CASE/$sol/a1ut0Ir
+cp fort.38 /$disk/$sat/products/$STAGE/$CASE/$sol/sprdctr
+cp fort.40 /$disk/$sat/products/$STAGE/$CASE/$sol/temp_ut1utc
+cp fort.47 /$disk/$sat/products/$STAGE/$CASE/$sol/xyutaGr
+cp fort.48 /$disk/$sat/products/$STAGE/$CASE/$sol/xyut0Gr
+cp fort.49 /$disk/$sat/products/$STAGE/$CASE/$sol/iers_subr
+cp fort.50 /$disk/$sat/products/$STAGE/$CASE/$sol/temp_ut1utcr
+cp fort.60 /$disk/$sat/products/$STAGE/$CASE/$sol/iers_sub2001
+cp fort.70 /$disk/$sat/products/$STAGE/$CASE/$sol/iers_sub2001.sprdct
+cp fort.90 /$disk/$sat/products/$STAGE/$CASE/$sol/unit90
+
+#
+cd ..
+\rm -r parmrdr$$
+
+cd /$disk/$sat/products/COMPARE/$STAGE/$CASE
+ln -s /$disk/$sat/products/$STAGE/$CASE/$sol/stacrt.gdn2 $sol       
+
+exit 0

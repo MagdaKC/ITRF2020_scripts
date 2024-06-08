@@ -1,0 +1,55 @@
+#!/bin/ksh
+#                                                               ecp       990715
+
+${SCR_DBG}set -xv
+set -vx
+
+
+SCR_NAME=SUB_MAKE_SINEX_CoG
+SCR_PARM=5
+SCR_LIST="infile SAT PROJ STEP WT"
+SCR_VERS=230705.0
+
+
+if [ `expr $#` -gt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+
+#  SUB_MAKE_SINEX
+
+# Usage: SUB_MAKE_SINEX infile [SAT] [PROJ] [STEP] [WT]
+
+
+infile=$1
+SAT=${2:-GISLV}        
+PROJ=${3:-ILRS}
+STEP=${4:-WEEKLY}
+WT=${5:-}
+
+while read SOL SNX
+do
+
+export SOL SAT SNX PROJ STEP WT
+
+#  We will need to replace the script below with:
+#
+#              MAKE_SINEX_230102_EOP20C04_CoG
+
+    ${SCRIPTS}/MAKE_SINEX_230102_EOP20C04_CoG
+
+done < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/$infile
+
+exit 0
+

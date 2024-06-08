@@ -1,0 +1,51 @@
+#!/bin/ksh
+#
+${SCR_DBG}set -xv
+set -xv
+# read SNXDIR SNXFILE < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/v${SNX_VER}/SINEX_OF_THIS_RUN.PPV
+echo put $SNXFILE
+
+ START="+SNX 2.00"
+
+cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/DAILY/v180/
+rm LIST TIME_STOP_WRONG TIME_DIF_NAME_and_INSIDE
+ls -1 *.snx.gz > LIST
+while read SNXFILE
+do
+zcat $SNXFILE > t1
+
+  
+arcline1=`sed -n "/$START/=" t1 `
+sed -n "${arcline1}p"   t1 > t2
+#+SNX 2.00 JCT 23:337:44529 JCT 23:330:03948 23:336:83335 L 00092 2 E S
+#jcet.pos+eop.231202.v180.snx.gz
+cut -c33-57 t2 > t3
+sed -e "s/:/ /g" t3 > t4
+
+read YY1 DD1 SS1 YY2 DD2 SS2 < t4
+DD11=`expr $DD1 + 6`
+if [ $DD2 -eq $DD11 ] ; then
+echo "date is ok"
+else
+echo "$SNXFILE" >> TIME_STOP_WRONG
+fi
+YY3=`echo $SNXFILE|cut -c14-15`    
+MM3=`echo $SNXFILE|cut -c16-17`    
+DD3=`echo $SNXFILE|cut -c18-19`    
+
+/umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy $YY3 $MM3 $DD3 > t5
+DD4=$(awk '{print substr($1,3,3)}' t5)
+YY4=$(awk '{print substr($1,1,2)}' t5)
+#YY4 - year form sinex name
+#YY1 -start Year in sinex file
+#YY2 -stop Year in sinex file
+if [ $YY4 -eq $YY2 -a  $DD4 -eq $DD2 ] ; then
+echo "OK"
+else
+echo "$SNXFILE" >> TIME_DIF_NAME_and_INSIDE
+fi
+
+rm t?
+#exit 0
+done < LIST
+exit 0

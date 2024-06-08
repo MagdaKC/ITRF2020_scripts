@@ -1,0 +1,448 @@
+#!/bin/ksh
+#
+
+${SCR_DBG}set -vx
+set -xv
+
+# Usage: MAKE_NEW_ARC svn case year 
+
+#if [ `expr $#` -gt 3 ]; then
+#   echo "Usage: MAKE_NEW_ARC svn case year 2> script_out \007"
+#   exit 100
+#fi
+
+#    MAKE_NEW_ARC 
+
+SCR_NAME=MAKE_NEW_ARC
+SCR_PARM=3
+SCR_LIST="svn case year"
+SCR_VERS=030902.0
+
+
+if [ `expr $#` -lt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+
+svn=${1:-GISL1}
+case=${2:-WEEKLY}
+year=${3:-2003}
+diskC=$disk_n
+
+
+if [ "$svn" = "GISL1" ]; then
+
+   no=7603901
+   disk=${diskC}/MISSIONS
+
+   infile=$MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_INFO_L.${case}_v${SNX_VER}
+   sat=${svn}
+SV=L1
+elif [ "$svn" = "GISL2" ]; then
+
+   no=9207002
+   disk=${diskC}/MISSIONS
+
+   infile=$MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_INFO_L.${case}_v${SNX_VER}
+   sat=${svn}
+SV=L2
+elif [ "$svn" = "ETA1" ]; then
+
+   no=8900103
+   disk=${diskC}/MISSIONS
+
+   infile=$MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_INFO_E.${case}_v${SNX_VER}
+   sat=${svn}
+   SV=E1
+
+elif [ "$svn" = "ETA2" ]; then
+
+   no=8903903
+   disk=${diskC}/MISSIONS
+
+   infile=$MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_INFO_E.${case}_v${SNX_VER}
+   sat=${svn}
+SV=E2
+
+
+ elif [ "$svn" = "LARES2" ]; then
+
+ no=2208001
+ disk=$MAIN_PATH/MISSIONS
+ infile=$MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_INFO_R.${case}_v${SNX_VER}
+ sat=${svn}
+ SV=R2
+
+elif [ "$svn" = "CHAMP" ]; then
+
+   no=0003902
+   disk=space/MISSIONS
+
+   infile=$MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_INFO_CH.${case}_v${SNX_VER}
+   sat=${svn}
+
+elif [ "$svn" = "STARL" ]; then
+
+   no=7501001
+   disk=space/MISSIONS
+
+   infile=$MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_INFO_STR.${case}_v${SNX_VER}
+   sat=${svn}
+
+elif [ "$svn" = "AJISI" ]; then
+
+   no=8606101
+   disk=space/MISSIONS
+
+   infile=$MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_INFO_AJI.${case}_v${SNX_VER}
+   sat=${svn}
+
+elif [ "$svn" = "ERS1" ]; then
+
+   no=9105001
+   disk=space/MISSIONS
+
+   infile=$MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_INFO_ER1.${case}_v${SNX_VER}
+   sat=${svn}
+
+elif [ "$svn" = "TP" ]; then
+
+   no=9205201
+   disk=space/MISSIONS
+
+   infile=$MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_INFO_TP.${case}_v${SNX_VER}
+   sat=${svn}
+
+fi
+
+#
+# execute job
+#
+
+
+disk1=/$disk/$sat/d_base/trnd/DR/${case}/v${SNX_VER}
+disk2=/$disk/$sat/d_base/bias
+disk3=/$disk/$sat/d_base/attp
+disk4=/$disk/d_base/sgms
+
+mkdir -p $disk1
+mkdir -p $disk2
+mkdir -p $disk3
+mkdir -p $disk4
+
+cd $disk1
+
+$SCRIPTS/MAKE_4MBIAS ${sat}
+
+# Now the bias master is locally in "all_bias.MASTER"
+
+cat $MAIN_PATH/INFILES/INF_OPS_ITRF2020/MASTER_${case}.${sat} > t1
+
+
+if [ "$case" = "MONTHLY" ];then
+
+  if [ "$sat" = "GISL1" -o "$sat" = "GISL2" ];then
+
+    while read file bgn end nd ac1 ac2 ac3 ac4 ac5 ac6 ac7 
+    do 
+
+    grep -v -e EPOCH -e ELEMS -e THRDRG t1 > t0
+    arcline=`sed -n "/SATPAR/=" t0 `
+    nextline=`expr $arcline + 1`
+    sed -n "1,${arcline}p" t0 > t1a
+    sed -n "1,\$p" $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_EPOCHS.${case}_v${SNX_VER} >> t1a
+    sed -n "1,\$p" $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ELEMS_${sat}.${file}_v${SNX_VER}     >> t1a
+    arcline=`sed -n "/ALBEDO/=" t0 `
+    lastline=`expr $arcline - 1`
+    sed -n "${nextline},${lastline}p" t0          >> t1a
+
+    sed -e "s/AAAAAA/${ac1}/g" -e "s/BBBBBB/${ac2}/g" -e "s/CCCCCC/${ac3}/g" -e "s/DDDDDD/${ac4}/g" -e "s/EEEEEE/${ac5}/g" -e "s/FFFFFF/${ac6}/g" -e "s/GGGGGG/${ac7}/g"  t1a > t2
+
+    sed -n "1,\$p" all_bias.MASTER >> t2
+
+cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/d_base/bias/ITRF2020/RANGE_MBIAS_230328_CARDS_${sat} >> t2
+    grep ${ac4} $disk3/thrdrg.${sat} >> t2
+
+    nextline=`sed -n "/PREPRO/=" t0 `
+    lastline=`expr $nextline + 1`
+    
+    sed -n "${arcline},${nextline}p" t0 >> t2
+    
+    sed -n "1,\$p" $disk4/MASTER_SIGMA.current >> t2
+    
+    sed -n "${lastline},\$p" t0 >> t2
+    
+    sed -e "s/SSSSSS/${bgn}/g" -e "s/PPPPPP/${end}/g" t2 > t1b
+    
+    mv t1b $disk1/${file}
+
+    done < $infile
+
+  elif [ "$sat" = "ETA1" -o "$sat" = "ETA2" ];then
+
+    while read file bgn end nd ac1 ac2 ac3 ac4 
+    do 
+
+    grep -v -e EPOCH -e ELEMS -e THRDRG t1 > t0
+    arcline=`sed -n "/SATPAR/=" t0 `
+    nextline=`expr $arcline + 1`
+    sed -n "1,${arcline}p" t0 > t1a
+    sed -n "1,\$p" $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_EPOCHS.${case}_v${SNX_VER} >> t1a
+    sed -n "1,\$p" $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ELEMS_${sat}.${file}_v${SNX_VER}     >> t1a
+    arcline=`sed -n "/ALBEDO/=" t0 `
+    lastline=`expr $arcline - 1`
+    sed -n "${nextline},${lastline}p" t0          >> t1a
+
+    sed -e "s/AAAAAA/${ac1}/g" -e "s/BBBBBB/${ac2}/g" -e "s/CCCCCC/${ac3}/g" -e "s/DDDDDD/${ac4}/g" t1a > t2
+
+    sed -n "1,\$p" all_bias.MASTER >> t2
+
+cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/d_base/bias/ITRF2020/RANGE_MBIAS_230328_CARDS_${sat} >> t2
+
+    nextline=`sed -n "/PREPRO/=" t0 `
+    lastline=`expr $nextline + 1`
+    
+    sed -n "${arcline},${nextline}p" t0 >> t2
+    
+    sed -n "1,\$p" $disk4/MASTER_SIGMA.current >> t2
+    
+    sed -n "${lastline},\$p" t0 >> t2
+    
+    sed -e "s/SSSSSS/${bgn}/g" -e "s/PPPPPP/${end}/g" t2 > t1b
+    
+    mv t1b $disk1/${file}
+
+    done < $infile
+
+  fi
+
+elif [ "$case" = "WEEKLY" ];then
+
+  if [ "$sat" = "GISL1" -o "$sat" = "GISL2" -o "$sat" = "LARES2" ];then
+
+    while read file bgn end nd ac1 ac2 
+    do 
+
+    grep -v -e EPOCH -e ELEMS -e THRDRG t1 > t0
+    arcline=`sed -n "/SATPAR/=" t0 `
+    nextline=`expr $arcline + 1`
+    sed -n "1,${arcline}p" t0 > t1a
+    sed -n "1,\$p" $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_EPOCHS.${case}_v${SNX_VER} >> t1a
+    sed -n "1,\$p" $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ELEMS_${sat}.${file}_v${SNX_VER}     >> t1a
+    arcline=`sed -n "/ALBEDO/=" t0 `
+    lastline=`expr $arcline - 1`
+    sed -n "${nextline},${lastline}p" t0          >> t1a
+
+    sed -e "s/AAAAAA/${ac1}/g" -e "s/BBBBBB/${ac2}/g" t1a > t2
+
+    sed -n "1,\$p" all_bias.MASTER >> t2
+
+cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/d_base/bias/ITRF2020/RANGE_MBIAS_230328_CARDS_${sat} >> t2
+
+    grep ${ac1} $disk3/thrdrg.${sat} >> t2
+
+    nextline=`sed -n "/PREPRO/=" t0 `
+    lastline=`expr $nextline + 1`
+    
+    sed -n "${arcline},${nextline}p" t0 >> t2
+    
+    sed -n "1,\$p" $disk4/MASTER_SIGMA.current >> t2
+    
+    sed -n "${lastline},\$p" t0 >> t2
+    
+    sed -e "s/SSSSSS/${bgn}/g" -e "s/PPPPPP/${end}/g" t2 > t1b
+   #mkc 20211104i NEW OBSCOR
+            cat $MAIN_PATH/MISSIONS/d_base/obscor/DEFAULT_JCET_mean > o2
+            # OBSCR 21 cat $MAIN_PATH/MISSIONS/d_base/obscor/$SV/${ARC}_OBSCOR >> o2
+            cat /umbc/research/epavlis/INFILES/ALL_STATIONS_230311/OBSCOR/230311/OBSCOR/$SV/${ARC}_OBSCOR >> o2
+
+        #cat $MAIN_PATH/INFILES/ALL_STATIONS_211101/OBSCOR/211101/OBSCOR/DEFAULT_JCET_mean > o2
+        #cat $MAIN_PATH/INFILES/ALL_STATIONS_211101/OBSCOR/211101/OBSCOR/${SV}/${ARC}_OBSCOR >> o2
+            sed -i -e '/DATA/r o2' t1b
+        cat $MAIN_PATH/MISSIONS/d_base/bias/ITRF2020/DELE_210224_AFTER202301_CARDS > d0
+        grep -v ENDARC t1b > t1c
+        cat d0 >> t1c
+        echo "ENDARC"  >> t1c
+                 ###
+    mv t1c $disk1/${file}
+
+    done < $infile
+
+  elif [ "$sat" = "ETA1" -o "$sat" = "ETA2" ];then
+
+    while read file bgn end nd ac1 
+    do 
+
+    grep -v -e EPOCH -e ELEMS -e THRDRG t1 > t0
+    arcline=`sed -n "/SATPAR/=" t0 `
+    nextline=`expr $arcline + 1`
+    sed -n "1,${arcline}p" t0 > t1a
+    sed -n "1,\$p" $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_EPOCHS.${case}_v${SNX_VER} >> t1a
+    sed -n "1,\$p" $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ELEMS_${sat}.${file}_v${SNX_VER}     >> t1a
+    arcline=`sed -n "/ALBEDO/=" t0 `
+    lastline=`expr $arcline - 1`
+    sed -n "${nextline},${lastline}p" t0          >> t1a
+
+    sed -e "s/AAAAAA/${ac1}/g" t1a > t2
+
+#MKC
+grep -v -e "MBIAS.........151" -e "MBIAS.........500" -e "MBIAS.........900" all_bias.MASTER > gtmptrnd
+
+cp gtmptrnd all_bias.MASTER
+#
+
+    sed -n "1,\$p" all_bias.MASTER >> t2
+#MKC
+    cat EXTRA_BIAS >> t2
+#   
+
+    nextline=`sed -n "/PREPRO/=" t0 `
+    lastline=`expr $nextline + 1`
+    
+    sed -n "${arcline},${nextline}p" t0 >> t2
+    
+    sed -n "1,\$p" $disk4/MASTER_SIGMA.current >> t2
+    
+    sed -n "${lastline},\$p" t0 >> t2
+    
+    sed -e "s/SSSSSS/${bgn}/g" -e "s/PPPPPP/${end}/g" t2 > t1b
+   #mkc 20211104i NEW OBSCOR
+        #    cat $MAIN_PATH/MISSIONS/d_base/obscor/DEFAULT_JCET_mean > o2
+        #    cat $MAIN_PATH/MISSIONS/d_base/obscor/$SV/${ARC}_OBSCOR >> o2
+
+        #cat $MAIN_PATH/INFILES/ALL_STATIONS_211101/OBSCOR/211101/OBSCOR/DEFAULT_JCET_mean > o2
+        #cat $MAIN_PATH/INFILES/ALL_STATIONS_211101/OBSCOR/211101/OBSCOR/${SV}/${ARC}_OBSCOR >> o2
+            cat $MAIN_PATH/MISSIONS/d_base/obscor/DEFAULT_JCET_mean > o2
+            #cat $MAIN_PATH/MISSIONS/d_base/obscor/$SV/${ARC}_OBSCOR >> o2
+            cat /umbc/research/epavlis/INFILES/ALL_STATIONS_230311/OBSCOR/230311/OBSCOR/$SV/${ARC}_OBSCOR >> o2
+                              sed -i -e '/DATA/r o2' t1b
+        cat $MAIN_PATH/MISSIONS/d_base/bias/ITRF2020/DELE_210224_AFTER202301_CARDS > d0
+        grep -v ENDARC t1b > t1c
+        cat d0 >> t1c
+                echo "ENDARC"  >> t1c
+                                       ###
+    mv  t1c $disk1/${file}
+    done < $infile
+
+  fi
+
+elif [ "$case" = "DAILY" ];then
+
+  if [ "$sat" = "GISL1" -o "$sat" = "GISL2" -o "$sat" = "LARES2" ];then
+
+    while read file bgn end nd ac1 ac2 
+    do 
+
+    grep -v -e EPOCH -e ELEMS -e THRDRG t1 > t0
+    arcline=`sed -n "/SATPAR/=" t0 `
+    nextline=`expr $arcline + 1`
+    sed -n "1,${arcline}p" t0 > t1a
+    sed -n "1,\$p" $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_EPOCHS.${case}_v${SNX_VER} >> t1a
+    sed -n "1,\$p" $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ELEMS_${sat}.${file}_v${SNX_VER}     >> t1a
+    arcline=`sed -n "/ALBEDO/=" t0 `
+    lastline=`expr $arcline - 1`
+    sed -n "${nextline},${lastline}p" t0          >> t1a
+
+    sed -e "s/AAAAAA/${ac1}/g" -e "s/BBBBBB/${ac2}/g" t1a > t2
+
+    sed -n "1,\$p" all_bias.MASTER >> t2
+
+    grep " ${ac1}" $disk3/thrdrg.${sat} >> t2
+
+    nextline=`sed -n "/PREPRO/=" t0 `
+    lastline=`expr $nextline + 1`
+    
+    sed -n "${arcline},${nextline}p" t0 >> t2
+    
+    sed -n "1,\$p" $disk4/MASTER_SIGMA.current >> t2
+    
+    sed -n "${lastline},\$p" t0 >> t2
+    
+    sed -e "s/SSSSSS/${bgn}/g" -e "s/PPPPPP/${end}/g" t2 > t1b
+   #mkc 20211104i NEW OBSCOR
+        cat $MAIN_PATH/MISSIONS/d_base/obscor/DEFAULT_JCET_mean > o2
+        #cat $MAIN_PATH/MISSIONS/d_base/obscor/$SV/${ARC}_OBSCOR >> o2
+        cat /umbc/research/epavlis/INFILES/ALL_STATIONS_230311/OBSCOR/230311/OBSCOR/$SV/${ARC}_OBSCOR >> o2
+
+        #cat $MAIN_PATH/INFILES/ALL_STATIONS_211101/OBSCOR/211101/OBSCOR/DEFAULT_JCET_mean > o2
+        #cat $MAIN_PATH/INFILES/ALL_STATIONS_211101/OBSCOR/211101/OBSCOR/${SV}/${ARC}_OBSCOR >> o2
+        sed -i -e '/DATA/r o2' t1b
+        cat $MAIN_PATH/MISSIONS/d_base/bias/ITRF2020/DELE_210224_AFTER202301_CARDS > d0
+        grep -v ENDARC t1b > t1c
+        cat d0 >> t1c
+                echo "ENDARC"  >> t1c
+        ###
+    mv t1c $disk1/${file}
+
+    done < $infile
+
+  elif [ "$sat" = "ETA1" -o "$sat" = "ETA2" ];then
+
+    while read file bgn end nd ac1 
+    do 
+
+    grep -v -e EPOCH -e ELEMS -e THRDRG t1 > t0
+    arcline=`sed -n "/SATPAR/=" t0 `
+    nextline=`expr $arcline + 1`
+    sed -n "1,${arcline}p" t0 > t1a
+    sed -n "1,\$p" $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_EPOCHS.${case}_v${SNX_VER} >> t1a
+    sed -n "1,\$p" $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ELEMS_${sat}.${file}_v${SNX_VER}     >> t1a
+    arcline=`sed -n "/ALBEDO/=" t0 `
+    lastline=`expr $arcline - 1`
+    sed -n "${nextline},${lastline}p" t0          >> t1a
+
+    sed -e "s/AAAAAA/${ac1}/g" t1a > t2
+
+grep -v -e "MBIAS.........151" -e "MBIAS.........500" -e "MBIAS.........900" all_bias.MASTER > gtmptrnd
+
+cp gtmptrnd all_bias.MASTER
+
+
+    sed -n "1,\$p" all_bias.MASTER >> t2
+    cat EXTRA_BIAS >> t2
+    nextline=`sed -n "/PREPRO/=" t0 `
+    lastline=`expr $nextline + 1`
+    
+    sed -n "${arcline},${nextline}p" t0 >> t2
+    
+    sed -n "1,\$p" $disk4/MASTER_SIGMA.current >> t2
+    
+    sed -n "${lastline},\$p" t0 >> t2
+    
+    sed -e "s/SSSSSS/${bgn}/g" -e "s/PPPPPP/${end}/g" t2 > t1b
+    
+   #mkc 20211104i NEW OBSCOR
+        cat $MAIN_PATH/MISSIONS/d_base/obscor/DEFAULT_JCET_mean > o2
+       # cat $MAIN_PATH/MISSIONS/d_base/obscor/$SV/${ARC}_OBSCOR >> o2
+        cat /umbc/research/epavlis/INFILES/ALL_STATIONS_230311/OBSCOR/230311/OBSCOR/$SV/${ARC}_OBSCOR >> o2
+        #cat $MAIN_PATH/INFILES/ALL_STATIONS_211101/OBSCOR/211101/OBSCOR/DEFAULT_JCET_mean > o2
+        #cat $MAIN_PATH/INFILES/ALL_STATIONS_211101/OBSCOR/211101/OBSCOR/${SV}/${ARC}_OBSCOR >> o2
+        sed -i -e '/DATA/r o2' t1b
+        cat $MAIN_PATH/MISSIONS/d_base/bias/ITRF2020/DELE_210224_AFTER202301_CARDS > d0
+        grep -v ENDARC t1b > t1c
+        cat d0 >> t1c
+                echo "ENDARC"  >> t1c
+        ###
+    mv t1c $disk1/${file}
+
+    done < $infile
+
+  fi
+fi
+
+
+\rm t2 t0 t1a t1 all_bias.MASTER
+
+exit 0
+

@@ -1,0 +1,202 @@
+#!/bin/ksh
+#
+${SCR_DBG}set -xv
+set -xv
+
+
+
+#  RUN_STR
+
+#
+
+SCR_NAME=REPORT_BiAS_ALL
+SCR_LIST="CASE ETA_IN"
+SCR_VERS=070928.0
+
+SCR_DBG="#"
+export SCR_DBG
+
+
+Date=`date +%y%m%d`
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+CASE=DAILY
+#ARC=z70925
+ARC=$1
+diskC=$disk_n
+ CASE=DAILY
+  #ARC=z70925
+   SNX_VER=180
+    ARC=w31225
+     diskC=/umbc/epavlis/data01/LOCAL/magdak
+#------------------------------
+#  Report for all satellites: L1, L2, E1, E2, A1 and S1
+#------------------------------
+# To the end of the proces. Merge Reports from all satellites and sort by station and date.
+#Merge alll station together and sort unique
+cat /$diskC/MISSIONS/GISL1/qc_report/${CASE}/v${SNX_VER}/${ARC}/st_L1 > ST1
+cat /$diskC/MISSIONS/GISL2/qc_report/${CASE}/v${SNX_VER}//${ARC}/st_L2 >> ST1
+cat /$diskC/MISSIONS/ETA1/qc_report/${CASE}/v${SNX_VER}/${ARC}/st_E1 >> ST1
+cat /$diskC/MISSIONS/ETA2/qc_report/${CASE}/v${SNX_VER}/${ARC}/st_E2 >> ST1
+cat /$diskC/MISSIONS/LARES2/qc_report/${CASE}/v${SNX_VER}/${ARC}/st_R2 >> ST1
+cat /$diskC/MISSIONS/LARES/qc_report/${CASE}/v${SNX_VER}/${ARC}/st_LR >> ST1
+cat /$diskC/MISSIONS/AJISI/qc_report/${CASE}/v${SNX_VER}/${ARC}/st_AJ >> ST1
+cat /$diskC/MISSIONS/STARL/qc_report/${CASE}/v${SNX_VER}/${ARC}/st_ST >> ST1
+sort -u ST1 > ST
+
+# To the end of the proces. Merge Reports from all satellites and sort by station and date.
+#Merge alll station together and sort unique
+cat /$diskC/MISSIONS/PPV/qc_report/${CASE}/v${SNX_VER}/${ARC}_LEAS.txt > ST2
+
+MAIN_PATH=/$diskC
+read NYEAR NDOY Date_NEW_ARC ARC2 < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_NEW.${CASE}_v${SNX_VER}
+read XYEAR XDOY Date_NXT_ARC NXT < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_NXT.${CASE}_v${SNX_VER}
+read EYEAR EDOY Date_END_ARC END < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_END_OLD.${CASE}_v${SNX_VER}
+read EYEAR2 EDOY2 Date_END_ARC2 END2 < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_END.${CASE}_v${SNX_VER}
+XDOY2=`expr $XDOY - 1`
+
+/$diskC/scripts/ydoy2ymd $NYEAR $NDOY > D1a
+/$diskC/scripts/ydoy2ymd $XYEAR $XDOY2 > D2a
+read D1 < D1a
+read D2 < D2a
+print "$Date_END_ARC" > D3a
+cut -c1-2 D3a > YYY 
+cut -c3-4 D3a > MMM 
+cut -c5-6 D3a > DDD 
+read YYYA < YYY
+read DDDA < DDD
+read MMMA < MMM
+#231002 /$diskC/scripts/ymd2ydoy $EYEAR $YYYA $DDDA $MMMA > D2b
+/$diskC/scripts/ymd2ydoy $EYEAR $MMMA $DDDA > D2b
+cut -c1-2 D2b > YY3 
+cut -c3-5 D2b > DY3 
+read  DYB < DY3
+DYC=`expr $DYB - 1`
+DYCC=$DYC
+/$diskC/scripts/ydoy2ymd $EYEAR $DYCC > D2c
+#cut -c1-2 D3a > YYY
+#cut -c3-4 D3a > MMM
+#cut -c5-6 D3a > DDD
+cut -c1-2 D2c > YYY
+cut -c3-4 D2c > MMM
+cut -c5-6 D2c > DDD
+read YYYA < YYY
+read DDDA < DDD
+read MMMA < MMM
+
+print "${YYYA}/${MMMA}/${DDDA}" > G_Da
+read G_D < G_Da
+
+
+
+
+#Merge data for for one station from  all satellites
+
+G_D="23/12/31"
+grep "${G_D}" ST2 > Report_all_sort_one
+
+# *.rpt - report with titles and *.txt report without any title
+cp Report_all_sort_one  /$diskC/MISSIONS/PPV/qc_report/${CASE}/v${SNX_VER}/${ARC}.txt
+
+
+/$diskC/scripts/ydoy2ymd $NYEAR $NDOY > D1b
+/$diskC/scripts/ydoy2ymd $EYEAR2 $EDOY2 > D2a
+read D1c < D1b
+read D2c < D2a
+EDOY3=`expr $EDOY2 - 1`
+/$diskC/scripts/ydoy2ymd $EYEAR2 $EDOY3 > D3a
+read D3 < D3a
+
+#START Report for all satellites
+print "# @$Date" > Report2
+print "# @Data span  ${D1c}-${D2c}" >> Report2
+print "# @contact epavlis@umbc.edu" >> Report2
+print "# @website  http://geodesy.jcet.umbc.edu/" >> Report2
+print "# @version 2.0" >> Report2
+print "#    " >> Report2
+print "# each line contains:" >> Report2
+print "#    " >> Report2
+print "# STA ID           = site name  " >> Report2
+print "# YY/MM/DD HH:MM   = pass starting time " >> Report2
+print "# SAT              = satellite name (L1: LAGEOS1; L2: LAGEOS2; E1: ETALON1; E2:ETALON2; LR LARES; R2: LARES2 S1: STARLETTE; A1: AJISAI) " >> Report2
+print "# GOD OBS          = number of good normal points  " >> Report2
+print "# RAW RMS          = residual RMS before editing & bias application " >> Report2
+print "# PREC EST         = post-fit scattering rms  " >> Report2
+print "# RANGE BIAS       = estimated range bias  " >> Report2
+print "# RANGE BIAS SIGMA = estimated range bias sigma " >> Report2
+print "# TIME BIAS        = estimated time bias  " >> Report2
+print "# TIME BIAS SIGMA  = estimated time bias sigma" >> Report2
+print "# PASS DUR         = pass duration  " >> Report2
+print "# EDIT OBS         = number of bad normal points  " >> Report2
+print "# CALIB+ MEAN      = mean Applied System Delay (ILRS FR format cols 97-104)  " >> Report2
+print "# CALIB SDEV       = mean System Calibration Method (ILRS FR format cols 126) " >> Report2
+print "# CALIB SHIFT+     = mean Root Mean Square (ILRS FR format cols 111-114) " >> Report2
+print "# STPASS RMS       = mean Pass RMS (ILRS FR format cols 58-64) "  >> Report2
+print "# TEMP             = mean surface temperature [K]  " >> Report2
+print "# HUM              = mean relative humidity of surface %  " >> Report2
+print "# PRES             = mean pressure [hPa]  " >> Report2
+print "# WLEN             = walelength [nm]  " >> Report2
+print "# SCH              = System Change Indicator (ILRS FR format cols 127) " >> Report2
+print "# SCI              = System Configuration (ILRS FR format cols 128)  " >> Report2
+print "# DRF              = Data Release Flag (ILRS FR format cols 130)" >> Report2
+print "# ELEVATION MAX    = maximum elevation for pass [degrees]  " >> Report2
+print "# ELEVATION MIN    = minimum elevation for pass [degrees]  " >> Report2
+print "#    " >> Report2
+
+
+#Merge data for for one station from  all satellites
+#1
+while read STAN2
+do
+rm T1ALL T2ALL
+cat /$diskC/MISSIONS/GISL1/qc_report/${CASE}/v${SNX_VER}/${ARC}/${STAN2}_L1 >>  T1ALL 
+cat /$diskC/MISSIONS/GISL2/qc_report/${CASE}/v${SNX_VER}/${ARC}/${STAN2}_L2 >>  T1ALL 
+cat /$diskC/MISSIONS/ETA1/qc_report/${CASE}/v${SNX_VER}/${ARC}/${STAN2}_E1 >>  T1ALL 
+cat /$diskC/MISSIONS/ETA2/qc_report/${CASE}/v${SNX_VER}/${ARC}/${STAN2}_E2 >>  T1ALL 
+cat /$diskC/MISSIONS/LARES2/qc_report/${CASE}/v${SNX_VER}/${ARC}/${STAN2}_R2 >>  T1ALL 
+cat /$diskC/MISSIONS/LARES/qc_report/${CASE}/v${SNX_VER}/${ARC}/${STAN2}_LR >>  T1ALL 
+cat /$diskC/MISSIONS/STARL/qc_report/${CASE}/v${SNX_VER}/${ARC}/${STAN2}_S1 >>  T1ALL 
+cat /$diskC/MISSIONS/AJISI/qc_report/${CASE}/v${SNX_VER}/${ARC}/${STAN2}_A1 >>  T1ALL 
+sort -k1,1 -k2,2 T1ALL > T2ALLA
+grep "${G_D}" T2ALLA > T2ALL 
+if [ -s T2ALL ]; then
+cp T2ALL ${STAN2}
+print "$STAN2" > STAT1
+cut -c1-4 STAT1 > STAT12
+#2
+read STAT2 < STAT12
+while read STAT3 NAME DOS
+do
+if [ "${STAT2}" = "${STAT3}" ]; then
+print "#$STAT3 ${NAME}  $DOS" >> Report2
+fi
+
+#2
+done < /$diskC/INFILES/ILRS_SITE_LIST_102
+
+
+
+print "#                            GOOD        RAW      PREC       RANGE     RANGE    TIME    TIME  PASS    EDIT    CALIB+  CALIB  CALIB++ STPASS    TEMP     HUM     PRES     WLEN   S S D        ELEVATION " >> Report2
+print "#                             OBS        RMS       EST        BIAS      BIAS    BIAS    BIAS   DUR     OBS    MEAN    SDEV   SHIFT   RMS        [K]       %     [hPa]    [nm]   C C R      MAX       MIN     ">> Report2
+print "# STA ID YY/MM/DD HH:MM SAT  A          [mm]      [mm]        [mm]     SIGMA    [us]   SIGMA  [MIN]           [mm]    [mm]   [mm]    [mm]                                       H I F        [degrees]" >> Report2
+print "#                 " >> Report2
+cat T2ALL >>  Report2
+print "#" >> Report2
+#cp T3ALL ${SATN2}_ALL
+fi
+done <  ST
+Date_ENDO_ARC=$D3
+cp Report2 /$diskC/MISSIONS/PPV/qc_report/${CASE}/v${SNX_VER}/jcet.qc1day.${Date_ENDO_ARC}.slr.v01.rpt
+exit 0
+echo "/$diskC/MISSIONS/PPV/qc_report/DAILY/v${SNX_VER} jcet.qc1day.${Date_ENDO_ARC}.slr.v01.rpt" > /$diskC/INFILES/Current_biasreport.DAILY
+chmod 755 /$diskC/INFILES/Current_biasreport.DAILY
+
+exit 0

@@ -1,0 +1,48 @@
+#!/bin/ksh
+#
+${SCR_DBG}set -xv
+set -xv
+# read SNXDIR SNXFILE < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/v${SNX_VER}/SINEX_OF_THIS_RUN.PPV
+echo put $SNXFILE
+
+ START="+SOLUTION\/ESTIMATE"
+ STOP="-SOLUTION\/ESTIMATE"
+
+cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/DAILY/v180/
+rm LIST RRBIAS
+ls -1 *.snx.gz > LIST
+while read SNXFILE
+do
+zcat $SNXFILE > t1
+
+  
+arcline1=`sed -n "/$START/=" t1 `
+arcline2=`sed -n "/$STOP/=" t1 `
+echo $arcline1 > ppp1
+arcline11=`awk ' {print $1} ' ppp1`
+echo $arcline2 > ppp2
+arcline22=`awk ' {print $NF} ' ppp2`
+sed -n "${arcline11},${arcline22}p" t1 > t2
+grep RBIAS t2 > t3
+cut -c15-26 t3 > t4
+sort t4| uniq -c | grep -v "      1" > t5
+  FILE=t5
+ if [[ -s $FILE ]] ; then
+  sed -e "s/^/$SNXFILE /" t5 > t6
+   cat t6 >> RRBIAS
+    fi
+rm t?
+done < LIST
+exit 0
+#mail -s "RBIAS Duplicate in sinex $CASE SLRF2020 v${SNX_VER} ${SNXFILE} " -a t5  magdak@umbc.edu < t5
+  FILE=t5
+if [[ -s $FILE ]] ; then
+echo "$FILE has data."
+mail -s "RBIAS Duplicate in sinex $CASE SLRF2020 v${SNX_VER} ${SNXFILE} " -a t5  magdak@umbc.edu < t5
+else
+echo "$FILE no RBIAS double."
+fi
+
+
+
+exit0

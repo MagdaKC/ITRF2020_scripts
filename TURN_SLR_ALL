@@ -1,0 +1,850 @@
+#!/bin/ksh
+#
+
+${SCR_DBG}set -vx
+set -vx
+
+#   TURN_SLR_ALL
+
+#             CASE to be either null, "WEEKLY", "MONTHLY", etc
+#             MODE to be either DR or EMT or EMT2DR, depending on what you turn for
+
+SCR_NAME=TURN_SLR_ALL
+SCR_PARM=11
+SCR_LIST="infile SV ITR VER GTR CASE MODE PROJ SUBSOL DELETE INSERT"
+SCR_VERS=040219.0
+
+
+if [ `expr $#` -lt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+
+infile=$1
+SV=$2
+ITR=$3
+VER=$4
+GTR=${5:-3}
+CASE=${6:-WEEKLY}
+MODE=${7:-DR}
+PROJ=${8:-PP6}
+SUBSOL=${9:-A}
+DELETE=${10:-OUT}
+INSERT=${11:-NONE}
+
+
+  if [ "$SV" = "L1" ]; then
+
+  DSK=$DISK
+  sat=GISL1
+  SATDEL=GISLV
+  satn=7603901
+
+  elif [ "$SV" = "L2" ]; then
+
+  DSK=$DISK
+  sat=GISL2
+  SATDEL=GISLV
+  satn=9207002
+  
+  elif [ "$SV" = "E1" ]; then
+
+  DSK=$DISK
+  sat=ETA1
+  SATDEL=ETAV
+  SATDEL=GISLV           # we DELETE only based on LAGEOS !!!
+  SATDEL=PPV             # we DELETE based on LAGEOS + ETALONS !!!
+  satn=8900103
+
+  elif [ "$SV" = "E2" ]; then
+
+  DSK=$DISK
+  sat=ETA2
+  SATDEL=ETAV
+  SATDEL=GISLV           # we DELETE only based on LAGEOS !!!
+  SATDEL=PPV             # we DELETE based on LAGEOS + ETALONS !!!
+  satn=8903903
+
+
+
+  elif [ "$SV" = "LARES" ]; then
+
+  DSK=$DISK
+  sat=LARES
+  SATDEL=LARES
+  SATDEL=LARES           # we DELETE only based on LAGEOS !!!
+  SATDEL=LARES             # we DELETE based on LAGEOS + ETALONS !!!
+  satn=1200601
+
+  elif [ "$SV" = "LARES2" ]; then
+  #elif [ "$SV" = "R2" ]; then
+
+  DSK=$DISK
+  sat=LARES2
+  SATDEL=LARES2
+  SATDEL=LARES2           # we DELETE only based on LAGEOS !!!
+  SATDEL=LARES2             # we DELETE based on LAGEOS + ETALONS !!!
+  satn=2208001
+
+
+  elif [ "$SV" = "CHAMP" ]; then
+
+  DSK=$DISK
+  sat=CHAMP
+  SATDEL=$sat
+  satn=0309002
+
+  elif [ "$SV" = "STARL" ]; then
+
+  DSK=$DISK
+  sat=STARL
+  SATDEL=$sat
+  satn=8903903
+
+  elif [ "$SV" = "GFZ" ]; then
+
+  DSK=$DISK
+  sat=GFZ
+  SATDEL=$sat
+  satn=8601795
+  PROJ=
+
+  elif [ "$SV" = "AJISI" ]; then
+
+  DSK=$DISK
+  sat=AJISI
+  SATDEL=$sat
+  satn=8903903
+
+  elif [ "$SV" = " ERS1" ]; then
+
+  DSK=$DISK
+  sat=ERS1
+  SATDEL=$sat
+  satn=8903903
+
+  elif [ "$SV" = "TP" ]; then
+
+  DSK=$DISK
+  sat=TP
+  SATDEL=$sat
+  satn=8903903
+
+  fi
+
+export satn
+mkdir $MAIN_PATH/tmp/magda/T$$
+cd $MAIN_PATH/tmp/magda/T$$
+
+
+disk1=/${DSK}/$sat/punchdout/$MODE/$CASE
+
+if [ "$MODE" = "DR" ]; then
+
+disk1=/${DSK}/$sat/punchdout/DR/${CASE}/v${SNX_VER}
+
+disk2=/${DSK}/$sat/d_base/trnd/DR/${CASE}/v${SNX_VER}
+
+mkdir -p $disk2
+
+
+#cd $disk1
+
+while read file date 
+do
+
+zcat  ${disk1}/${file}.$VER.gz > t0
+#gzcat ${file}.$VER > t0
+
+ #arcline=`sed -n "/\/ARC\/    1 ${GTR} 0/=" t0 `
+ arcline=`sed -n "/\/ARC\/    1 ${GTR} ./=" t0 `
+echo $arcline > ppp1
+arcline=`awk ' {print $NF} ' ppp1`
+
+frstline=`expr $arcline + 1`
+
+sed -n "${frstline},\$p" t0 > t1
+
+
+ sed -e "s/REFSYS..../REFSYS0964/g" t1      > t2
+
+
+#mv $disk2/${file} $disk2/${file}.$VER.$ITR
+#gzip -f $disk2/${file}.$VER.$ITR
+
+if [ "$INSERT" != "NONE" ]; then
+
+$SCRIPTS/$INSERT t2 $sat ${file}
+
+fi
+###180605
+arcline1=`sed -n "/DATA/=" t2 `
+arcline2=` expr $arcline1 - 1 `
+arcline3=` expr $arcline1 + 1 `
+
+sed -n "1,${arcline2}p" t2 > t21
+#####CAHNGE!!!!!! cat zmicz/REPRO/d_base/bias/WEEKLY/MODELED_MBIAS_2B_APPLIED_210415 >> t21
+ #cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/d_base/bias/ITRF2020/RANGE_MBIAS_230328_CARDS_${sat} >> t21
+ #NEW DHF 240213
+ cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/d_base/bias/ITRF2020/RANGE_MBIAS_240213_CARDS_${sat} >> t21
+sed -n "${arcline1},\$p" t2 >> t21
+#
+
+mv t21 $disk2/${file}
+
+# Move the results' files from the previous iteration to save them:
+
+ARC=$file
+LABEL=$VER
+
+mv /${DSK}/$sat/output/${MODE}/${CASE}/v${SNX_VER}/$ARC.$LABEL.gz /${DSK}/$sat/output/${MODE}/${CASE}/v${SNX_VER}/$ARC.$LABEL.$ITR.gz
+mv /${DSK}/$sat/punchdout/${MODE}/${CASE}/v${SNX_VER}/$ARC.$LABEL.gz /${DSK}/$sat/punchdout/${MODE}/${CASE}/v${SNX_VER}/$ARC.$LABEL.$ITR.gz
+mv /${DSK}/$sat/orbtvu/car/$ARC.$LABEL.gz /${DSK}/$sat/orbtvu/car/$ARC.$LABEL.$ITR.gz
+mv /${DSK}/$sat/summaries/${MODE}/${CASE}/v${SNX_VER}/$ARC.$LABEL.gz /${DSK}/$sat/summaries/${MODE}/${CASE}/v${SNX_VER}/$ARC.$LABEL.$ITR.gz
+mv /${DSK}/$sat/orbtvu/kep/$ARC.$LABEL.gz /${DSK}/$sat/orbtvu/kep/$ARC.$LABEL.$ITR.gz
+mv /${DSK}/$sat/corrections/${MODE}/${CASE}/v${SNX_VER}/$ARC.$LABEL.gz /${DSK}/$sat/corrections/${MODE}/${CASE}/v${SNX_VER}/$ARC.$LABEL.$ITR.gz
+mv /${DSK}/$sat/simdat/$ARC.$LABEL.gz /${DSK}/$sat/simdat/$ARC.$LABEL.$ITR.gz
+mv /${DSK}/$sat/biaschk/$ARC.$LABEL.gz /${DSK}/$sat/biaschk/$ARC.$LABEL.$ITR.gz
+mv /${DSK}/$sat/telem/$ARC.$LABEL.gz /${DSK}/$sat/telem/$ARC.$LABEL.$ITR.gz
+mv /${DSK}/$sat/traj/${ARC}.${LABEL}.orbfil.gz /${DSK}/$sat/traj/${ARC}.${LABEL}.orbfil.$ITR.gz
+mv /${DSK}/$sat/traj/${ARC}.${LABEL}.rv.gz /${DSK}/$sat/traj/${ARC}.${LABEL}.rv.$ITR.gz
+mv /${DSK}/$sat/residuals_ascii/${MODE}/${CASE}/v${SNX_VER}/${ARC}.${LABEL}.ascii.gz /${DSK}/$sat/residuals_ascii/${MODE}/${CASE}/v${SNX_VER}/${ARC}.${LABEL}.ascii.$ITR.gz
+mv /${DSK}/$sat/residuals_ascii/${MODE}/${CASE}/v${SNX_VER}/${ARC}.${LABEL}.sort_by_config.gz /${DSK}/$sat/residuals_ascii/${MODE}/${CASE}/$v${SNX_VER}/{ARC}.${LABEL}.sort_by_config.$ITR.gz
+mv /${DSK}/$sat/corrections/${MODE}/${CASE}/v${SNX_VER}/${ARC}.${LABEL}.cor.gz /${DSK}/$sat/corrections/${MODE}/${CASE}/v${SNX_VER}/${ARC}.${LABEL}.cor.$ITR.gz
+
+
+done < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/$infile
+
+\rm t0 t1
+
+elif [ "$MODE" = "DR14" ]; then
+
+MODE=DR
+disk1=/${DSK}/$sat/punchdout/DR/$CASE
+
+disk2=/${DSK}/$sat/d_base/trnd/DR/${CASE}/REANAL2014/TURN/$PROJ
+
+mkdir -p $disk2
+
+
+#cd $disk1
+
+while read file date 
+do
+
+zcat  ${disk1}/${file}.$VER.gz > t0
+#gzcat ${file}.$VER > t0
+
+ arcline=`sed -n "/\/ARC\/    1 ${GTR} 0/=" t0 `
+
+frstline=`expr $arcline + 1`
+
+sed -n "${frstline},\$p" t0 > t1
+
+
+ sed -e "s/REFSYS..../REFSYS0964/g" t1      > t2
+
+
+mv $disk2/${file} $disk2/${file}.$VER.$ITR
+gzip -f $disk2/${file}.$VER.$ITR
+
+if [ "$INSERT" != "NONE" ]; then
+
+$SCRIPTS/$INSERT t2 $sat ${file}
+
+fi
+
+mv t2 $disk2/${file}
+
+# Move the results' files from the previous iteration to save them:
+
+ARC=$file
+LABEL=$VER
+
+mv /${DSK}/$sat/output/${MODE}/${CASE}/$ARC.$LABEL.gz /${DSK}/$sat/output/${MODE}/${CASE}/$ARC.$LABEL.$ITR.gz
+mv /${DSK}/$sat/punchdout/${MODE}/${CASE}/$ARC.$LABEL.gz /${DSK}/$sat/punchdout/${MODE}/${CASE}/$ARC.$LABEL.$ITR.gz
+mv /${DSK}/$sat/orbtvu/car/$ARC.$LABEL.gz /${DSK}/$sat/orbtvu/car/$ARC.$LABEL.$ITR.gz
+mv /${DSK}/$sat/summaries/${MODE}/${CASE}/$ARC.$LABEL.gz /${DSK}/$sat/summaries/${MODE}/${CASE}/$ARC.$LABEL.$ITR.gz
+mv /${DSK}/$sat/orbtvu/kep/$ARC.$LABEL.gz /${DSK}/$sat/orbtvu/kep/$ARC.$LABEL.$ITR.gz
+mv /${DSK}/$sat/corrections/${MODE}/${CASE}/$ARC.$LABEL.gz /${DSK}/$sat/corrections/${MODE}/${CASE}/$ARC.$LABEL.$ITR.gz
+mv /${DSK}/$sat/simdat/$ARC.$LABEL.gz /${DSK}/$sat/simdat/$ARC.$LABEL.$ITR.gz
+mv /${DSK}/$sat/biaschk/$ARC.$LABEL.gz /${DSK}/$sat/biaschk/$ARC.$LABEL.$ITR.gz
+mv /${DSK}/$sat/telem/$ARC.$LABEL.gz /${DSK}/$sat/telem/$ARC.$LABEL.$ITR.gz
+mv /${DSK}/$sat/traj/${ARC}.${LABEL}.orbfil.gz /${DSK}/$sat/traj/${ARC}.${LABEL}.orbfil.$ITR.gz
+mv /${DSK}/$sat/traj/${ARC}.${LABEL}.rv.gz /${DSK}/$sat/traj/${ARC}.${LABEL}.rv.$ITR.gz
+mv /${DSK}/$sat/residuals_ascii/${MODE}/${CASE}/${ARC}.${LABEL}.ascii.gz /${DSK}/$sat/residuals_ascii/${MODE}/${CASE}/${ARC}.${LABEL}.ascii.$ITR.gz
+mv /${DSK}/$sat/residuals_ascii/${MODE}/${CASE}/${ARC}.${LABEL}.sort_by_config.gz /${DSK}/$sat/residuals_ascii/${MODE}/${CASE}/${ARC}.${LABEL}.sort_by_config.$ITR.gz
+mv /${DSK}/$sat/corrections/${MODE}/${CASE}/${ARC}.${LABEL}.cor.gz /${DSK}/$sat/corrections/${MODE}/${CASE}/${ARC}.${LABEL}.cor.$ITR.gz
+
+
+done < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/$infile
+
+\rm t0 t1
+
+elif [ "$MODE" = "DR15" ]; then
+
+MODE=DR
+disk1=/${DSK}/$sat/punchdout/DR/$CASE
+
+#disk2=/${DSK}/$sat/d_base/trnd/DR/${CASE}/REANAL2015/141117/TURN${VER}/$PROJ
+disk2=/${DSK}/$sat/d_base/trnd/DR/${CASE}/REANAL2015/151203/TURN${VER}/$PROJ
+
+mkdir -p $disk2
+
+
+#exit 2014
+#cd $disk1
+
+while read file date 
+do
+
+zcat  ${disk1}/${file}.$VER.gz > t0
+#gzcat ${file}.$VER > t0
+
+ arcline=`sed -n "/\/ARC\/    1 ${GTR} 0/=" t0 `
+
+frstline=`expr $arcline + 1`
+
+sed -n "${frstline},\$p" t0 > t1
+
+
+ sed -e "s/REFSYS..../REFSYS0964/g" t1      > t2
+
+
+mv $disk2/${file} $disk2/${file}.$VER.$ITR
+gzip -f $disk2/${file}.$VER.$ITR
+
+if [ "$INSERT" != "NONE" ]; then
+
+$SCRIPTS/$INSERT t2 $sat ${file}
+
+fi
+
+mv t2 $disk2/${file}
+
+# Move the results' files from the previous iteration to save them:
+
+ARC=$file
+LABEL=$VER
+
+mv /${DSK}/$sat/output/${MODE}/${CASE}/$ARC.$LABEL.gz /${DSK}/$sat/output/${MODE}/${CASE}/$ARC.$LABEL.$ITR.gz
+mv /${DSK}/$sat/punchdout/${MODE}/${CASE}/$ARC.$LABEL.gz /${DSK}/$sat/punchdout/${MODE}/${CASE}/$ARC.$LABEL.$ITR.gz
+mv /${DSK}/$sat/orbtvu/car/$ARC.$LABEL.gz /${DSK}/$sat/orbtvu/car/$ARC.$LABEL.$ITR.gz
+mv /${DSK}/$sat/summaries/${MODE}/${CASE}/$ARC.$LABEL.gz /${DSK}/$sat/summaries/${MODE}/${CASE}/$ARC.$LABEL.$ITR.gz
+mv /${DSK}/$sat/orbtvu/kep/$ARC.$LABEL.gz /${DSK}/$sat/orbtvu/kep/$ARC.$LABEL.$ITR.gz
+mv /${DSK}/$sat/corrections/${MODE}/${CASE}/$ARC.$LABEL.gz /${DSK}/$sat/corrections/${MODE}/${CASE}/$ARC.$LABEL.$ITR.gz
+mv /${DSK}/$sat/simdat/$ARC.$LABEL.gz /${DSK}/$sat/simdat/$ARC.$LABEL.$ITR.gz
+mv /${DSK}/$sat/biaschk/$ARC.$LABEL.gz /${DSK}/$sat/biaschk/$ARC.$LABEL.$ITR.gz
+mv /${DSK}/$sat/telem/$ARC.$LABEL.gz /${DSK}/$sat/telem/$ARC.$LABEL.$ITR.gz
+mv /${DSK}/$sat/traj/${ARC}.${LABEL}.orbfil.gz /${DSK}/$sat/traj/${ARC}.${LABEL}.orbfil.$ITR.gz
+mv /${DSK}/$sat/traj/${ARC}.${LABEL}.rv.gz /${DSK}/$sat/traj/${ARC}.${LABEL}.rv.$ITR.gz
+mv /${DSK}/$sat/residuals_ascii/${MODE}/${CASE}/${ARC}.${LABEL}.ascii.gz /${DSK}/$sat/residuals_ascii/${MODE}/${CASE}/${ARC}.${LABEL}.ascii.$ITR.gz
+mv /${DSK}/$sat/residuals_ascii/${MODE}/${CASE}/${ARC}.${LABEL}.sort_by_config.gz /${DSK}/$sat/residuals_ascii/${MODE}/${CASE}/${ARC}.${LABEL}.sort_by_config.$ITR.gz
+mv /${DSK}/$sat/corrections/${MODE}/${CASE}/${ARC}.${LABEL}.cor.gz /${DSK}/$sat/corrections/${MODE}/${CASE}/${ARC}.${LABEL}.cor.$ITR.gz
+
+
+done < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/$infile
+
+\rm t0 t1
+
+elif [ "$MODE" = "EMT" ]; then
+
+
+
+disk1=/${DSK}/$sat/punchdout/DR/${CASE}/v${SNX_VER}
+
+disk2=/${DSK}/$sat/d_base/trnd/EMT/${CASE}/v${SNX_VER}
+
+#cd $disk1
+
+while read file date
+do
+
+zcat ${disk1}/${file}.$VER > t0
+
+
+#
+# tempo patch to remove MBIAS cmnds
+#
+
+#/usr/xpg4/bin/grep -v MBIAS t00 > t0
+
+#
+# remove for normal use and change t00 to t0
+
+
+#arcline=`sed -n "/\/ARC\/    1 ${GTR} 0/=" t0 `
+arcline=`sed -n "/\/ARC\/    1 ${GTR} ./=" t0 `
+echo $arcline > ppp1
+arcline=`awk ' {print $NF} ' ppp1`
+
+frstline=`expr $arcline + 1`
+sed -n "${frstline},\$p" t0 > t1
+lastline=`sed -n /ALBEDO/= t1`
+editline=`expr $lastline - 1`
+nextline=`expr $lastline + 0`
+
+sed -n "1,${editline}p" t1 > t2
+
+echo "EMATRX 01               ${satn}${date}." >> t2
+
+lastline=`sed -n /ENDARC/= t1`
+finaline=`expr $lastline - 1`
+
+sed -n "${nextline},${finaline}p" t1 >> t2
+
+if [ "$DELETE" = "IN" ]; then
+
+ sed -n "1,\$p" /${DSK}/$SATDEL/d_base/sldl/$CASE/$PROJ/$SUBSOL/${file}.$VER > t2d
+ cat /${DSK}/$SATDEL/residuals_ascii/DR/${CASE}/${CATALOG}/v${SNX_VER}/CATALOG/${ARC}.wv${SNX_VER}1_v2 >> t2d
+         sort -u t2d > t2ds
+          cat t2ds >> t2
+
+
+
+fi
+
+echo ENDARC >> t2
+
+sed -e "s/REFSYS..../REFSYS0331/g" t2      > t3
+
+mv $disk2/${file} $disk2/${file}.$VER.$ITR
+gzip -f $disk2/${file}.$VER.$ITR
+
+if [ "$INSERT" != "NONE" ]; then
+
+$SCRIPTS/$INSERT t3 $sat ${file}
+
+fi
+###180605
+arcline1=`sed -n "/DATA/=" t3 `
+arcline2=` expr $arcline1 - 1 `
+arcline3=` expr $arcline1 + 1 `
+
+sed -n "1,${arcline2}p" t3 > t21
+#cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/d_base/bias/WEEKLY/MODELED_MBIAS_2B_APPLIED_210415 >> t21
+##cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/d_base/bias/ITRF2020/RANGE_MBIAS_230328_CARDS_${sat} >> t21
+cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/d_base/bias/ITRF2020/RANGE_MBIAS_240213_CARDS_${sat} >> t21
+sed -n "${arcline1},\$p" t3 >> t21
+#
+
+mv t21 $disk2/${file}
+
+
+
+#mv t3 $disk2/${file}
+
+done < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/$infile
+
+\rm t0 t1 t2 t00
+
+
+elif [ "$MODE" = "EMT14" ]; then
+MODE=EMT
+
+
+
+disk1=/${DSK}/$sat/punchdout/DR/$CASE
+
+disk2=/${DSK}/$sat/d_base/trnd/EMT/${CASE}/REANAL2014/$PROJ
+
+#cd $disk1
+
+while read file date
+do
+
+zcat ${disk1}/${file}.$VER > t0
+
+
+#
+# tempo patch to remove MBIAS cmnds
+#
+
+#/usr/xpg4/bin/grep -v MBIAS t00 > t0
+
+#
+# remove for normal use and change t00 to t0
+
+
+arcline=`sed -n "/\/ARC\/    1 ${GTR} 0/=" t0 `
+frstline=`expr $arcline + 1`
+sed -n "${frstline},\$p" t0 > t1
+lastline=`sed -n /ALBEDO/= t1`
+editline=`expr $lastline - 1`
+nextline=`expr $lastline + 0`
+
+sed -n "1,${editline}p" t1 > t2
+
+echo "EMATRX 01               ${satn}${date}." >> t2
+
+lastline=`sed -n /ENDARC/= t1`
+finaline=`expr $lastline - 1`
+
+sed -n "${nextline},${finaline}p" t1 >> t2
+
+if [ "$DELETE" = "IN" ]; then
+
+  sed -n "1,\$p" /${DSK}/$SATDEL/d_base/sldl/$CASE/$PROJ/$SUBSOL/${file}.$VER >> t2
+
+fi
+
+echo ENDARC >> t2
+
+sed -e "s/REFSYS..../REFSYS0331/g" t2      > t3
+
+mv $disk2/${file} $disk2/${file}.$VER.$ITR
+gzip -f $disk2/${file}.$VER.$ITR
+
+if [ "$INSERT" != "NONE" ]; then
+
+$SCRIPTS/$INSERT t3 $sat ${file}
+
+fi
+
+mv t3 $disk2/${file}
+
+done < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/$infile
+
+\rm t0 t1 t2 t00
+
+elif [ "$MODE" = "EMT15" ]; then
+MODE=EMT
+
+
+
+disk1=/${DSK}/$sat/punchdout/DR/$CASE
+
+disk2=/${DSK}/$sat/d_base/trnd/EMT/${CASE}/REANAL2015/$PROJ
+
+#cd $disk1
+
+while read file date
+do
+
+zcat ${disk1}/${file}.$VER > t0
+
+
+#
+# tempo patch to remove MBIAS cmnds
+#
+
+#/usr/xpg4/bin/grep -v MBIAS t00 > t0
+
+#
+# remove for normal use and change t00 to t0
+
+
+arcline=`sed -n "/\/ARC\/    1 ${GTR} 0/=" t0 `
+frstline=`expr $arcline + 1`
+sed -n "${frstline},\$p" t0 > t1
+lastline=`sed -n /ALBEDO/= t1`
+editline=`expr $lastline - 1`
+nextline=`expr $lastline + 0`
+
+sed -n "1,${editline}p" t1 > t2
+
+echo "EMATRX 01               ${satn}${date}." >> t2
+
+lastline=`sed -n /ENDARC/= t1`
+finaline=`expr $lastline - 1`
+
+sed -n "${nextline},${finaline}p" t1 >> t2
+
+if [ "$DELETE" = "IN" ]; then
+
+  sed -n "1,\$p" /${DSK}/$SATDEL/d_base/sldl/$CASE/$PROJ/$SUBSOL/${file}.$VER >> t2
+
+fi
+
+echo ENDARC >> t2
+
+sed -e "s/REFSYS..../REFSYS0331/g" t2      > t3
+
+mv $disk2/${file} $disk2/${file}.$VER.$ITR
+gzip -f $disk2/${file}.$VER.$ITR
+
+if [ "$INSERT" != "NONE" ]; then
+
+$SCRIPTS/$INSERT t3 $sat ${file}
+
+fi
+
+mv t3 $disk2/${file}
+
+done < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/$infile
+
+\rm t0 t1 t2 t00
+elif [ "$MODE" = "EMT2EMT" ]; then
+MODE=EMT
+
+
+
+disk1=/${DSK}/$sat/punchdout/EMT/$CASE
+
+disk2=/${DSK}/$sat/d_base/trnd/EMT/${CASE}/REANAL2015_by_site
+
+mkdir $disk2
+##cd $disk1
+
+while read file date
+do
+
+zcat ${disk1}/${file}.$VER > t0
+
+
+#
+# tempo patch to remove MBIAS cmnds
+#
+
+#/usr/xpg4/bin/grep -v MBIAS t00 > t0
+
+#
+# remove for normal use and change t00 to t0
+
+arcline=`sed -n "/\/ARC\/    1 1 3/=" t0 `
+frstline=`expr $arcline + 1`
+sed -n "${frstline},\$p" t0 > t1
+arcline1=`sed -n /EDIT/= t1`
+arcline2=`sed -n /ACCEL/= t1`
+grep SOLRAD t0 > S1
+grep ACCEL t0 > A1
+sed -e "s/                   ..000D-03/                   .1000D-15/" A1 > A2
+sed -e "s/                 ...0000D-03/                   .1000D-15/" A2 > A3
+sed -e "s/                 .1000..D-00/                   .1000D-15/" A3 > A4
+sed -e "s/                1.000000D-0./                   .1000D-15/" S1 > S2
+echo $arcline2 > ppp2
+arcline22=`awk ' {print $NF} ' ppp2`
+arcline23=` expr $arcline22 + 1 `
+
+
+
+sed -n "1,${arcline1}p" t1 > t2
+cat S2 >> t2
+cat A4 >> t2
+sed -n "${arcline23},\$p" t1 >> t2
+
+#old
+
+lastline=`sed -n /ALBEDO/= t2`
+editline=`expr $lastline - 1`
+nextline=`expr $lastline + 0`
+
+sed -n "1,${editline}p" t2 > t3
+if [ "$sat" = "GISL1" ]; then
+echo "VARCOV 10 10     7603901              1.E-10         1.E-10       1.E-10  1.E-15" >> t3
+echo "VARCOV 10 11     7603901              1.E-15         1.E-15" >> t3
+fi
+
+if [ "$sat" = "GISL2" ]; then
+echo "VARCOV 10 10     9207002              1.E-10         1.E-10       1.E-10  1.E-15" >> t3
+echo "VARCOV 10 11     9207002              1.E-15         1.E-15" >> t3
+fi
+
+if [ "$sat" = "ETA1" ]; then
+echo "VARCOV 10 10     8900103              1.E-10         1.E-10       1.E-10  1.E-15" >> t3
+echo "VARCOV 10 11     8900103              1.E-15         1.E-15" >> t3
+fi
+
+if [ "$sat" = "ETA2" ]; then
+echo "VARCOV 10 10     8903903              1.E-10         1.E-10       1.E-10  1.E-15" >> t3
+echo "VARCOV 10 11     8903903              1.E-15         1.E-15" >> t3
+fi
+lastline=`sed -n /ENDARC/= t2`
+finaline=`expr $lastline - 1`
+
+sed -n "${nextline},${finaline}p" t2 >> t3
+
+if [ "$DELETE" = "IN" ]; then
+
+  sed -n "1,\$p" /${DSK}/$SATDEL/d_base/sldl/$CASE/$PROJ/$SUBSOL/${file}.$VER >> t3
+
+fi
+
+echo ENDARC >> t3
+
+#sed -e "s/REFSYS..../REFSYS0331/g" t3      > t4
+
+mv $disk2/${file} $disk2/${file}.$VER.$ITR
+gzip -f $disk2/${file}.$VER.$ITR
+
+if [ "$INSERT" != "NONE" ]; then
+
+$SCRIPTS/$INSERT t3 $sat ${file}
+
+fi
+
+mv t3 $disk2/${file}
+
+done < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/$infile
+
+\rm t0 t1 t2 t00
+elif [ "$MODE" = "EMT2DR" ]; then
+
+
+
+#disk1=/${DSK}/$sat/punchdout/EMT/$CASE
+
+#disk2=/${DSK}/$sat/d_base/trnd/DR/${CASE}/$PROJ
+
+disk1=/${DSK}/$sat/punchdout/EMT/${CASE}/v${SNX_VER}
+
+disk2=/${DSK}/$sat/d_base/trnd/DR/${CASE}/v${SNX_VER}_081319
+
+
+#cd $disk1
+
+while read file date
+do
+
+zcat ${disk1}/${file}.$VER > t00
+
+#
+# tempo patch to also remove MBIAS cmnds
+#
+
+#/usr/xpg4/bin/grep -v -e MBIAS -e EMATRX t00 > t0
+
+#
+ grep -v -e EMATRX t00 > t0
+# 
+##
+
+arcline=`sed -n "/\/ARC\/    1 ${GTR}../=" t0 `
+
+frstline=`expr $arcline + 1`
+
+sed -n "${frstline},\$p" t0 > t1
+
+
+sed -e "s/REFSYS..../REFSYS0643/g" t1      > t2
+
+
+mv $disk2/${file} $disk2/${file}.$VER.$ITR
+gzip -f $disk2/${file}.$VER.$ITR
+
+if [ "$INSERT" != "NONE" ]; then
+
+$SCRIPTS/$INSERT t2 $sat ${file}
+
+fi
+
+mv t2 $disk2/${file}
+
+done < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/$infile
+
+\rm t0 t1 t2 t3 t00
+
+elif [ "$MODE" = "EMT2DR14" ]; then
+
+
+
+disk1=/${DSK}/$sat/punchdout/EMT/$CASE
+
+#disk2=/${DSK}/$sat/d_base/trnd/DR/${CASE}/REANAL2014/140405
+disk2=/${DSK}/$sat/d_base/trnd/DR/${CASE}/REANAL2015/141117
+
+#cd $disk1
+
+while read file date
+do
+
+zcat ${disk1}/${file}.$VER > t00
+
+#
+# tempo patch to also remove MBIAS cmnds
+#
+
+#/usr/xpg4/bin/grep -v -e MBIAS -e EMATRX t00 > t0
+
+#
+ grep -v -e EMATRX t00 > t0
+# 
+##
+
+arcline=`sed -n "/\/ARC\/    1 1 3/=" t0 `
+
+frstline=`expr $arcline + 1`
+
+sed -n "${frstline},\$p" t0 > t1
+
+
+sed -e "s/REFSYS..../REFSYS0643/g" t1      > t2
+
+
+mv $disk2/${file} $disk2/${file}.$VER.$ITR
+gzip -f $disk2/${file}.$VER.$ITR
+
+if [ "$INSERT" != "NONE" ]; then
+
+$SCRIPTS/$INSERT t2 $sat ${file}
+
+fi
+
+mv t2 $disk2/${file}
+
+done < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/$infile
+
+\rm t0 t1 t2 t3 t00
+elif [ "$MODE" = "EMT2DR15" ]; then
+
+
+
+disk1=/${DSK}/$sat/punchdout/EMT/$CASE
+
+#disk2=/${DSK}/$sat/d_base/trnd/DR/${CASE}/REANAL2014/140405
+disk2=/${DSK}/$sat/d_base/trnd/DR/${CASE}/REANAL2015/141117/TURNwD2
+
+#cd $disk1
+
+while read file date
+do
+
+zcat ${disk1}/${file}.$VER > t00
+
+#
+# tempo patch to also remove MBIAS cmnds
+#
+
+#/usr/xpg4/bin/grep -v -e MBIAS -e EMATRX t00 > t0
+
+#
+ grep -v -e EMATRX t00 > t0
+# 
+##
+
+arcline=`sed -n "/\/ARC\/    1 1 3/=" t0 `
+
+frstline=`expr $arcline + 1`
+
+sed -n "${frstline},\$p" t0 > t1
+
+
+sed -e "s/REFSYS..../REFSYS0643/g" t1      > t2
+
+
+mv $disk2/${file} $disk2/${file}.$VER.$ITR
+gzip -f $disk2/${file}.$VER.$ITR
+
+if [ "$INSERT" != "NONE" ]; then
+
+$SCRIPTS/$INSERT t2 $sat ${file}
+
+fi
+
+mv t2 $disk2/${file}
+
+done < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/$infile
+
+\rm t0 t1 t2 t3 t00
+fi

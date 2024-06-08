@@ -1,0 +1,1 @@
+cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/d_base/bias/ITRF2020/RANGE_MBIAS_230328_CARDS_${sat} >> t21

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Loop to run the command 77 times
+#for ((i=1; i<=77; i++))
+for ((i=1; i<=14; i++))
+do
+    # Run the command
+    /umbc/epavlis/data01/LOCAL/magdak/scripts/ITRF2020/OPS/RUN_SERIES_IERS_SLRF2020_7d+satIDir_2024_02_06 WEEKLY YES OPS2020 . 80 > o.WEEKLY_v80_$i 2>&1
+
+    # Sleep for a second before running the next iteration (if needed)
+    sleep 1
+done
+

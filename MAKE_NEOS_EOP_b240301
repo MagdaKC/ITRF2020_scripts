@@ -1,0 +1,54 @@
+#!/bin/ksh
+#
+
+set -xv
+
+#    MAKE_NEOS_EOP
+
+ARC=$1
+SOL=$2
+LABEL=${3:-w1}
+SAT=${4:-PPV}
+CASE=${5:-DR}
+STAGE=${6:-WEEKLY}
+
+#CASE=DR
+#STAGE=WEEKLY
+MAIN_PATH=/umbc/epavlis/data01/LOCAL/magdak
+disk=${MAIN_PATH}/MISSIONS
+
+export ARC LABEL CASE STAGE MAIN_PATH disk
+
+cd /tmp
+mkdir mkneos$$
+cd mkneos$$
+
+
+$MAIN_PATH/scripts/ITRF2020/OPS/GET_RESID_STATS $ARC $LABEL $SAT $STAGE
+
+mv $MAIN_PATH/INFILES/INF_OPS_ITRF2020/EOPSTATS.$ARC t0
+
+cut -c8-10 t0 > tnnp
+cut -c13-15 t0 > trms
+cut -c33-36 t0 > tns
+
+paste -d" " trms tns tnnp > tall
+sed "1,\$s/$/  1/g" tall > tallND
+sed "1,1s/  1$/ ND/g" tallND > Right
+
+$MAIN_PATH/scripts/ITRF2020/OPS/PARM_READER_NEOS $SOL $SAT $STAGE
+
+cat /$disk/$SAT/products/$STAGE/OPS/${SOL}/iers_sub > t1
+sed -n "1,7p" t1 > t2
+cut -c1-63 t2 > t3
+
+cat /$disk/$SAT/products/$STAGE/OPS/Title t3 > Left
+paste -d" " Left Right > /$disk/$SAT/products/$STAGE/OPS/${SOL}/${ARC}.JCET
+pwd 
+ls -la Left Right
+
+sed -n "2,8p" /$disk/$SAT/products/$STAGE/OPS/${SOL}/${ARC}.JCET >> /$disk/$SAT/products/$STAGE/OPS/v${SNX_VER}/NEOS.JCET
+
+cd ..
+\rm -r mkneos$$
+

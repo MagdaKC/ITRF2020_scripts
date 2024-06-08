@@ -1,0 +1,93 @@
+# @240102
+# @Data span  231227-240103
+# @contact epavlis@umbc.edu
+# @website  http://geodesy.jcet.umbc.edu/
+# @version 2.0
+#    
+# each line contains:
+#    
+# STA ID           = site name  
+# YY/MM/DD HH:MM   = pass starting time 
+# SAT              = satellite name (L1: LAGEOS1; L2: LAGEOS2; E1: ETALON1; E2:ETALON2; LR LARES; R2: LARES2 S1: STARLETTE; A1: AJISAI) 
+# GOD OBS          = number of good normal points  
+# RAW RMS          = residual RMS before editing & bias application 
+# PREC EST         = post-fit scattering rms  
+# RANGE BIAS       = estimated range bias  
+# RANGE BIAS SIGMA = estimated range bias sigma 
+# TIME BIAS        = estimated time bias  
+# TIME BIAS SIGMA  = estimated time bias sigma
+# PASS DUR         = pass duration  
+# EDIT OBS         = number of bad normal points  
+# CALIB+ MEAN      = mean Applied System Delay (ILRS FR format cols 97-104)  
+# CALIB SDEV       = mean System Calibration Method (ILRS FR format cols 126) 
+# CALIB SHIFT+     = mean Root Mean Square (ILRS FR format cols 111-114) 
+# STPASS RMS       = mean Pass RMS (ILRS FR format cols 58-64) 
+# TEMP             = mean surface temperature [K]  
+# HUM              = mean relative humidity of surface %  
+# PRES             = mean pressure [hPa]  
+# WLEN             = walelength [nm]  
+# SCH              = System Change Indicator (ILRS FR format cols 127) 
+# SCI              = System Configuration (ILRS FR format cols 128)  
+# DRF              = Data Release Flag (ILRS FR format cols 130)
+# ELEVATION MAX    = maximum elevation for pass [degrees]  
+# ELEVATION MIN    = minimum elevation for pass [degrees]  
+#    
+#1824 Kiev  12356S001
+#                            GOOD        RAW      PREC       RANGE     RANGE    TIME    TIME  PASS    EDIT    CALIB+  CALIB  CALIB++ STPASS    TEMP     HUM     PRES     WLEN   S S D        ELEVATION 
+#                             OBS        RMS       EST        BIAS      BIAS    BIAS    BIAS   DUR     OBS    MEAN    SDEV   SHIFT   RMS        [K]       %     [hPa]    [nm]   C C R      MAX       MIN     
+# STA ID YY/MM/DD HH:MM SAT  A          [mm]      [mm]        [mm]     SIGMA    [us]   SIGMA  [MIN]           [mm]    [mm]   [mm]    [mm]                                       H I F        [degrees]
+#                 
+18248101 23/12/31 18:07 L1      6         7.8       5.1         5.9       5.8     0.4     1.2     18       3   30818 E    11     0  P    43     274.6      9.0    996.4    532.0  0 3 0      54.1      24.1
+#
+#1890 Badary  12338S004
+#                            GOOD        RAW      PREC       RANGE     RANGE    TIME    TIME  PASS    EDIT    CALIB+  CALIB  CALIB++ STPASS    TEMP     HUM     PRES     WLEN   S S D        ELEVATION 
+#                             OBS        RMS       EST        BIAS      BIAS    BIAS    BIAS   DUR     OBS    MEAN    SDEV   SHIFT   RMS        [K]       %     [hPa]    [nm]   C C R      MAX       MIN     
+# STA ID YY/MM/DD HH:MM SAT  A          [mm]      [mm]        [mm]     SIGMA    [us]   SIGMA  [MIN]           [mm]    [mm]   [mm]    [mm]                                       H I F        [degrees]
+#                 
+18900901 23/12/31 05:42 L2      4        34.9       4.5       -34.6      13.3    -0.6     1.5      7       0   21878 I     0     0  P    10     263.8      9.0    918.7    532.0  0 0 0      39.2      32.0
+#
+#7090 Yarragadee  50107M001
+#                            GOOD        RAW      PREC       RANGE     RANGE    TIME    TIME  PASS    EDIT    CALIB+  CALIB  CALIB++ STPASS    TEMP     HUM     PRES     WLEN   S S D        ELEVATION 
+#                             OBS        RMS       EST        BIAS      BIAS    BIAS    BIAS   DUR     OBS    MEAN    SDEV   SHIFT   RMS        [K]       %     [hPa]    [nm]   C C R      MAX       MIN     
+# STA ID YY/MM/DD HH:MM SAT  A          [mm]      [mm]        [mm]     SIGMA    [us]   SIGMA  [MIN]           [mm]    [mm]   [mm]    [mm]                                       H I F        [degrees]
+#                 
+70900513 23/12/31 01:23 LR      5        12.5       3.9        11.9      15.2    -3.6     1.3      5       0   14381 E     4     1  P     5     297.8     64.4    983.5    532.0  0 0 0      36.9      24.0
+70900513 23/12/31 01:45 L1      9         9.3       2.2         9.0       3.0     0.9     1.1     15       0   14381 E     4     1  P     9     298.8     63.0    983.3    532.0  0 3 0      83.5      37.1
+70900513 23/12/31 06:59 L2      4        18.6       4.8       -18.0       8.8    -0.1     1.5      4       0   14382 E     3     0  P    18     301.8     51.0    981.5    532.0  0 0 0      45.9      35.0
+70900513 23/12/31 09:42 LR      3        33.7       6.6        33.0      13.0    -0.2     1.5      0       0   14382 E     3    -1  P     7     299.5     59.0    981.3    532.0  0 0 0      22.6      19.7
+70900513 23/12/31 11:39 L1     10         3.8       3.3         1.9       2.4    -0.5     1.1     30       0   14379 E     4    -4  P     8     294.8     28.1    982.3    532.0  0 3 0      67.2      21.9
+70900513 23/12/31 14:53 L2     12        12.2       4.6        11.3       3.5    -1.1     1.4     40       0   14378 E     3     1  P     8     292.9     88.7    983.1    532.0  0 0 0      82.6      35.4
+70900513 23/12/31 15:23 L1      5        24.0       2.3       -23.9       8.6     0.2     1.2      7       0   14378 E     3     1  P     7     292.7     88.0    982.9    532.0  0 3 0      22.1      19.2
+70900513 23/12/31 17:58 E1     10       217.6      10.7      -217.3     590.4     0.0     4.3     62       0   15039 E     8     1  P    24     291.8     86.8    982.5    532.0  0 0 0      34.8      28.7
+#
+#7237 Changchun  21611S001
+#                            GOOD        RAW      PREC       RANGE     RANGE    TIME    TIME  PASS    EDIT    CALIB+  CALIB  CALIB++ STPASS    TEMP     HUM     PRES     WLEN   S S D        ELEVATION 
+#                             OBS        RMS       EST        BIAS      BIAS    BIAS    BIAS   DUR     OBS    MEAN    SDEV   SHIFT   RMS        [K]       %     [hPa]    [nm]   C C R      MAX       MIN     
+# STA ID YY/MM/DD HH:MM SAT  A          [mm]      [mm]        [mm]     SIGMA    [us]   SIGMA  [MIN]           [mm]    [mm]   [mm]    [mm]                                       H I F        [degrees]
+#                 
+72371901 23/12/31 10:44 E2      3       390.3       6.8      -389.9     747.4     0.0     6.7     60       0   27592 E    13    na  P    30     254.6      8.0   1000.6    532.0  0 0 0      67.9      39.6
+72371901 23/12/31 10:53 L1      3        46.9       1.7        46.8       7.2     0.1     1.2      6       0   27592 E    13    na  P     4     255.9     76.0   1000.5    532.0  0 3 1      36.5      31.6
+72371901 23/12/31 14:23 L1      3        32.2       1.6        32.2       3.6    -0.8     0.9     25       0   27580 E    13    na  P     4     251.7     82.0   1000.3    532.0  0 3 0      48.9      40.4
+72371901 23/12/31 21:21 L1      4        37.4       0.9        37.4       5.6    -0.4     1.1     18       0   27588 E    14    na  P     4     252.6     82.0    995.7    532.0  0 3 0      57.5      39.8
+#
+#                            GOOD        RAW      PREC       RANGE     RANGE    TIME    TIME  PASS    EDIT    CALIB+  CALIB  CALIB++ STPASS    TEMP     HUM     PRES     WLEN   S S D        ELEVATION 
+#                             OBS        RMS       EST        BIAS      BIAS    BIAS    BIAS   DUR     OBS    MEAN    SDEV   SHIFT   RMS        [K]       %     [hPa]    [nm]   C C R      MAX       MIN     
+# STA ID YY/MM/DD HH:MM SAT  A          [mm]      [mm]        [mm]     SIGMA    [us]   SIGMA  [MIN]           [mm]    [mm]   [mm]    [mm]                                       H I F        [degrees]
+#                 
+73964701 23/12/31 11:17 L1      6        30.6       2.4        30.5       7.1     0.5     1.2     11       0   10833 E     5     0  P     6     281.7     51.0   1016.0    532.0  0 3 0      27.4      18.9
+73964701 23/12/31 14:29 L1     10         6.2       2.1         5.8       3.6     1.0     0.9     27       0   10816 E     4     0  P     7     279.6      5.0   1017.4    532.0  0 3 0      70.1      31.6
+73964701 23/12/31 19:53 L2      6         4.6       2.1        -4.1       7.9     0.4     1.4     10       0   10814 E     4     0  P     6     276.6     67.0   1017.1    532.0  0 0 0      75.5      51.8
+#
+#7819 Kunming  21609S004
+#                            GOOD        RAW      PREC       RANGE     RANGE    TIME    TIME  PASS    EDIT    CALIB+  CALIB  CALIB++ STPASS    TEMP     HUM     PRES     WLEN   S S D        ELEVATION 
+#                             OBS        RMS       EST        BIAS      BIAS    BIAS    BIAS   DUR     OBS    MEAN    SDEV   SHIFT   RMS        [K]       %     [hPa]    [nm]   C C R      MAX       MIN     
+# STA ID YY/MM/DD HH:MM SAT  A          [mm]      [mm]        [mm]     SIGMA    [us]   SIGMA  [MIN]           [mm]    [mm]   [mm]    [mm]                                       H I F        [degrees]
+#                 
+78198201 23/12/31 11:21 L1      5        36.2       3.8        36.0       7.7    -0.2     1.2      7       0   21580 E     4    10  P    18     286.1     49.0    798.6    532.0  0 3 0      16.7      14.7
+78198201 23/12/31 14:38 L1      4        23.0       6.8        21.9       4.1     0.6     1.2      6       0   21576 E     4    -3  P    15     283.5     65.0    799.5    532.0  0 3 0      60.1      41.9
+78198201 23/12/31 15:41 L2      4        76.8       7.4        76.5      22.1     0.3     1.5      5       0   21575 E     4    -1  P    13     282.0     72.0    799.4    532.0  0 0 0      17.4      17.0
+78198201 23/12/31 18:19 L1      4        15.6       3.2       -15.2       9.5     0.2     1.2      5       0   21573 E     4    -3  P    16     281.1      8.0    798.7    532.0  0 3 0      21.5      19.5
+78198201 23/12/31 19:35 L2      3        20.4       2.8        20.3       6.4     0.0     1.5      3       0   21573 E     4     1  P    11     281.1     83.0    798.4    532.0  0 0 0      72.6      63.9
+78198201 23/12/31 20:44 E1      2       203.8       7.0      -203.6     609.3     0.0     4.3      1       0   21574 E     5     1  P    12     280.6     86.0    798.1    532.0  0 0 0      45.6      45.5
+78198201 23/12/31 21:33 L1      5         6.9       3.2         6.1      10.2    -0.4     1.2      7       0   21574 E     5     1  P    10     280.3     89.0    797.8    532.0  0 3 0      21.0      17.1
+#

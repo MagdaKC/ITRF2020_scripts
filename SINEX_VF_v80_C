@@ -1,0 +1,33 @@
+#!/bin/bash
+ #
+
+ set -xv
+
+ Date=`date +%y%m%d`
+ver=80
+DEL=China+Russia_DEL
+#DEL=Russia_DEL
+#DEL=China_DEL
+#DEL=ALL
+disk=/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v${ver}/
+cd $disk
+#while read DEL
+#do
+echo $DEL
+ls -1 jcet.pos+eop.??????.v${ver}_${DEL}.snx.gz > LIST_${DEL}
+
+while read file
+do
+zgrep "VARIANCE FACTOR(S)" $file > TP
+cat TP
+ARC=$(echo "$file" | grep -o -E '[0-9]+' | head -n 1)
+#VARIANCE FACTOR(S)              0.388870038845858E-04
+read A1 A2 VF < TP
+DISK=PPV
+echo "$file $ARC $VF">> VF_v${ver}_LE12_ALL_${DEL}_${Date}.txt
+rm TP TG T0
+cd $disk
+ #exit 0
+done < $disk/LIST_${DEL}
+#done < /umbc/epavlis/data01/LOCAL/magdak/scripts/RMS/CASE_DEL
+exit 0

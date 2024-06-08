@@ -1,0 +1,165 @@
+#!/bin/ksh
+#
+
+set -xv
+
+SCR_NAME=SUB_TRF_NEOS
+SCR_PARM=19
+SCR_LIST="SOL STAGE SUBCASE CASE slvdir PROG LVFIXD LVFLST LVGRAV LVTVGC LVSTAV LVPOLC LVPOLR LVUT1C LVUT1R LVBIAS LVPARM LVSATS LVSATP"
+SCR_VERS=090208.0
+
+
+if [ `expr $#` -gt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+
+# Script : SUB_TRF_NEOS
+#
+
+disk=${diskC}/MISSIONS
+disk=/umbc/epavlis/data01/LOCAL/magdak/MISSIONS
+
+SOL=$1
+STAGE=${2:-WEEKLY}
+SUBCASE=${3:-OPS}
+CASE=${4:-50}
+
+#
+slvdir=${5:-GISLV}
+#
+PROG=${6:-SOLVE_TRF_WEEKLY}
+#
+#
+# -- >  Use this for Min. Const. EOP solutions
+#
+#LVFIXD=${7:-U4staestMinCon}
+#LVFIXD=${14:-LVstaest.u4_ORIG}   
+#
+# -- >  NULL is for "loose" TRF solutions
+#
+LVFIXD=${7:-NULL}   
+#
+LVFLST=${8:-L12_FILELIST_93-03.523-543}
+#
+LVGRAV=${9:-NULL}
+#LVGRAV=${9:-U4gravconst}
+#LVGRAV=${6:-NLVgravconst.u4.deg1+2.J2_.1E-06.NEW_ITRF2002}
+#
+LVTVGC=${10:-NULL}
+#LVTVGC=${10:-U4tvgconst}
+#LVTVGC=${7:-NLVtvgconst.u4.ITRF2000_GM1.2E06}
+#
+LVSTAV=${11:-U4stavelconstNEOS}
+#LVSTAV=${11:-U4stavelconst}
+#LVSTAV=${8:-NLVstavelconst.u4.ITRF2000_72}
+#
+LVPOLC=${12:-U4polconst1976-2030}
+#LVPOLC=${12:-U4polconst}
+#LVPOLC=${9:-NLVpolconst.u4.2.E-05_upto031231}
+#
+LVPOLR=${13:-U4polRcnst1976-2030}
+#LVPOLR=${13:-U4polRcnst}
+#LVPOLR=${10:-NLVpolRcnst.u4.2.3E-14.upto031231}
+#
+LVUT1C=${14:-U4ut1const1976-2030}
+#LVUT1C=${14:-U4ut1const}
+#LVUT1C=${11:-NLVut1const.u4.0.3E00_up031231}
+#
+LVUT1R=${15:-U4ut1Rcnst1976-2030}
+#LVUT1R=${15:-U4ut1Rcnst}
+#LVUT1R=${12:-NLVut1Rcnst.u4.3.5E-07_upto031231}
+#
+LVBIAS=${16:-U4biasconstNEOS}
+#LVBIAS=${13:-NLVbiasconst.u4_my_weighting}
+#
+LVPARM=${17:-NULL}
+#LVPARM=${17:-U4sitebiasPARMVL}
+#LVPARM=${15:-LVbias.sites.PARMVL}   
+#
+LVSATS=${18:-U4satCrAcclcnstrnt}
+#LVSATS=${18:-NLVsatCrconst.u4+ACCEL_2constrnt}
+#
+LVSATP=${19:-U4satPARMVL}
+#LVSATP=${19:-NLVsatPARMVLs.u4}
+
+
+usr=magda
+PROJ=$SERVICE
+STEP=.
+
+if [ ! -d /${disk}/${slvdir} ]; then
+      mkdir /${disk}/${slvdir}     
+fi
+if [ ! -d /${disk}/${slvdir}/output ]; then
+      mkdir /${disk}/${slvdir}/output     
+fi
+#if [ ! -d /${disk}/${slvdir}/output/${PROJ}_out ]; then
+#      mkdir /${disk}/${slvdir}/output/${PROJ}_out
+#fi
+if [ ! -d /${disk}/${slvdir}/output/$STAGE ]; then
+      mkdir /${disk}/${slvdir}/output/$STAGE     
+fi
+if [ ! -d /${disk}/${slvdir}/output/$STAGE/$SUBCASE ]; then
+      mkdir /${disk}/${slvdir}/output/$STAGE/$SUBCASE     
+fi
+##if [ ! -d /${disk}/${slvdir}/output/$STAGE/$SUBCASE/CASE_$CASE ]; then
+##      mkdir /${disk}/${slvdir}/output/$STAGE/$SUBCASE/CASE_$CASE     
+##fi
+
+if [ ! -d /${disk}/${slvdir}/unit5 ]; then
+      mkdir /${disk}/${slvdir}/unit5     
+fi
+if [ ! -d /${disk}/${slvdir}/unit5/$STAGE ]; then
+      mkdir /${disk}/${slvdir}/unit5/$STAGE     
+fi
+if [ ! -d /${disk}/${slvdir}/unit5/$STAGE/$SUBCASE ]; then
+      mkdir /${disk}/${slvdir}/unit5/$STAGE/$SUBCASE     
+fi
+##if [ ! -d /${disk}/${slvdir}/unit5/$STAGE/$SUBCASE/CASE_$CASE ]; then
+##      mkdir /${disk}/${slvdir}/unit5/$STAGE/$SUBCASE/CASE_$CASE     
+##fi
+export PROG slvdir SOL usr PROJ LVFLST LVGRAV LVTVGC LVSTAV LVPOLC LVUT1C LVPOLR LVUT1R LVBIAS LVFIXD LVPARM
+export disk STAGE CASE SUBCASE LVSATS LVSATP
+
+Date=`date`
+
+YYMMBGN=$Date_NEW_ARC
+YYMMEND=$Date_NXT_ARC
+
+#      BGN END 
+#      YYMMYYMMVVVEE : VVV-solution version EE-emat version
+
+
+cmatNo=${YYMMBGN}${YYMMEND}${CMAT_VERSION}.
+
+sed -e "s/ MMMMMMMMMMMMMM/${cmatNo}/g" -e "s/DDDDDDDDDDDD/${Date}/g" /${disk}/$slvdir/unit5/$STAGE/${SUBCASE}/v${SNX_VER}/LVcmat.prt_${PROJ}NEOS.tmplt > xxx_tmp
+
+sed -e "s/CCCCCCCCCCCCC/${CURRENT_CMAT_2_ADD}/g" xxx_tmp > /${disk}/$slvdir/unit5/$STAGE/${SUBCASE}/v${SNX_VER}/LVcmat.prt_${SOL}
+
+$SCRIPTS/$PROG >  /${disk}/${slvdir}/output/$STAGE/$SUBCASE/v${SNX_VER}/SLV.${PROJ}_${SOL} 2>&1 
+
+/bin/grep "^ SOLVE:  NORMAL TERMINATION" /${disk}/${slvdir}/output/$STAGE/$SUBCASE/v${SNX_VER}/SLV.${PROJ}_${SOL} > chkrun
+/usr/bin/sum chkrun > s_cur
+read l_cur d_cur f_cur < s_cur
+
+if [ "$l_cur" -gt "22000" ]; then
+
+  echo "Abnormal SOLVE termination in $STAGE/$SUBCASE/SLV.${PROJ}_${SOL}" > 2mail
+  mailx -s SOLVE_trouble_NEOS_$SOL magdak@umbc.edu < 2mail
+
+fi
+
+exit 0
+#

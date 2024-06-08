@@ -1,0 +1,155 @@
+#!/bin/ksh
+#
+
+${SCR_DBG}set -vx
+set -xv
+
+#   GET_ELEMS_ALL
+
+#             CASE to be either null, "WEEKLY", "MONTHLY", etc
+
+SCR_NAME=GET_ELEMS_ALL
+SCR_PARM=10
+SCR_LIST="infile SV ITR VER GTR CASE PROJ SUBSOL DELETE INSERT"
+SCR_VERS=090210.0
+
+
+if [ `expr $#` -lt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+
+infile=$1
+SV=$2
+ITR=$3
+VER=$4
+GTR=${5:-3}
+CASE=${6:-WEEKLY}
+PROJ=${7:-PP6}
+SUBSOL=${8:-A}
+DELETE=${9:-OUT}
+INSERT=${10:-NONE}
+diskC=$disk_n
+
+  if [ "$SV" = "L1" ]; then
+
+  DSK=${diskC}/MISSIONS
+  sat=GISL1
+  SATDEL=GISLV
+  satn=7603901
+
+  elif [ "$SV" = "L2" ]; then
+
+  DSK=${diskC}/MISSIONS
+  sat=GISL2
+  SATDEL=GISLV
+  satn=9207002
+  
+  elif [ "$SV" = "E1" ]; then
+
+  DSK=${diskC}/MISSIONS
+  sat=ETA1
+  SATDEL=ETAV
+  satn=8900103
+
+  elif [ "$SV" = "E2" ]; then
+
+  DSK=${diskC}/MISSIONS
+  sat=ETA2
+  SATDEL=ETAV
+  satn=8903903
+
+  #elif [ "$SV" = "LARES2" ]; then
+  elif [ "$SV" = "R2" ]; then
+
+ DSK=${diskC}/MISSIONS
+ sat=LARES2
+ SATDEL=R2
+ satn=2208001
+
+  elif [ "$SV" = "CHAMP" ]; then
+
+  DSK=${diskC}/MISSIONS
+  sat=CHAMP
+  SATDEL=$sat
+  satn=0309002
+
+  elif [ "$SV" = "STARL" ]; then
+
+  DSK=${diskC}/MISSIONS
+  sat=STARL
+  SATDEL=$sat
+  satn=8903903
+
+  elif [ "$SV" = "GFZ" ]; then
+
+  DSK=${diskC}/MISSIONS
+  sat=GFZ
+  SATDEL=$sat
+  satn=8601795
+  PROJ=
+
+  elif [ "$SV" = "AJISI" ]; then
+
+  DSK=${diskC}/MISSIONS
+  sat=AJISI
+  SATDEL=$sat
+  satn=8903903
+
+  elif [ "$SV" = " ERS1" ]; then
+
+  DSK=${diskC}/MISSIONS
+  sat=ERS1
+  SATDEL=$sat
+  satn=8903903
+
+  elif [ "$SV" = "TP" ]; then
+
+  DSK=${diskC}/MISSIONS
+  sat=TP
+  SATDEL=$sat
+  satn=8903903
+
+  fi
+
+export satn
+
+
+
+disk1=/${DSK}/$sat/punchdout/EMT/$CASE/v${SNX_VER}
+
+cd $disk1
+
+while read file new_file
+do
+
+zcat ${file}.$VER.gz > t00
+ 
+#gzip -d ${file}.$VER.gz 
+#cat ${file}.$VER > t00
+#gzip -9 ${file}.$VER
+##
+
+arcline=`sed -n "/\/ARC\/    1 1../=" t00 `
+
+frstline=`expr $arcline + 1`
+
+sed -n "${frstline},\$p" t00 > t1
+
+grep "^ELEMS" t1 > $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ELEMS_${sat}.${new_file}_v${SNX_VER}
+
+done < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/$infile
+
+\rm t1 t00
+

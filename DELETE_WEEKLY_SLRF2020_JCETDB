@@ -1,0 +1,56 @@
+#!/bin/ksh
+#
+
+set -xv
+
+#  RUN_STR
+
+#
+
+SCR_NAME=REPORT_BIAS
+SCR_PARM=0
+SCR_LIST="CASE ETA_IN"
+SCR_VERS=070928.0
+
+SCR_DBG="#"
+export SCR_DBG
+
+if [ `expr $#` -lt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+Date=`date +%y%m%d`
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+disk_P1=/umbc/epavlis/data01/LOCAL/magdak
+disk=/afs/umbc.edu/users/m/a/magdak/home
+SCRIPTS=/umbc/epavlis/data01/LOCAL/magdak/scripts/BIAS_DB
+SCRIPTS=/afs/umbc.edu/users/m/a/magdak/home/scripts/BIAS_DB
+export SCRIPTS disk
+CASE=WEEKLY
+DELTA=7
+
+read YEAR ODOY DATE ARC < $disk_P1/INFILES/ARC_SETUP_NEW.WEEKLY
+ NDATE=$(date +%Y-%m-%d -d "$DATE")
+psql -t -h localhost -U jasongroup -d bias_slrf2020 --command "delete from bias_wl1 where observation_date='$NDATE';" > t42
+psql -t -h localhost -U jasongroup -d bias_slrf2020 --command "delete from bias_wl2 where observation_date='$NDATE';" >> t42
+psql -t -h localhost -U jasongroup -d bias_slrf20120--command "delete from bias_we1 where observation_date='$NDATE';" >> t42
+psql -t -h localhost -U jasongroup -d bias_slrf2020 --command "delete from bias_we2 where observation_date='$NDATE';" >> t42
+psql -t -h localhost -U jasongroup -d bias_slrf2020 --command "delete from bias_wr2 where observation_date='$NDATE';" >> t42
+
+print "REMOVE from DATABSE bias_slrf2020" > t42.txt
+cat t42 >> t42.txt
+mailx -s "REMOVE from DATABSE bias_slrf2020" magdak@umbc.edu < t42.txt 
+
+
+exit 0
+

@@ -1,0 +1,83 @@
+!/bin/sh
+#
+
+${SCR_DBG}set -xv 
+set -vx
+
+
+SCR_NAME=MAKE_SINEX_DATA_BLOCK
+SCR_PARM=8
+SCR_LIST="ARC [sat] [STAGE] [CASE] [PROJ] [VER] [SUBSFX] [disk]"
+SCR_VERS=040224.0
+
+
+if [ `expr $#` -lt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+
+ARC=$1
+sat=${2:-GISL1}
+STAGE=${3:-WEEKLY}
+CASE=${4:-A}
+PROJ=${5:-ILRS}
+VER=$6
+SUBSFX=${7:-}
+disk=${8:-raid2/REPRO}
+
+WT=$WEIGHT
+
+sol=output/DATACATS
+
+if [ ! -d /${disk}/${sat}/${sol}/${STAGE}/$CASE/${ARC}_v${SNX_VER} ]; then
+   mkdir -p /${disk}/${sat}/${sol}/${STAGE}/$CASE/${ARC}_v${SNX_VER}
+fi
+
+if [ ! -d /${disk}/${sat}/d_base/sldl/${STAGE}/$CASE ]; then
+   mkdir -p /${disk}/${sat}/d_base/sldl/${STAGE}/$CASE
+fi
+
+#
+# execute job
+#
+
+mkdir catlg_data$$
+cd catlg_data$$
+
+cat $MAIN_PATH/INFILES/catlg_data.$sat > ftn05
+
+cat /$disk/$sat/${sol}/${STAGE}/$CASE/v${SNX_VER}/${ARC}.${VER} > ftn09a
+cut -c3-200 ftn09a > ftn09
+sort -u -k 7,7 ftn09 -o ftn08
+
+nice -0   $MAIN_PATH/EXECUTABLES/catlg_data.x < ftn05 > /$disk/$sat/${sol}/${STAGE}/$CASE/${ARC}_v${SNX_VER}/CTS.$ARC         
+
+mv fort.10 /$disk/$sat/$sol/${STAGE}/$CASE/${ARC}_v${SNX_VER}/$sat.start_stop
+mv fort.15 /$disk/$sat/$sol/${STAGE}/$CASE/${ARC}_v${SNX_VER}/$sat.HISTO_by_site
+mv fort.25 /$disk/$sat/$sol/${STAGE}/$CASE/${ARC}_v${SNX_VER}/$sat.HISTO_by_day
+
+cp fort.30 /$disk/$sat/$sol/${STAGE}/$CASE/v${SNX_VER}/${PROJ}_${ARC}.${VER}_${WT}_$SUBSFX
+
+mv fort.30 $MAIN_PATH/INFILES/INF_OPS_ITRF2020/EPOCH_BLK_${PROJ}/${STAGE}/v${SNX_VER}/${PROJ}_${ARC}.${VER}_${WT}_$SUBSFX
+
+grep -v "DELETE       0 51" fort.40 > fort.40a
+mv fort.40a /$disk/$sat/d_base/sldl/${STAGE}/$ARC.${VER}
+
+tar cvf /$disk/$sat/$sol/${STAGE}/$CASE/${ARC}_v${SNX_VER}.${VER}.tar  /$disk/$sat/$sol/${STAGE}/$CASE/${ARC}_v${SNX_VER}
+gzip -f /$disk/$sat/$sol/${STAGE}/$CASE/${ARC}_v${SNX_VER}.${VER}.tar
+
+\rm -r  /$disk/$sat/$sol/${STAGE}/$CASE/${ARC}_v${SNX_VER}
+
+cd ..
+\rm -r catlg_data$$

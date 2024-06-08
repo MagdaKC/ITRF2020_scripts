@@ -1,0 +1,103 @@
+#!/bin/ksh
+#
+
+${SCR_DBG}set -vx
+set -vx
+
+#    MAKE_RES_CATALOG_P2
+
+SCR_NAME=MAKE_RES_CATALOG_P2
+SCR_PARM=4
+SCR_LIST="infile SAT CASE STAGE"
+SCR_VERS=200731.0
+
+
+if [ `expr $#` -lt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+
+ARC=$1
+SAT=$2
+CASE=${3:-EMT}
+STAGE=${4:-WEEKLY}
+
+dsk=$MAIN_PATH/MISSIONS
+#dsk=nobackup/mkuzmicz/MISSIONS
+
+if [ ! -d /$dsk/$SAT/residuals_ascii/$CASE/$STAGE/v${SNX_VER}/CATALOG ]; then
+      mkdir -p /$dsk/$SAT/residuals_ascii/$CASE/$STAGE/v${SNX_VER}/CATALOG
+fi
+
+#230530 disk=/$dsk/$SAT/residuals_ascii/$CASE/v${SNX_VER}/$STAGE
+disk=/$dsk/$SAT/residuals_ascii/$CASE/$STAGE/v${SNX_VER}/
+
+whrto=/$dsk/$SAT/residuals_ascii/$CASE/$STAGE/v${SNX_VER}/CATALOG
+
+cd $disk
+\rm t0 t1 t2 t3?? t4 t5 SS DD NN
+
+if [ "$SAT" = "GISLV" ]; then
+zcat  /$dsk/GISL1/residuals_ascii/$CASE/$STAGE/v${SNX_VER}/${ARC}.wv${SNX_VER}1.sort_by_config.gz > t0
+zcat  /$dsk/GISL2/residuals_ascii/$CASE/$STAGE/v${SNX_VER}/${ARC}.wv${SNX_VER}1.sort_by_config.gz >> t0
+fi
+if [ "$SAT" = "PPV" ]; then
+zcat  /$dsk/GISL1/residuals_ascii/EMT/$STAGE/v${SNX_VER}/${ARC}.wv${SNX_VER}e.sort_by_config.gz >  t0
+zcat  /$dsk/GISL2/residuals_ascii/EMT/$STAGE/v${SNX_VER}/${ARC}.wv${SNX_VER}e.sort_by_config.gz >> t0
+zcat  /$dsk/ETA1/residuals_ascii/$CASE/$STAGE/v${SNX_VER}/${ARC}.wv${SNX_VER}1.sort_by_config.gz  >> t0
+zcat  /$dsk/ETA2/residuals_ascii/$CASE/$STAGE/v${SNX_VER}/${ARC}.wv${SNX_VER}1.sort_by_config.gz  >> t0
+fi
+grep -v "Reference" t0 > t1
+cut -c26-34,100-108 t1 > t2
+#+1 t31 t41
+#POS t31
+grep -v " -1.00000" t2 > t31
+sort -u t31 > t41
+#-1 t32 t42
+#NEG t32
+grep -v "  1.00000" t2 > t32
+sort -u t32 > t42
+#STATION LIST
+cut -c1-8 t2 > SS0
+sort -u SS0 > SSS
+
+while read STATION 
+do
+
+#+1 NO1
+grep $STATION t31 > t5
+grep -c "" t5 > t6
+read NO1 < t6
+echo ${NO1}
+#-1 NO2
+grep $STATION t32 > t5
+grep -c "" t5 > t6
+read NO2 < t6
+echo $NO | sed 's/-//'
+echo ${NO2}
+NO=$(echo "${NO1}  - ${NO2} " | bc -l)
+echo $NO | sed 's/-//' > NO_ABS
+ read NO < NO_ABS
+echo $STATION $NO1 $NO2 $NO  >> NN
+
+#if [ "$NO" -le "10" ]; then
+if [ "$NO1" -le "10" ]; then
+echo "DELETE${STATION} 51" >> DD 
+fi
+done < SSS
+cp DD $whrto/${ARC}.wv${SNX_VER}1_v2
+#\rm t0 t1 t2 t3?? t4 DD
+
+exit 0
+

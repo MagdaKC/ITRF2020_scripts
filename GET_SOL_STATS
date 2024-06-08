@@ -1,0 +1,61 @@
+#!/bin/ksh
+#
+
+${SCR_DBG}set -vx
+set -vx
+
+SCR_NAME=GET_SOL_STATS
+SCR_PARM=4
+SCR_LIST="infile SAT STEP CASE"
+SCR_VERS=040219.0
+
+
+if [ `expr $#` -lt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+
+#  ORIGINALLY:  getSOLstatsI
+
+
+infile=$1
+SAT=$2
+STEP=${3:-WEEKLY}
+CASE=${4:-OPS}
+
+disk=/$DISK/$SAT/output/$STEP/$CASE
+
+
+file=$disk/v${SNX_VER}/SLV.$infile
+/bin/grep "   CARTESIAN    " $file > xxxxxx
+sort -u -k 4,4 xxxxxx -o xxxxxx1
+/bin/grep '1 TITLE' $file > yyyyyy
+/bin/grep 'COMBINED MATRIX:' $file >> yyyyyy
+/bin/grep 'WSOS for updated solution:' $file >> yyyyyy
+/bin/grep 'Total number of observations accumulated:' $file >> yyyyyy
+/bin/grep 'RMS for updated solution:' $file >> yyyyyy
+/bin/grep 'RMS for updated solution:' $file >> zzzzzz
+sed "1,\$s/1 TITLE/TITLE/g" yyyyyy > yyyyyy1
+sed "1,\$s/                RMS for updated solution://g" zzzzzz > zzzzzz1
+
+read VAR < zzzzzz1
+COV=xxxxxx1
+
+#export VAR COV
+
+#~/scripts/scale_cov $infile
+
+mv yyyyyy1 $MAIN_PATH/INFILES/INF_OPS_ITRF2020/STATS_${SERVICE}/$STEP/v${SNX_VER}/STATS.$infile
+
+exit 0

@@ -1,0 +1,154 @@
+#!/bin/ksh
+#
+
+${SCR_DBG}set -xv
+set -xv
+
+SCR_NAME=MAKE_BIAS_LIST
+SCR_PARM=7
+SCR_LIST="infile SAT STAGE CASE BIASTYPE VER WT"
+SCR_VERS=210422.0
+
+
+if [ `expr $#` -gt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+
+infile=$1
+SAT=$2
+STAGE=$3
+CASE=$4
+BIASTYPE=$5
+VER=${6:-we}
+WT=${7:-}
+
+PROJ=$SERVICE
+
+# Select what type of biases to process!
+
+SLMB=$BIASTYPE
+
+
+mkdir -p $MAIN_PATH/INFILES/MBIAS_BLK_$PROJ/$STAGE/$CASE
+
+where=/nobackup/mkuzmicz/REPRO/$SAT/punchdout/$STAGE/$CASE
+whrsatID=/nobackup/mkuzmicz/REPRO/$SAT/d_base/bias/satIDir
+
+mkdir mbtmp$$
+cd mbtmp$$
+\rm -r ready
+\rm inp
+mkdir ready
+
+echo $BGN > fort.5
+
+zcat $where/${infile}_${WT}pnc > t0
+
+cat $whrsatID/$ARC > b0
+
+/bin/grep "^PARMSM    $SLMB"  t0 > t1
+
+cut -c9-25 t1 > t2
+cut -c23-24 t1 > t3
+sed "s/^0/ /g" t3 > t30
+cp t30 twave
+
+cut -c3-13 t2 > t20
+
+if [ "$BIAS" = "6" ]; then
+
+sed "s/../ 6/g" t30 > twave
+
+elif [ "$BIAS" = "7" ]; then
+
+sed "s/.3/ 7/g" t30 > twave
+
+fi
+
+while read site
+do
+
+grep $site b0 > $site
+
+wc -l $site >> inp
+
+done < t20
+
+while read lrec file
+do
+
+grep -e " 1 " -e " 2 " $file >> ready/$file
+grep -v -e " 1 " -e " 2 " $file > 2prcs
+
+wc -l 2prcs > w0
+read nrec site < w0
+
+if [ $nrec -ne 0 ]; then
+
+  if [ "$BIAS" != "7" ]; then
+     cat 2prcs >> ready/$file
+  elif [ $nrec -eq 1 ]; then
+     cat 2prcs >> ready/$file
+  fi
+
+  lsat=0
+
+  while read site nsat nwv val
+  do
+
+  siteout=$site
+  lsat=`expr $lsat + $nsat`
+
+  wvn=$nwv
+  bias=$val
+
+  done < 2prcs
+
+    echo "  "$siteout " "$lsat " "$wvn "  "$bias >> ready/$file
+
+
+fi
+
+done < inp
+
+cd ready
+ls -1 * > list
+
+while read file
+do
+
+    sort -u -n -k 1,1 -k 2,2 $file > ${file}s
+
+done < list
+
+cat *s > ../twaveNEW
+
+cd ..
+cut -c15-16 twaveNEW > twaveREP
+
+sed "s/$/  500/g" twaveREP > t34
+
+paste -d" " t2 t34 > t4
+
+mv t4 bias_in
+
+/u/epavlis/EXECUTABLES/chuz_wv.x < fort.5 > out_chuz_wv 2>&1
+
+mv bias_out $MAIN_PATH/INFILES/MBIAS_BLK_$PROJ/$STAGE/$CASE/${infile}.$SLMB
+
+cd ..
+#\rm -r mbtmp$$
+
+exit 0

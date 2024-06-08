@@ -1,0 +1,218 @@
+#!/bin/ksh
+#
+
+set -xv
+
+SCR_NAME=SUB_TRF_WEEKLY_LE
+SCR_PARM=19
+SCR_LIST="SOL STAGE SUBCASE CASE slvdir PROG LVFIXD LVFLST LVGRAV LVTVGC LVSTAV LVPOLC LVPOLR LVUT1C LVUT1R LVBIAS LVPARM LVSATS LVSATP"
+SCR_VERS=090210.0
+
+
+if [ `expr $#` -gt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+
+# Script : SUB_TRF_WEEKLY_PP_BIAS
+#
+
+disk=/umbc/epavlis/data01/LOCAL/magdak/MISSIONS
+
+SOL=$1
+STAGE=${2:-WEEKLY}
+SUBCASE=${3:-OPS}
+CASE=${4:-50}
+
+#
+slvdir=${5:-GISLV}
+#
+PROG=${6:-SOLVE_TRF_WEEKLY_2020}
+#PROG=${6:-SOLVE_TRF_WEEKLY_2014}
+#
+#
+# -- >  Use this for Min. Const. EOP solutions
+#
+#LVFIXD=${7:-U4staestMinCon}
+#LVFIXD=${14:-LVstaest.u4_ORIG}   
+#
+# -- >  NULL is for "loose" TRF solutions
+#
+LVFIXD=${7:-NULL}   
+#
+LVFLST=${8:-L12_FILELIST_93-03.523-543}
+#
+LVGRAV=${9:-NULL}
+#LVGRAV=${9:-U4gravconst}
+#LVGRAV=${6:-NLVgravconst.u4.deg1+2.J2_.1E-06.NEW_ITRF2002}
+#
+LVTVGC=${10:-NULL}
+#LVTVGC=${10:-U4tvgconst}
+#LVTVGC=${7:-NLVtvgconst.u4.ITRF2000_GM1.2E06}
+#
+LVSTAV=${11:-U4stavelconstREPRO}
+#LVSTAV=${11:-U4stavelconstPP}
+#LVSTAV=${11:-U4stavelconst}
+#LVSTAV=${8:-NLVstavelconst.u4.ITRF2000_72}
+#
+LVPOLC=${12:-U4polconst1976-2030}
+#LVPOLC=${12:-U4polconst}
+#LVPOLC=${9:-NLVpolconst.u4.2.E-05_upto031231}
+#
+LVPOLR=${13:-U4polRcnst1976-2030}
+#LVPOLR=${13:-U4polRcnst}
+#LVPOLR=${10:-NLVpolRcnst.u4.2.3E-14.upto031231}
+#
+LVUT1C=${14:-U4ut1const1976-2030}
+#LVUT1C=${14:-U4ut1const}
+#LVUT1C=${11:-NLVut1const.u4.0.3E00_up031231}
+#
+LVUT1R=${15:-U4ut1Rcnst1976-2030}
+#LVUT1R=${15:-U4ut1Rcnst}
+#LVUT1R=${12:-NLVut1Rcnst.u4.3.5E-07_upto031231}
+#
+LVBIAS=${16:-U4biasconst}
+#LVBIAS=${13:-NLVbiasconst.u4_my_weighting}
+#
+# LVPARM=${17:-U4sitebiasPARMVL_AFTER_1993.v5}
+# LVPARM=${17:-U4sitebiasPARMVL_AFTER_1994.v5}
+# LVPARM=${17:-U4sitebiasPARMVL_AFTER_Oct_1996.v5}
+# LVPARM=${17:-U4sitebiasPARMVL_AFTER_1997.v5}
+#LVPARM=${17:-U4sitebiasPARMVL_AFTER_1998.v5}
+LVPARM=${17:-U4sitebiasPARMVL_AFTER_}
+
+#                                            LVPARM=${17:-U4sitebiasPARMVL_0}
+#                                            LVPARM=${17:-U4sitebiasPARMVL}
+#LVPARM=${15:-LVbias.sites.PARMVL}   
+#
+LVSATS=${18:-U4satCrAcclcnstrnt}
+#LVSATS=${18:-NLVsatCrconst.u4+ACCEL_2constrnt}
+#
+LVSATP=${19:-U4satPARMVL}
+#LVSATP=${19:-U4satPARMVL-4}
+#LVSATP=${19:-NLVsatPARMVLs.u4}
+
+# UNIT5_PPv5=LVcmat.prt_ILRSPP.tmplt_wRB_4_1993-1994
+# UNIT5_PPv5=LVcmat.prt_ILRSPP.tmplt_wRB_4_1994-1996.09
+# UNIT5_PPv5=LVcmat.prt_ILRSPP.tmplt_wRB_4_1996.10-1997
+# UNIT5_PPv5=LVcmat.prt_ILRSPP.tmplt_wRB_4_1997-1998
+# UNIT5_PPv5=LVcmat.prt_ILRSPP.tmplt_wRB_4_1998-2001.06
+# UNIT5_PPv5=LVcmat.prt_ILRSPP.tmplt_wRB_4_2001.07-2002.05
+# UNIT5_PPv5=LVcmat.prt_ILRSPP.tmplt_wRB_4_2002.06-2006
+
+LVPARM=${LVPARM}${INTPRM}
+#SNX_VER=210 or 211 or 212
+if [ "${SNX_VER}" = "210" -o  "${SNX_VER}" = "211" -o  "${SNX_VER}" = "212"  ]; then
+LVPARM=$ARC
+fi
+if [   "${SNX_VER}" = "202" -o  "${SNX_VER}" = "205" -o  "${SNX_VER}" = "202_T" -o "${SNX_VER}" = "220"  ]; then
+LVPARM=NULL
+fi
+
+UNIT5_PPv5=LVcmat.prt_ILRSPP.tmplt_wRB_4_$INTU5
+#UNIT5_PPv5=LVcmat.prt_ILRSPP.tmplt_wRB_4_OPS2020
+
+
+usr=magda
+PROJ=$SERVICE
+STEP=.
+
+if [ ! -d /${disk}/${slvdir} ]; then
+      mkdir /${disk}/${slvdir}     
+fi
+if [ ! -d /${disk}/${slvdir}/output ]; then
+      mkdir /${disk}/${slvdir}/output     
+fi
+#if [ ! -d /${disk}/${slvdir}/output/${PROJ}_out ]; then
+#      mkdir /${disk}/${slvdir}/output/${PROJ}_out
+#fi
+if [ ! -d /${disk}/${slvdir}/output/$STAGE ]; then
+      mkdir /${disk}/${slvdir}/output/$STAGE     
+fi
+if [ ! -d /${disk}/${slvdir}/output/$STAGE/$SUBCASE ]; then
+      mkdir /${disk}/${slvdir}/output/$STAGE/$SUBCASE     
+fi
+##if [ ! -d /${disk}/${slvdir}/output/$STAGE/$SUBCASE/CASE_$CASE ]; then
+##      mkdir /${disk}/${slvdir}/output/$STAGE/$SUBCASE/CASE_$CASE     
+##fi
+
+if [ ! -d /${disk}/${slvdir}/unit5 ]; then
+      mkdir /${disk}/${slvdir}/unit5     
+fi
+if [ ! -d /${disk}/${slvdir}/unit5/$STAGE ]; then
+      mkdir /${disk}/${slvdir}/unit5/$STAGE     
+fi
+if [ ! -d /${disk}/${slvdir}/unit5/$STAGE/$SUBCASE ]; then
+      mkdir /${disk}/${slvdir}/unit5/$STAGE/$SUBCASE     
+fi
+##if [ ! -d /${disk}/${slvdir}/unit5/$STAGE/$SUBCASE/CASE_$CASE ]; then
+##      mkdir /${disk}/${slvdir}/unit5/$STAGE/$SUBCASE/CASE_$CASE     
+##fi
+export PROG slvdir SOL usr PROJ LVFLST LVGRAV LVTVGC LVSTAV LVPOLC LVUT1C LVPOLR LVUT1R LVBIAS LVFIXD LVPARM
+export disk STAGE CASE SUBCASE LVSATS LVSATP UNIT5_PPv5
+
+Date=`date`
+
+YYMMBGN=$Date_NEW_ARC
+YYMMEND=$Date_NXT_ARC
+ YYC=`echo $NYEAR | cut -c3-4`
+
+#      BGN END 
+#      YYMMYYMMVVVEE : VVV-solution version EE-emat version
+
+
+cmatNoM=${YYMMBGN}14${YYC}${CMAT_VERSION}.
+
+
+#sed -e "s/ MMMMMMMMMMMMMM/${cmatNoM}/g" -e "s/DDDDDDDDDDDD/${Date}/g" /${disk}/$slvdir/unit5/$STAGE/${SUBCASE}/${UNIT5_PPv5} > xxx_tmp
+ sed -e "s/ MMMMMMMMMMMMM/ ${cmatNoM}/g" -e "s/DDDDDDDDDDDD/${Date}/g" /${disk}/$slvdir/unit5/$STAGE/${SUBCASE}/v${SNX_VER}/${UNIT5_PPv5} > xxx_tmp
+
+# NO NEED TO DO THIS FOR PP_BIAS!
+# locate the BIAS control command insertion point:
+
+brkline=`sed -n "/_ADD_BIAS_CNTL_/=" xxx_tmp `
+strline=`expr $brkline + 1`
+
+sed -n "1,${brkline}p" xxx_tmp > xxx_tmp1
+#cat /nobackup/mkuzmicz/REPRO/d_base/bias/SOLVE_CNTL/$ARC >> xxx_tmp1
+cat /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/d_base/bias/SOLVE_CNTL/$ARC >> xxx_tmp1
+sed -n "${brkline},\$p" xxx_tmp >> xxx_tmp1
+
+#sed -e "s/CCCCCCCCCCCCC/${cmatNoM}/g" xxx_tmp > /${disk}/$slvdir/unit5/$STAGE/${SUBCASE}/v${SNX_VER}/LVcmat.prt_${SOL}
+sed -e "s/CCCCCCCCCCCCC/${cmatNoM}/g" xxx_tmp1 > /${disk}/$slvdir/unit5/$STAGE/${SUBCASE}/v${SNX_VER}/LVcmat.prt_${SOL}
+
+#/bin/grep "^MATRIX" /${disk}/${slvdir}/unit5/$STAGE/$SUBCASE/v${SNX_VER}/LVcmat.prt_${SOL} >> /nobackup/mkuzmicz/tmp/magda/IERS_MATRIX_LIST_$EFFORT
+
+#chmod 664 /nobackup/mkuzmicz/tmp/magda/IERS_MATRIX_LIST_$EFFORT
+
+$SCRIPTS/$PROG >  /${disk}/${slvdir}/output/$STAGE/$SUBCASE/v${SNX_VER}/SLV.${PROJ}_${SOL} 2>&1 
+
+$SCRIPTS/GET_CORR_OF_PARMS ${PROJ}_${SOL} ${slvdir} $STAGE $SUBCASE >  o.GET_CORR_OF_PARMS 2>&1 
+
+/bin/grep "^ SOLVE:  NORMAL TERMINATION" /${disk}/${slvdir}/output/$STAGE/$SUBCASE/v${SNX_VER}/SLV.${PROJ}_${SOL} > chkrun
+/usr/bin/sum chkrun > s_cur
+read l_cur d_cur f_cur < s_cur
+
+if [ "$l_cur" -gt "22000" ]; then
+
+  echo "Abnormal SOLVE termination in $STAGE/$SUBCASE/v${SNX_VER}/SLV.${PROJ}_${SOL}" > 2mail
+
+#cat 2mail >> /nobackup/mkuzmicz/tmp/magda/ERROR_IN_SOLVE_REANAL07
+
+  mailx -s SOLVE_trouble_$SOL  magdak@umbc.edu < 2mail
+
+fi
+
+exit 0
+#

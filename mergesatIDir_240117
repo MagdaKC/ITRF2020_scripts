@@ -1,0 +1,26 @@
+#!/bin/ksh
+#
+
+set -xv
+
+#   mergesatIDir          2023.07.09
+
+file=$1     #   =$ARC   !!!
+
+
+cat /$DISK/GISL1/d_base/bias/satIDir/$file /$DISK/GISL2/d_base/bias/satIDir/$file   > temp1
+
+cat /$DISK/GISL1/d_base/bias/satIDir/$file /$DISK/GISL2/d_base/bias/satIDir/$file /$DISK/ETA1/d_base/bias/satIDir/$file /$DISK/ETA2/d_base/bias/satIDir/$file   > temp2
+
+sort -n -u -k 1,1 -k 2,2 temp1 > temp11
+
+grep -v "0.0000000000000D+00"  temp11 > /$DISK/GISLV/d_base/bias/satIDir/$file
+
+sort -n -u -k 1,1 -k 2,2 temp2 > temp22
+
+grep -v "0.0000000000000D+00"  temp22 > /$DISK/PPV/d_base/bias/satIDir/$file
+
+
+\rm temp1 temp2
+
+exit 0

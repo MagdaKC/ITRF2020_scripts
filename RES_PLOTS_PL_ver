@@ -1,0 +1,75 @@
+#!/bin/ksh
+#
+set -xv
+
+#  RUN_STR
+
+#
+
+SCR_NAME=plots
+SCR_PARM=0
+SCR_LIST="CASE ETA_IN"
+SCR_VERS=080805.0
+
+SCR_DBG="#"
+export SCR_DBG
+
+if [ `expr $#` -lt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+Date=`date +%y%m%d`
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+
+MAIN_PATH=/umbc/epavlis/data01/LOCAL/magdak
+CASE=plots
+cd /umbc/epavlis/data01/LOCAL/magdak/tmp/magdak
+mkdir ${CASE}_$$
+cd ${CASE}_$$
+cp $MAIN_PATH/INFILES/INF_OPS_LARES/*plt /tmp/magdak/${CASE}_$$
+export SCRIPTS
+#####
+
+
+ARC1=$1
+SAT=$2
+CASE=$3
+ARC2=${ARC1}
+ARC=${ARC1}
+
+grep B051  $MAIN_PATH/MISSIONS/$SAT/products/arc/${CASE}/v${SNX_VER}/${ARC1}_pbias.wv${SNX_VER}P > PB51
+mkdir $MAIN_PATH/MISSIONS/PASS/$SAT/${ARC}
+##cp PB51 $MAIN_PATH/MISSIONS/PASS/$SAT/${ARC}/pass_num1_${STA}_${ARC}
+wc -l PB51 > PB51_NUM
+if   [ "$SAT" = "GISL1" ];then
+    SV=L1
+elif [ "$SAT" = "GISL2" ];then
+   SV=L2
+elif [ "$SAT" = "LARES" ];then
+   SV=LARES
+elif [ "$SAT" = "ETA1" ];then
+    SV=E1
+elif [ "$SAT" = "ETA2" ];then
+	   SV=E2
+elif [ "$SAT" = "LARES2" ];then
+	   SV=R2
+fi
+read NUM FF < PB51_NUM
+echo "${SV}   $NUM " > $MAIN_PATH/tmp/magdak/ALL_${ARC}_${SV}
+#### 
+cd ..
+#\rm -r ${CASE}$$  
+exit 0
+
+

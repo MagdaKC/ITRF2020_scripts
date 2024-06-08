@@ -1,0 +1,143 @@
+#!/bin/ksh
+#
+
+set -xv
+
+#   BACKTRACK_1_WEEK
+diskC=umbc/epavlis/data01/LOCAL/magdak/
+SNX_VER=280 
+echo ${SNX_VER}
+cd /${diskC}/INFILES/INF_OPS_ITRF2020
+MAIN_PATH=/${diskC}
+
+echo " OLD "
+
+cat ARC_SETUP_OLD.WEEKLY_v${SNX_VER}
+
+echo " NEW "
+
+cat ARC_SETUP_NEW.WEEKLY_v${SNX_VER}
+
+echo " NEXT "
+
+cat ARC_SETUP_NXT.WEEKLY_v${SNX_VER}
+
+echo " SOL No. "
+
+#exit 0
+cat SOLUTION_NO_FOR_LAST_RUN.WEEKLY_v${SNX_VER}
+
+cp ARC_SETUP_OLD.WEEKLY_v${SNX_VER} ARC_SETUP_OLD.WEEKLY_v${SNX_VER}.SAVE_BKTRK
+cp ARC_SETUP_NEW.WEEKLY_v${SNX_VER} ARC_SETUP_NEW.WEEKLY_v${SNX_VER}.SAVE_BKTRK
+cp ARC_SETUP_NXT.WEEKLY_v${SNX_VER} ARC_SETUP_NXT.WEEKLY_v${SNX_VER}.SAVE_BKTRK
+cp SOLUTION_NO_FOR_LAST_RUN.WEEKLY_v${SNX_VER} SOLUTION_NO_FOR_LAST_RUN.WEEKLY_v${SNX_VER}.SAVE_BKTRK
+
+#cat *.SAVE_BKTRK
+
+cp ARC_SETUP_NEW.WEEKLY_v${SNX_VER} ARC_SETUP_NXT.WEEKLY_v${SNX_VER}
+cp ARC_SETUP_OLD.WEEKLY_v${SNX_VER} ARC_SETUP_NEW.WEEKLY_v${SNX_VER}
+
+read EYEAR EDOY Date_END_ARC END_ARC < ARC_SETUP_END_OLD.WEEKLY_v${SNX_VER}
+EDOY=` expr $EDOY - 7 `
+$MAIN_PATH/scripts/ydoy2ymd $EYEAR $EDOY > tempo
+
+
+# Convert to our file-name convention:
+read Date_END_ARC < tempo
+Y=`echo $Date_END_ARC|cut -c1-1`
+MD=`echo $Date_END_ARC|cut -c2-6`
+
+if [ "$Y" -eq "0"  ]; then
+Y=z
+elif [ "$Y" -eq "9"  ]; then
+Y=n
+elif [ "$Y" -eq "8"  ]; then
+Y=e
+elif [ "$Y" -eq "7"  ]; then
+Y=s
+elif [ "$Y" -eq "6"  ]; then
+Y=x
+elif [ "$Y" -eq "1"  ]; then
+Y=o
+elif [ "$Y" -eq "2"  ]; then
+
+Y=w
+
+fi
+
+END_ARC=${Y}${MD}
+
+echo $EYEAR $EDOY $Date_END_ARC $END_ARC > tempo
+mv tempo ARC_SETUP_END_OLD.WEEKLY_v${SNX_VER}
+
+read YEAR DOY Date_OLD_ARC OLD_ARC < ARC_SETUP_OLD.WEEKLY_v${SNX_VER}
+DOY=` expr $DOY - 7 `
+if [ "$DOY" -eq "0"  ]; then
+YEAR=` expr $YEAR - 1 `
+case $YEAR in
+
+1980) ndays=366 ;;       #  Leap year
+1984) ndays=366 ;;       #  Leap year
+1988) ndays=366 ;;       #  Leap year
+1992) ndays=366 ;;       #  Leap year
+1996) ndays=366 ;;       #  Leap year
+2000) ndays=366 ;;       #  Leap year
+2004) ndays=366 ;;       #  Leap year
+2008) ndays=366 ;;       #  Leap year
+2012) ndays=366 ;;       #  Leap year
+2016) ndays=366 ;;       #  Leap year
+2020) ndays=366 ;;       #  Leap year
+2024) ndays=366 ;;       #  Leap year
+2028) ndays=366 ;;       #  Leap year
+2032) ndays=366 ;;       #  Leap year
+2036) ndays=366 ;;       #  Leap year
+2040) ndays=366 ;;       #  Leap year
+
+*) ndays=365 ;;       #  Default
+
+esac
+
+DOY=$ndays
+fi
+
+$MAIN_PATH/scripts/ydoy2ymd $YEAR $DOY > tempo
+
+# Convert to our file-name convention:
+read Date_OLD_ARC < tempo
+Y=`echo $Date_OLD_ARC|cut -c1-1`
+MD=`echo $Date_OLD_ARC|cut -c2-6`
+
+if [ "$Y" -eq "0"  ]; then
+Y=z
+elif [ "$Y" -eq "9"  ]; then
+Y=n
+elif [ "$Y" -eq "8"  ]; then
+Y=e
+elif [ "$Y" -eq "7"  ]; then
+Y=s
+elif [ "$Y" -eq "6"  ]; then
+Y=x
+elif [ "$Y" -eq "1"  ]; then
+Y=o
+elif [ "$Y" -eq "2"  ]; then
+
+Y=w
+
+fi
+
+OLD_ARC=${Y}${MD}
+
+echo $YEAR $DOY $Date_OLD_ARC $OLD_ARC > tempo
+mv tempo ARC_SETUP_OLD.WEEKLY_v${SNX_VER}
+chmod 777 ARC_SETUP_OLD.WEEKLY_v${SNX_VER} ARC_SETUP_NEW.WEEKLY_v${SNX_VER} ARC_SETUP_NXT.WEEKLY_v${SNX_VER} SOLUTION_NO_FOR_LAST_RUN.WEEKLY_v${SNX_VER} 
+
+
+echo " ********************************************* "
+echo " *   /${diskC}/INFILES/INF_OPS_ITRF2020/ARC_SETUP_NXT.WEEKLY_v${SNX_VER}  * "
+cat  /${diskC}/INFILES/INF_OPS_ITRF2020/ARC_SETUP_NXT.WEEKLY_v${SNX_VER} 
+echo " *   /${diskC}/INFILES/INF_OPS_ITRF2020/ARC_SETUP_NEW.WEEKLY_v${SNX_VER}  * "
+cat  /${diskC}/INFILES/INF_OPS_ITRF2020/ARC_SETUP_NEW.WEEKLY_v${SNX_VER} 
+echo " *   /${diskC}/INFILES/INF_OPS_ITRF2020/ARC_SETUP_OLD.WEEKLY_v${SNX_VER}  * "
+cat  /${diskC}/INFILES/INF_OPS_ITRF2020/ARC_SETUP_OLD.WEEKLY_v${SNX_VER} 
+
+exit 0

@@ -1,0 +1,17 @@
+LCMTV=30
+
+
+/bin/sed -e "s/AAAAAA/$ARC/g" -e "s/DDDDDD/$Date_NEW_ARC/g" -e "s/YY/$YY/g" -e "s/LL/$LCMTV/g" -e "s/EE/$ECMTV/g" $MAIN_PATH/INFILES/LER2emt_merge_list2.tmplt >   $MAIN_PATH/INFILES/INF_OPS_ITRF2020/LVLRS2emt_merge_list.$Date_NEW_ARC
+
+
+$SCRIPTS/SUB_MKCMAT LER 1.00 $YY $CASE . ${LVER}e LVLRS2emt_merge_list.$Date_NEW_ARC > o.SUB_MKCMAT_LVLRS.$Date_NEW_ARC 2>&1
+LCMTVx=31
+
+/bin/sed -e "s/AAAAAA/$ARC/g" -e "s/DDDDDD/$Date_NEW_ARC/g" -e "s/YY/$YY/g" -e "s/LL/$LCMTVx/g" -e "s/EE/$ECMTVx/g" $MAIN_PATH/INFILES/LER2emt_merge_list2.tmplt > $MAIN_PATH/INFILES/INF_OPS_ITRF2020/LER2emt_merge_list.$Date_NEW_ARC
+
+
+$SCRIPTS/SUB_MKCMAT LERx 1.00 $YY $CASE . ${LVER}x LER2emt_merge_list.$Date_NEW_ARC > o.SUB_MKCMAT_v${SNX_VER}_LER2x.$Date_NEW_ARC 2>&1
+
+CMAT_VERSION=41
+
+export CMAT_VERSION

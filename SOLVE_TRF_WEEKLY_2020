@@ -1,0 +1,266 @@
+#!/bin/sh                                                              
+#
+#          SOLVE_TRF_WEEKLY_2020           
+#
+#             R E M A R K S :                      ecp 960330 Original
+#      Add blanks at unit sequence brakes              970729 mod 1
+#                                                      000526
+#      Modified to handle 7-day L1&2 combined emats    000604
+#      Tailored to ITRF solutions                      030219
+#
+#
+
+set -xv
+
+SCR_NAME=SOLVE_TRF_WEEKLY_2020           
+SCR_PARM=0
+SCR_LIST=""
+SCR_VERS=230117.0
+
+
+if [ `expr $#` -lt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+
+#                SOLVE_TRF_WEEKLY_2020
+
+export NCPUS=1
+#
+#  CHECK EXISTENCE OF REQUIRED DIRECTORIES :
+#
+if [ ! -d /${disk}/${slvdir} ]; then
+      mkdir /${disk}/${slvdir}     
+fi
+if [ ! -d /${disk}/${slvdir}/output ]; then
+      mkdir /${disk}/${slvdir}/output     
+fi
+if [ ! -d /${disk}/${slvdir}/output/${PROJ}_out ]; then
+      mkdir /${disk}/${slvdir}/output/${PROJ}_out
+fi
+if [ ! -d /${disk}/${slvdir}/output/${PROJ}_out/$STAGE ]; then
+      mkdir /${disk}/${slvdir}/output/${PROJ}_out/$STAGE     
+fi
+if [ ! -d /${disk}/${slvdir}/output/${PROJ}_out/$STAGE/$SUBCASE ]; then
+      mkdir /${disk}/${slvdir}/output/${PROJ}_out/$STAGE/$SUBCASE     
+fi
+##if [ ! -d /${disk}/${slvdir}/output/${PROJ}_out/$STAGE/$SUBCASE/CASE_$CASE ]; then
+##      mkdir /${disk}/${slvdir}/output/${PROJ}_out/$STAGE/$SUBCASE/CASE_$CASE     
+##fi
+if [ ! -d /${disk}/${slvdir}/unit4 ]; then
+      mkdir /${disk}/${slvdir}/unit4     
+fi
+if [ ! -d /${disk}/${slvdir}/unit5 ]; then
+      mkdir /${disk}/${slvdir}/unit5     
+fi
+if [ ! -d /${disk}/${slvdir}/unit5/$STAGE ]; then
+      mkdir /${disk}/${slvdir}/unit5/$STAGE     
+fi
+if [ ! -d /${disk}/${slvdir}/unit5/$STAGE/$SUBCASE ]; then
+      mkdir /${disk}/${slvdir}/unit5/$STAGE/$SUBCASE     
+fi
+##if [ ! -d /${disk}/${slvdir}/unit5/$STAGE/$SUBCASE/CASE_$CASE ]; then
+##      mkdir /${disk}/${slvdir}/unit5/$STAGE/$SUBCASE/CASE_$CASE     
+##fi
+if [ ! -d /${disk}/${slvdir}/punchdout ]; then
+      mkdir /${disk}/${slvdir}/punchdout     
+fi
+if [ ! -d /${disk}/${slvdir}/punchdout/$STAGE ]; then
+      mkdir /${disk}/${slvdir}/punchdout/$STAGE     
+fi
+if [ ! -d /${disk}/${slvdir}/punchdout/$STAGE/$SUBCASE ]; then
+      mkdir /${disk}/${slvdir}/punchdout/$STAGE/$SUBCASE     
+fi
+##if [ ! -d /${disk}/${slvdir}/punchdout/$STAGE/$SUBCASE/CASE_$CASE ]; then
+##      mkdir /${disk}/${slvdir}/punchdout/$STAGE/$SUBCASE/CASE_$CASE     
+##fi
+if [ ! -d /${disk}/${slvdir}/pgscmt ]; then
+      mkdir /${disk}/${slvdir}/pgscmt
+fi
+if [ ! -d /${disk}/${slvdir}/pgscmt/$STAGE ]; then
+      mkdir /${disk}/${slvdir}/pgscmt/$STAGE     
+fi
+if [ ! -d /${disk}/${slvdir}/pgscmt/$STAGE/$SUBCASE ]; then
+      mkdir /${disk}/${slvdir}/pgscmt/$STAGE/$SUBCASE     
+fi
+##if [ ! -d /${disk}/${slvdir}/pgscmt/$STAGE/$SUBCASE/CASE_$CASE ]; then
+##      mkdir /${disk}/${slvdir}/pgscmt/$STAGE/$SUBCASE/CASE_$CASE     
+##fi
+if [ ! -d /${disk}/${slvdir}/pgscov ]; then
+      mkdir /${disk}/${slvdir}/pgscov     
+fi
+if [ ! -d /${disk}/${slvdir}/pgscov/$STAGE ]; then
+      mkdir /${disk}/${slvdir}/pgscov/$STAGE     
+fi
+if [ ! -d /${disk}/${slvdir}/pgscov/$STAGE/$SUBCASE ]; then
+      mkdir /${disk}/${slvdir}/pgscov/$STAGE/$SUBCASE     
+fi
+##if [ ! -d /${disk}/${slvdir}/pgscov/$STAGE/$SUBCASE/CASE_$CASE ]; then
+##      mkdir /${disk}/${slvdir}/pgscov/$STAGE/$SUBCASE/CASE_$CASE     
+##fi
+if [ ! -d /${disk}/${slvdir}/reference ]; then
+      mkdir /${disk}/${slvdir}/reference     
+fi
+#
+#  GO TO A TEMPORARY DIRECTORY :
+#
+
+cd /tmp
+mkdir ./slv$$
+cd ./slv$$
+
+FILENV=.assign
+export FILENV
+
+echo $PWD
+echo $SOLVE
+
+#
+#  LINK TO NEEDED  E-mats & C-mats :
+#
+
+
+mkdir -p  /$disk/$slvdir/emat/v${SNX_VER}/$STAGE
+
+cat > filelist <<EOF
+
+ 1 /$disk/$slvdir/emat/$STAGE/${CASE}/v${SNX_VER}/${ARC}.${CMAT_VERSION}
+EOF
+ 
+cat filelist
+
+
+#
+#  JCL :
+#
+ln -s $SCRIPTS/SOLVE_TRF_WEEKLY_2020              jcl
+#cat jcl
+#
+#  SATELLITE LIST :
+#
+cat $MAIN_PATH/INFILES/unit1             >                                satids                                                  
+#
+#
+#  APRIORI INFO, VALUES - SIGMAS - CONSTRAINTS :
+#
+
+ln -s /${disk}/${slvdir}/unit4/$SUBCASE/$LVGRAV                          aprior1
+
+ln -s /${disk}/${slvdir}/unit4/$SUBCASE/$LVTVGC                          aprior2
+
+ln -s /${disk}/${slvdir}/unit4/$SUBCASE/$LVSTAV                          aprior3
+
+ln -s /${disk}/${slvdir}/unit4/$SUBCASE/$LVPOLC                          aprior4
+
+ln -s /${disk}/${slvdir}/unit4/$SUBCASE/$LVPOLR                          aprior41
+
+ln -s /${disk}/${slvdir}/unit4/$SUBCASE/$LVUT1C                          aprior5
+
+ln -s /${disk}/${slvdir}/unit4/$SUBCASE/$LVUT1R                          aprior51
+
+ln -s /${disk}/${slvdir}/unit4/$SUBCASE/$LVBIAS                          aprior6
+
+ln -s /${disk}/${slvdir}/unit4/$SUBCASE/$LVFIXD                          aprior7
+
+ln -s /${disk}/d_base/bias/PARMVL/$LVPARM                                aprior8
+
+ln -s /${disk}/${slvdir}/unit4/$SUBCASE/$LVSATS                          aprior9
+
+ln -s /${disk}/${slvdir}/unit4/$SUBCASE/$LVSATP                          aprior10
+
+#
+
+echo $ARC
+
+grep $ARC $MAIN_PATH/INFILES/REPRO2023_WTS.CURRENT  > weights
+
+cat weights
+
+read wklyarc w_factor < weights
+
+sed -e "s/WWWWWWWW/$w_factor/g" aprior3 > aprior31
+
+cat aprior1 aprior2 aprior31 aprior4 aprior41 aprior5 aprior51 aprior6 aprior7 aprior8 aprior9 aprior10    >  aprior  
+
+cp aprior $MAIN_PATH/INFILES/INF_OPS_ITRF2020/CONSTR_${PROJ}/$STAGE/$SUBCASE/v${SNX_VER}/CONSTR.${PROJ}_${SOL}_${WT}
+
+cp aprior /${disk}/${slvdir}/unit4/$SUBCASE/v${SNX_VER}/${PROJ}_${SOL}.aprior
+
+#
+#  SOLVE CONTROL RECORDS :
+#  
+ln -s /${disk}/${slvdir}/unit5/$STAGE/$SUBCASE/v${SNX_VER}/LVcmat.prt_${SOL}          1unit5
+#  
+cat 1unit5                      >                                unit5    
+
+#
+#  RUN SOLVE  :
+#  
+#df                                                                              
+
+###time /umbc/research/epavlis/EXECUTABLES/solve   <unit5 >u6.new 2>err.new 
+#time  /nobackup/mkuzmicz/EXECUTABLES/V+solve_G.x   <unit5 >u6.new 2>err.new | asa
+ time  /umbc/research/epavlis/EXECUTABLES/PE2_EXEC/Vsolve_101906_180307_m8_PE2.x    <unit5 >u6.new 2>err.new | asa 
+
+
+ls -al
+
+
+#cp fort.7 fort.7.new
+
+#print "\n============================="
+#print "\n= error output of NEW_SOLVE ="
+#print "\n============================="
+
+cat err.new
+ 
+#echo '======================='
+#echo '= output of NEW_SOLVE ='
+#echo '======================='
+
+cat u6.new
+
+#print "\n=============================="
+#print "\n= fort.3 output of NEW_SOLVE ="
+#print "\n=============================="
+
+#cat fort.3
+ 
+#
+#  PUT AWAY OUTPUT FILES :  
+#  
+mv punch  /${disk}/${slvdir}/punchdout/$STAGE/$SUBCASE/v${SNX_VER}/${PROJ}_${SOL}_${WT}pnc
+#mv punch  /${disk}/${slvdir}/punchdout/$STAGE/$SUBCASE/${PROJ}_${SOL}_${WT}pnc
+#
+mv cmat /${disk}/${slvdir}/pgscmt/$STAGE/$SUBCASE/v${SNX_VER}/${PROJ}_${SOL}_${WT}cmt
+#mv cmat /${disk}/${slvdir}/pgscmt/$STAGE/$SUBCASE/${PROJ}_${SOL}_${WT}cmt
+#
+mv covmat /${disk}/${slvdir}/pgscov/$STAGE/$SUBCASE/v${SNX_VER}/${PROJ}_${SOL}_${WT}cov
+#mv covmat /${disk}/${slvdir}/pgscov/$STAGE/$SUBCASE/${PROJ}_${SOL}_${WT}cov
+#  
+#  CLEAN_UP :  
+#  
+cd ..
+#\rm -r slv$$                                                                        
+                                            
+                                            
+#  
+#  SUBMIT POST_PROCESSING JOBS :  
+#
+#[ -r /silo/zmjcc/solve/unit7/pgs${SOL} ] && /u2/zmjcc/utility/gcoef.jcl pgs${SOL} short
+#[ -r /silo/zmjcc/solve/unit7/pgs${SOL} ] && /u2/zmjcc/utility/sorted.jcl pgs${SOL} short
+#[ -r /silo/zmjcc/solve/unit7/pgs${SOL} ] && /u2/zmjcc/utility/recoef.jcl pgs${SOL} short
+#[ -r /silo/zmjcc/solve/unit7/pgs${SOL} ] && /u2/zmjcc/utility/tides.ext.jcl pgs${SOL} short
+
+exit

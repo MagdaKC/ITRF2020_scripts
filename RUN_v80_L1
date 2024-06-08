@@ -1,0 +1,5 @@
+#!/bin/ksh
+#
+
+set -xv
+./RUN_SERIES_IERS_SLRF2020_7d_LAGEOS1  WEEKLY YES OPS2020 . 80 > o.WEEKLY_v80_2019_1 2>&1

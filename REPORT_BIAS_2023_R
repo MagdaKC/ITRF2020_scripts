@@ -1,0 +1,327 @@
+#!/bin/ksh
+#
+
+set -xv
+
+#  RUN_STR
+
+#
+
+SCR_NAME=REPORT_BIAS
+SCR_PARM=6
+SCR_LIST="CASE ETA_IN"
+SCR_VERS=070928.0
+
+SCR_DBG="#"
+export SCR_DBG
+
+if [ `expr $#` -lt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+Date=`date +%y%m%d`
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+disk=/$diskC/MISSIONS
+SCRIPTS=/$diskC/scripts/OPS_D
+export SCRIPTS disk
+ARC=$1
+SAT=$2
+LVER=$3
+YY=$4
+TYPE_DR=$5
+SVN=$6
+
+diskC=$disk_n
+mkdir -p /$diskC/tmp/magdak
+#chmod -R 775 /$diskC/tmp/magdak
+cd /$diskC/tmp/magdak
+mkdir ${CASE}$$
+cd ${CASE}$$
+SCRIPTS=$MAIN_PATH/scripts/ITRF2020/OPS
+ln -s $MAIN_PATH/MISSIONS/d_base/site/DAILY/SLRF2020/EPOCH_2015.0/${ARC}.adj.gz $MAIN_PATH/MISSIONS/d_base/site/DAILY/SLRF2020/EPOCH_2015.0/${ARC}_pbias.adj.gz
+#####
+
+
+ARC1=${ARC}_pbias_7306
+
+zcat /$diskC/MISSIONS/$SAT/residuals_ascii/DR/$CASE/v${SNX_VER}/${ARC}.${LVER}0.sort_by_config.gz > /$diskC/tmp/magdak/${CASE}$$/PBIAS 
+
+#List with station for current arc for PBIAS cards
+#Output file with PBIAS card -> PBa
+#gzip -d PBIAS.gz
+cut -c26-33 PBIAS > SATs
+grep -v "   " SATs > SATss
+#ADD QC STATION
+cat $MAIN_PATH/INFILES/INF_OPS_ITRF2020/QC_STATION >> SATss
+sort -u SATss > st 
+sed -e "s/^/PBIAS /g" st > PB
+sed -e "s/$/900                                                        3.0D-04/g" PB > PBb
+sort -u SATss > st
+sed -e "s/^/PBIAS /g" st > PB2
+sed -e "s/$/051                                                        1.0D+02/g" PB2 > a
+#print "PBIAS          51                                                        1.0D+03" > a
+cat a > PBa
+cat PBb >> PBa
+
+#Output file with SIGMA card 
+print "SIGMA          51             1.                      1.0" > SIG
+#Delete all MBIAS and SIGMA cards from ftn05 file
+#new 220812  add ORB cards
+grep -v -e "MBIAS" -e "ORBFIL" -e "ORBTVU" /$diskC/MISSIONS/$SAT/d_base/trnd/DR/$CASE/v${SNX_VER}/$ARC > /$diskC/tmp/magdak/${CASE}$$/t0a
+grep -v "SIGMA" t0a > t0b
+grep -v "EMATRX" t0b > t0c
+grep -v "EDIT" t0c > t0
+#New cards:  PBIAS and SIGMA
+arcline0=`sed -n "/ELEMS2/=" t0 `
+sed -n "1,${arcline0}p" t0 > t1a
+pline0=`expr $arcline0 + 1`
+print "EDIT                     3.5000000000000D+00 1.00000000D+02 0.000000D+00 0.0D+00" >> t1a
+arcline=`sed -n "/ALBEDO/=" t0 `
+pline=`expr $arcline - 1`
+sed -n "${pline0},${pline}p" t0 >> t1a
+cat PBa >> t1a
+arcline2=`sed -n "/PREPRO/=" t0 `
+sed -n "${arcline},${arcline2}p" t0 >> t1a
+cat SIG >> t1a
+arcline3=`sed -n "/ENDARC/=" t0 `
+arcline4=`expr $arcline2 + 1`
+sed -n "${arcline4},${arcline3}p" t0 >> t1a
+sed -e "s/RESIDU/RESIDU10/g" t1a > t1b
+while read DSTAT
+do
+grep -v  "DELETE$DSTAT" t1b > t1c
+mv t1c t1b
+done < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/QC_STATION
+cp t1b  $ARC1
+
+
+#Copy new ftn05 (arc) to d_base/trnd/DR/DAILY/
+mv ${ARC1}  /$diskC/MISSIONS/$SAT/d_base/trnd/DR/$CASE/v${SNX_VER}/${ARC1}
+
+#Run GEODYN and output file "Report"
+$SCRIPTS/$RUN_GDN_SLR_SCR ${ARC1} ${LVER}P $SAT $YY ${TYPE_DR}_PB . $CASE > o.RUN_GDN_SLR_DR_3.$CASE.$SVN 2>&1
+
+$SCRIPTS/RMS_OF_FIT_SLR_ALL_LE ${ARC1}.${LVER}P $SVN $CASE DR > o.RMS_OF_FIT_SLR_ALL0.$CASE.$SVN 2>&1
+
+#Grep new values for BIAS 51 and 90 to two separetely files -> MBIAS and MBIAS900
+cp /$diskC/MISSIONS/$SAT/punchdout/DR/$CASE/v${SNX_VER}/${ARC1}.${LVER}P.gz /$diskC/tmp/magdak/${CASE}$$/${ARC1}.${LVER}P.gz
+zcat ${ARC1}.${LVER}P.gz > t0
+
+#This part is dependent from number of iteration!!
+#arcline=`sed -n "/\/ARC\/    1 3 0/=" t0 `
+
+#arcline=`sed -n "/\/ARC\/    1 2 0/=" t0 `
+arcline=`sed -n "/\/ARC\/    1 1 0/=" t0 `
+frstline=`expr $arcline + 1`
+sed -n "${frstline},\$p" t0 > t1
+sed -e "s/REFSYS..../REFSYS0964/g" t1      > t2
+
+grep "MBIAS" t2 > MBIAS_ALL
+grep " 51" MBIAS_ALL > MBIAS
+grep "900" MBIAS_ALL > MBIASs
+grep -v " 51" MBIASs >  MBIAS900
+rm t0 t1 t2
+cp /$diskC/MISSIONS/$SAT/residuals_ascii_xtnd/DR/$CASE/v${SNX_VER}/${ARC1}.${LVER}P.obsresxtnd  /$diskC/tmp/magdak/${CASE}$$/
+
+#Sort by stations and time
+cut -c8-34  ${ARC1}.${LVER}P.obsresxtnd > A1
+cut -c35-818  ${ARC1}.${LVER}P.obsresxtnd > A2
+#cut -c8-24  ${ARC1}.${LVER}P.obsresxtnd > A1
+#cut -c25-769  ${ARC1}.${LVER}P.obsresxtnd > A2
+sed -e "s/ /0/g" A1 > A1a
+
+paste -d " " A1a A2 > A3
+sort -k2,2 -k1,1 A3 -o A4
+
+mv A4 residsN.ascii_last_s
+rm A1 A2 A3 
+#File with sigmas for all estimate parameters
+cp /$diskC/MISSIONS/$SAT/products/arc/$CASE/v${SNX_VER}/${ARC1}.${LVER}P /$diskC/tmp/magdak/${CASE}$$/SIGMA_f
+#File with RMS for arc
+cp /$diskC/OUTFILES/RMS_Nobs_Elcut_R /$diskC/tmp/magdak/${CASE}$$/RMS_Nobs_Elcut_R
+
+
+#Run Report.x
+
+if [ "${SAT}" = "GISL1" ]; then
+SATN=L1
+fi
+if [ "${SAT}" = "GISL2" ]; then
+SATN=L2
+fi
+if [ "${SAT}" = "ETA1" ]; then
+SATN=E1
+fi
+if [ "${SAT}" = "ETA2" ]; then
+SATN=E2
+fi
+if [ "${SAT}" = "STARL" ]; then
+SATN=S1
+fi
+if [ "${SAT}" = "AJISI" ]; then
+SATN=A1
+fi
+if [ "${SAT}" = "LARES" ]; then
+SATN=LR
+fi
+if [ "${SAT}" = "LARES2" ]; then
+SATN=R2
+fi
+
+print "$SATN" > SAT_NAME
+
+##NEW version from 130609
+cut -c7-14 MBIAS  > st-M
+sort -u st-M > st-Ms
+cp st-Ms st
+#ELMINATE empty record
+/${diskC}/EXECUTABLES/ele_empty.x
+# CREATEs small files for each station for each pass (name: station_star_time)
+/${diskC}/EXECUTABLES/START_STOP_STAT.x
+file=residsNs3
+while read STAT START STOP
+do
+grep " $STAT" $file > t0
+sort -k1 t0 > t1
+START2=`echo ${START}|cut -c1-7`
+STOP2=`echo ${STOP}|cut -c1-7`
+
+arcline1=`sed -n "/$START2/=" t1 `
+arcline2=`sed -n "/$STOP2/=" t1 `
+echo $arcline1 > ppp1
+arcline11=`awk ' {print $1} ' ppp1`
+echo $arcline2 > ppp2
+arcline22=`awk ' {print $NF} ' ppp2`
+sed -n "${arcline11},${arcline22}p" t1 > t2
+mv t2 ${STAT}_${START}
+done < START_STO_STAT
+cut -c7-14 MBIAS  > st-M
+sort -u st-M > st-Ms
+cp st-Ms st
+/${diskC}/EXECUTABLES/Report_220804.x
+
+#####
+
+
+read NYEAR2 NDOY2 Date_NEW_ARC2 NEW_ARC2 < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_NEW.${CASE}_v${SNX_VER}
+#WEEKLY
+
+ if [ "$CASE" = "WEEKLY"  ]; then
+read EYEAR2 EDOY2 Date_END_ARC2 END_ARC2 < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_NXT.${CASE}_v${SNX_VER}
+   elif [ "$CASE" = "DAILY"  ]; then
+read EYEAR2 EDOY2 Date_END_ARC2 END_ARC2 < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_END.${CASE}_v${SNX_VER}
+     fi
+
+read EYEAR2 EDOY2 Date_END_ARC2 END_ARC2 < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_END.${CASE}_v${SNX_VER}
+
+
+/$diskC/scripts/ydoy2ymd $NYEAR2 $NDOY2 > D1b
+/$diskC/scripts/ydoy2ymd $EYEAR2 $EDOY2 > D2a
+read D1c < D1b
+read D2c < D2b
+
+cp fort.119 time_${SAT}
+#START Report for all satellites
+print "# @$Date" > Report
+print "# @Data span ${D1c}-${D2c}" >> Report
+print "# @contact epavlis@umbc.edu" >> Report
+print "# @website  http://geodesy.jcet.umbc.edu/" >> Report
+print "# @version 1.0" >> Report
+print "#    " >> Report
+print "# each line contains:" >> Report
+print "#    " >> Report
+print "# STA ID           = site name  " >> Report
+print "# YY/MM/DD HH:MM   = pass starting time " >> Report
+print "# SAT              = satellite name (L1: LAGEOS1; L2: LAGEOS2; E1: ETALON1; E2:ETALON2; LR LARES; R2: LARES2 S1: STARLETTE; A1: AJISAI) " >> Report2
+print "# GOD OBS          = number of good normal points  " >> Report
+print "# RAW RMS          = residual RMS before editing & bias application " >> Report
+print "# PREC EST         = post-fit scattering rms  " >> Report
+print "# RANGE BIAS       = estimated range bias  " >> Report
+print "# RANGE BIAS SIGMA = estimated range bias sigma " >> Report
+print "# TIME BIAS        = estimated time bias  " >> Report
+print "# TIME BIAS SIGMA  = estimated time bias sigma" >> Report
+print "# PASS DUR         = pass duration  " >> Report
+print "# EDIT OBS         = number of bad normal points  " >> Report
+print "# CALIB+ MEAN      = mean Applied System Delay (ILRS FR format cols 97-104)  " >> Report
+print "# CALIB SDEV       = mean System Calibration Method (ILRS FR format cols 126) " >> Report
+print "# CALIB SHIFT+     = mean Root Mean Square (ILRS FR format cols 111-114) " >> Report
+print "# STPASS RMS       = mean Pass RMS (ILRS FR format cols 58-64) "  >> Report
+print "# TEMP             = mean surface temperature [K]  " >> Report
+print "# HUM              = mean relative humidity of surface %  " >> Report
+print "# PRES             = mean pressure [hPa]  " >> Report
+print "# WLEN             = walelength [nm]  " >> Report
+print "# SCH              = System Change Indicator (ILRS FR format cols 127) " >> Report
+print "# SCI              = System Configuration (ILRS FR format cols 128)  " >> Report
+print "# DRF              = Data Release Flag (ILRS FR format cols 130)" >> Report
+print "# ELEVATION MAX    = maximum elevation for pass [degrees]  " >> Report
+print "# ELEVATION MIN    = minimum elevation for pass [degrees]  " >> Report
+print "#    " >> Report
+
+while read  STAT
+do
+print "$STAT" > STAT1
+cut -c1-4 STAT1 > STAT12
+read STAT2 < STAT12
+while read STAT3 NAME DOS
+do
+if [ "${STAT2}" = "${STAT3}" ]; then
+print "#$STAT3 ${NAME}  $DOS" >> Report
+fi
+
+done < /$diskC/INFILES/ILRS_SITE_LIST_102
+
+
+
+print "#                            GOOD        RAW      PREC       RANGE     RANGE    TIME    TIME  PASS    EDIT    CALIB+  CALIB  CALIB++ STPASS    TEMP     HUM     PRES     WLEN   S S D        ELEVATION " >> Report
+print "#                             OBS        RMS       EST        BIAS      BIAS    BIAS    BIAS   DUR     OBS    MEAN    SDEV   SHIFT   RMS        [K]       %     [hPa]    [nm]   C C R      MAX       MIN     ">> Report
+print "# STA ID YY/MM/DD HH:MM SAT  A          [mm]      [mm]        [mm]     SIGMA    [us]   SIGMA  [MIN]           [mm]    [mm]   [mm]    [mm]                                       H I F        [degrees]" >> Report
+print "#                 " >> Report
+cat $STAT >> Report
+cat $STAT > ${STAT}_${SATN}
+cat $STAT >> Report_${SATN}
+print "#                 " >> Report
+done < st
+cat st > st_${SATN}
+
+mkdir /$diskC/MISSIONS/$SAT/qc_report/${CASE}/v${SNX_VER}/${ARC}/                            
+cp *_${SATN} /$diskC/MISSIONS/$SAT/qc_report/${CASE}/v${SNX_VER}/${ARC}/  
+#DAY of the week 1-monday
+DY=` date '+ %w'`
+echo $DY > DD1
+read DAY < DD1
+
+export DAY
+
+#mkdir /$diskC/MISSIONS/$SAT/qc_report/${CASE}/v${SNX_VER}
+cp Report_${SATN} /$diskC/MISSIONS/$SAT/qc_report/${CASE}/v${SNX_VER}/${ARC1}.$DAY.SLRF2020.txt 
+cp Report /$diskC/MISSIONS/$SAT/qc_report/${CASE}/v${SNX_VER}/${ARC1}.SLRF2020.rpt
+mv Report Report_${SATN}_t
+
+
+#mailx -s "Report_BIAS_$ARC" magdak@umbc.edu <  ${ARC}.$DAY.SLRF2020.txt
+
+
+
+
+mv MBIAS MBIAS_ST
+mv PBIAS PBIAS_ST
+mv MBIAS900 MBIAS900_ST
+rm MBIAS*ALL
+
+
+cd ..
+#\rm -r ${CASE}$$
+
+
+exit 0
+

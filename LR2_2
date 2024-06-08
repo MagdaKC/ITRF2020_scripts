@@ -1,0 +1,154 @@
+#
+# At this point we do a LAGEOS+ETALON TRF solution (incremental)
+#
+
+CMAT_VERSION=30
+
+export CMAT_VERSION
+
+SOL=$SOL_E
+#read GLOBAL_CMAT_OLD < $MAIN_PATH/INFILES//INF_OPS_ITRF2020/$CASE/CURRENT_GLOBAL.${CMAT_VERSION}_v${SNX_VER}
+read CURRENT_CMAT_2_ADD < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/$CASE/CURRENT_LE12_CMAT_NO.${CMAT_VERSION}_v${SNX_VER}
+
+export GLOBAL_CMAT_OLD CURRENT_CMAT_2_ADD SOL
+
+
+#
+# At this point we do a LAGEOS+ETALON WEEKLY-TRF solution (Mid-arc referenced)
+#
+
+CMAT_VERSION=31
+
+export CMAT_VERSION
+
+SOL=$SOL_EPP
+
+read CURRENT_CMAT_2_ADD < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/$CASE/CURRENT_LE12_CMAT_NO.${CMAT_VERSION}_v${SNX_VER}
+
+export CURRENT_CMAT_2_ADD SOL
+
+$SCRIPTS/SUB_TRF_WEEKLY_LE $SOL $CASE OPS . PPV SOLVE_TRF_WEEKLY_2020  NULL > o.SLV_LE12_PP 2>&1
+
+# First get the list of biases that were solved-for:
+
+
+
+#
+# Postprocess the LAGEOS+ETALON WEEKLY-TRF solution:
+#
+
+PSOL_NUM=1
+
+$SCRIPTS/POST_PROCESS $SOL $SERVICE PPV $CASE LE12 ${PSOL_NUM} ${SNX_VER} $Date_NEW_ARC $Date_NXT_ARC $Date_MID_ARC $ILRS_AC $WEIGHT > o.POST_PROCESS_LE12_PP 2>&1  
+
+# Link the proper EPOCH BLOCK to this solution after removing any old links:
+
+\rm $EPOCH_DIR/${SERVICE}_${SOL}
+ln -s $EPOCH_DIR/${SERVICE}_${ARC}.${LVER}e_${WT}_$SUBSFX $EPOCH_DIR/${SERVICE}_${SOL}
+
+# Save the solution filename for postprocessing and orbit file creation:
+
+SOL_FILE=${SERVICE}_${SOL}_
+
+
+# Read and process the PARM file of this solution:
+
+$SCRIPTS/PARMRDR_OPS_TRF $SOL_FILE PPV $DISK $CASE OPS > o.PARMRDR_OPS_TRF_$SOL_FILE_PPV_$CASE 2>&1 
+
+#
+# At this point you can do a LAGEOS+ETALON Network Check and NEOS EOP solution:
+#
+
+CMAT_VERSION=31
+
+export CMAT_VERSION
+
+SOL=$SOL_EN
+
+read CURRENT_CMAT_2_ADD < $MAIN_PATH/INFILES/$CASE/CURRENT_LE12_CMAT_NO.${CMAT_VERSION}_v${SNX_VER}
+
+export CURRENT_CMAT_2_ADD SOL
+
+$SCRIPTS/SUB_TRF_NEOS $SOL $CASE OPS . PPV SOLVE_TRF_WEEKLY_2020  NULL > o.SLV_LE12_NEOS 2>&1
+
+
+# First get the list of biases that were solved-for:
+
+
+
+#
+# Postprocess the LAGEOS+ETALON ILRS_NEOS solution:
+#
+
+PSOL_NUM=1
+
+$SCRIPTS/POST_PROCESS $SOL $SERVICE PPV $CASE LE12NEOS ${PSOL_NUM} ${SNX_VER} $Date_NEW_ARC $Date_NXT_ARC $Date_MID_ARC $ILRS_AC $WEIGHT > o.POST_PROCESS_LE12_NEOS 2>&1  
+#
+
+# Link the proper EPOCH BLOCK to this solution after removing any old links:
+
+\rm $EPOCH_DIR/${SERVICE}_${SOL}
+ln -s $EPOCH_DIR/${SERVICE}_${ARC}.${LVER}e_${WT}_$SUBSFX $EPOCH_DIR/${SERVICE}_${SOL}
+
+
+
+
+#
+#
+#  Make a NEOS submission file:
+#
+#
+
+mkdir -p /${DISK}/PPV/d_base/data/EOP/NEOS/JCET
+
+
+$SCRIPTS/MAKE_NEOS_EOP $ARC ${SERVICE}_${SOL_EN}_ ${LVER}e PPV   EMT $CASE > o.MAKE_NEOS_EOP_SOL_EN 2>&1
+cat /${DISK}/PPV/products/$CASE/OPS/${SERVICE}_${SOL_EN}_/${ARC}.JCET >> /${DISK}/PPV/d_base/data/EOP/NEOS/JCET/LAGEOS12+ETALON12
+
+
+#---------------------------------------------------
+
+
+#  Done with ETALON  1 & 2
+
+
+#---------------------------------------------------
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++
+
+#
+#  Mail the file to ECP:
+#
+
+echo "NEW PER-SERIES v${SNX_VER} SLRF2020 RESULTS FOR ARC: " $ARC > thdr
+cat thdr /${DISK}/PPV/products/$CASE/OPS/${SERVICE}_${SOL_EN}_/${ARC}.JCET > 2mail
+
+
+mailx -s "v${SNX_VER} PER" epavlis@umbc.edu < 2mail
+mailx -s "v${SNX_VER} PER" magdak@umbc.edu < 2mail
+#exit 2222
+#---------------------------------------------------
+
+
+#  Make SINEX files 
+
+
+#---------------------------------------------------
+
+# Generate a LAGEOS & Etalon IDcat file:
+
+cat IDcat.L12 IDcat.E12 > IDcat.LE12
+
+
+$SCRIPTS/MAKE_POS+VEL_APRIORI_FROM_STAPOS_FILE_${ITRF_APRIORI}_PP_BIAS $ARC.adj x > o.MAKE_POS+VEL_APRIORI_FROM_STAPOS_FILE_${ITRF_APRIORI}_OPS_x_$ARC.adj 2>&1
+
+
+CoG_BLK2USE=IDcat.LE12
+SUBSFX=LE12
+export SUBSFX CoG_BLK2USE TSC_MODEL
+
+cp $CoG_BLK2USE /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/SYSTEMS/sys$CoGarcdate
+
+$SCRIPTS/SUB_MAKE_SINEX_EOP20C04_CoG ${SERVICE}_${SOL_EPP}_fnames.snx  PPV  $SERVICE $CASE $WT > o.SUB_MAKE_SINEX_${SERVICE}_${SOL_EPP} 2>&1
+
+

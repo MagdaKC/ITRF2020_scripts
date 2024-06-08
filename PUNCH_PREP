@@ -1,0 +1,77 @@
+#!/bin/ksh
+#
+#
+
+${SCR_DBG}set -xv
+set -xv
+
+SCR_NAME=PUNCH_PREP
+SCR_PARM=5
+SCR_LIST="sol sat PROJ STEP CASE"
+SCR_VERS=040219.0
+
+
+if [ `expr $#` -lt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+
+#  PUNCH_PREP makes a PARMSM file with TITLE/RMS included
+
+#  ORIGINALLY: mkPARMVLfI
+
+sol=$1
+sat=${2:-GISLV}
+PROJ=${3:-ILRS}
+STEP=${4:-WEEKLY}
+CASE=${5:-OPS}
+
+infile=SLV.${PROJ}_${sol}
+punch=${PROJ}_${sol}_pnc
+
+where=/$DISK/$sat
+
+OUT=$where/output/${STEP}/$CASE
+
+/bin/grep "RMS for updated solution: " $OUT/v${SNX_VER}/$infile > rms
+
+sed "s/RMS for updated solution:      //g" rms > rmsV
+
+read rmsd < rmsV
+
+rmsV=`printf %0.2E $rmsd` 
+
+echo "RMSrrrrrrrr" > rmsF
+
+sed "s/rrrrrrrr/$rmsV/g" rmsF > rmsf
+
+/bin/grep "1 TITLE " $OUT/v${SNX_VER}/$infile > tit
+
+sed "s/           1 TITLE  ...//g" tit > tit1
+
+pr  -m -t -w138 tit1 rmsf > title
+
+gzip -S .Z -f title
+
+zcat title $where/punchdout/${STEP}/$CASE/v${SNX_VER}/$punch > $where/parmvl/${STEP}/$CASE/v${SNX_VER}/$punch
+
+gzip  -f $where/parmvl/${STEP}/$CASE/v${SNX_VER}/$punch
+
+#      ---------1---------2---------3---------4---------5---------6---------7---------8
+#titmp="tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttRMSrrrrrrrr"
+#titmp="                                                                     RMSrrrrrrrr"
+#       tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt RMSrrrrrrrr
+
+
+exit 0

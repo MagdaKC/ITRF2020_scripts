@@ -1,0 +1,36 @@
+# Check for a reasonable size report:
+
+  #sum $file_LR > s_curLR
+  du -b $file_LR > s_curLR
+  #read d_curLR l_curLR f_curLR < s_curLR
+  read l_curLR f_curLR < s_curLR
+if [ ! -s ${file_LR} ]; then
+
+   echo  EOP file $file_R doesn\'t exist !
+
+   echo "EOP file $file_R doesn\'t exist  !!!  " > 2mail.d
+
+   mail -s URGENT_EOP_NOT_EXIST_v${SNX_VER} magdak@umbc.edu < 2mail.d
+
+   \rm 2mail.d
+
+ exit  9999 
+
+  elif [ "$l_curLR" -lt "400" ]; then
+  
+  #
+  # It looks like the report is empty or we have a VERY bad week!
+  #
+  
+    echo "Possible problem with EOP file: $file_LR" > 2mail.d
+    mail -s URGENT_EOP_${STAGE}_v${SNX_VER}_FILE_EMPTY magdak@umbc.edu < 2mail.d
+    echo "STOP PROCESS EOP wrong"
+ exit  1 
+  else
+  
+    echo "ALL OK !!!"
+    echo "eMail the report !!!"
+    cat s_curLR >> 2mail.d
+    mail -s EOP_${STAGE}_v${SNX_VER}_OK magdak@umbc.edu < 2mail.d
+  
+  fi

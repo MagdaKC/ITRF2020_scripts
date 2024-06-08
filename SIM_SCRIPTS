@@ -1,0 +1,14 @@
+ if [ "$CASE" = "DAILY" ]; then
+
+
+ cd $MAIN_PATH/tmp/magda/${CASE}${wkTmp}_${ARC}
+ /umbc/epavlis/data01/LOCAL/magdak/scripts/SIMULATIONS/SLR/RUN_SIM_ONE_ARC_2_DB_v180_P2_part1 > o.RUN_SIM_ONE_ARC_2_DB 2>&1
+ /umbc/epavlis/data01/LOCAL/magdak/scripts/SIMULATIONS/SLR/RUN_SIM+REAL_ONE_ARC_v180 > o.RUN_SIM+REAL_ONE_ARC_220516_3 2>&1
+ /umbc/epavlis/data01/LOCAL/magdak/scripts/SIMULATIONS/SLR/RUN_SIM_ONE_ARC_2_DB_v180_P2_part2 > o.RUN_SIM_ONE_ARC_2_DB_181204_P2_part2 2>&1
+ /umbc/epavlis/data01/LOCAL/magdak/scripts/job_JCETDB/RUN_SIM+REAL_ONE_ARC_1 > o.RUN_SIM+REAL_ONE_ARC_1 2>&1
+ #/umbc/epavlis/data01/LOCAL/magdak/scripts/job_JCETDB/RUN_SIM+REAL_ONE_ARC_2 > o.RUN_SIM+REAL_ONE_ARC_2 2>&1
+ /umbc/epavlis/data01/LOCAL/magdak/scripts/job_JCETDB/RUN_SIM+REAL_ONE_ARC_2_L2 > o.RUN_SIM+REAL_ONE_ARC_2_L2 2>&1
+ /umbc/epavlis/data01/LOCAL/magdak/scripts/job_JCETDB/RUN_SIM+REAL_ONE_ARC_2_L1 > o.o.RUN_SIM+REAL_ONE_ARC_2_l1 2>&1
+ /umbc/epavlis/data01/LOCAL/magdak/scripts/job_JCETDB/RUN_SIM+REAL_ONE_ARC_3 > o.RUN_SIM+REAL_ONE_ARC_3 2>&1
+
+ fi

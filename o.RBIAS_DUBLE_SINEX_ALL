@@ -1,0 +1,4173 @@
+set -xv
++ set -xv
+# read SNXDIR SNXFILE < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/v${SNX_VER}/SINEX_OF_THIS_RUN.PPV
+echo put $SNXFILE
+
++ echo put
+put
+ START="+SOLUTION\/ESTIMATE"
++ START='+SOLUTION\/ESTIMATE'
+ STOP="-SOLUTION\/ESTIMATE"
+
++ STOP='-SOLUTION\/ESTIMATE'
+cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/DAILY/v180/
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/DAILY/v180/
+rm LIST RRBIAS
++ rm LIST RRBIAS
+ls -1 *.snx.gz > LIST
++ ls -1 jcet.pos+eop.230720.v180.snx.gz jcet.pos+eop.230721.v180.snx.gz jcet.pos+eop.230722.v180.snx.gz jcet.pos+eop.230723.v180.snx.gz jcet.pos+eop.230724.v180.snx.gz jcet.pos+eop.230725.v180.snx.gz jcet.pos+eop.230726.v180.snx.gz jcet.pos+eop.230727.v180.snx.gz jcet.pos+eop.230728.v180.snx.gz jcet.pos+eop.230729.v180.snx.gz jcet.pos+eop.230730.v180.snx.gz jcet.pos+eop.230731.v180.snx.gz jcet.pos+eop.230801.v180.snx.gz jcet.pos+eop.230802.v180.snx.gz jcet.pos+eop.230803.v180.snx.gz jcet.pos+eop.230804.v180.snx.gz jcet.pos+eop.230805.v180.snx.gz jcet.pos+eop.230806.v180.snx.gz jcet.pos+eop.230807.v180.snx.gz jcet.pos+eop.230808.v180.snx.gz jcet.pos+eop.230809.v180.snx.gz jcet.pos+eop.230810.v180.snx.gz jcet.pos+eop.230811.v180.snx.gz jcet.pos+eop.230812.v180.snx.gz jcet.pos+eop.230813.v180.snx.gz jcet.pos+eop.230814.v180.snx.gz jcet.pos+eop.230815.v180.snx.gz jcet.pos+eop.230816.v180.snx.gz jcet.pos+eop.230817.v180.snx.gz jcet.pos+eop.230818.v180.snx.gz jcet.pos+eop.230819.v180.snx.gz jcet.pos+eop.230820.v180.snx.gz jcet.pos+eop.230821.v180.snx.gz jcet.pos+eop.230822.v180.snx.gz jcet.pos+eop.230823.v180.snx.gz jcet.pos+eop.230824.v180.snx.gz jcet.pos+eop.230825.v180.snx.gz jcet.pos+eop.230826.v180.snx.gz jcet.pos+eop.230827.v180.snx.gz jcet.pos+eop.230828.v180.snx.gz jcet.pos+eop.230829.v180.snx.gz jcet.pos+eop.230830.v180.snx.gz jcet.pos+eop.230831.v180.snx.gz jcet.pos+eop.230901.v180.snx.gz jcet.pos+eop.230902.v180.snx.gz jcet.pos+eop.230903.v180.snx.gz jcet.pos+eop.230904.v180.snx.gz jcet.pos+eop.230905.v180.snx.gz jcet.pos+eop.230906.v180.snx.gz jcet.pos+eop.230907.v180.snx.gz jcet.pos+eop.230908.v180.snx.gz jcet.pos+eop.230909.v180.snx.gz jcet.pos+eop.230910.v180.snx.gz jcet.pos+eop.230911.v180.snx.gz jcet.pos+eop.230912.v180.snx.gz jcet.pos+eop.230913.v180.snx.gz jcet.pos+eop.230914.v180.snx.gz jcet.pos+eop.230915.v180.snx.gz jcet.pos+eop.230916.v180.snx.gz jcet.pos+eop.230917.v180.snx.gz jcet.pos+eop.230918.v180.snx.gz jcet.pos+eop.230919.v180.snx.gz jcet.pos+eop.230920.v180.snx.gz jcet.pos+eop.230921.v180.snx.gz jcet.pos+eop.230922.v180.snx.gz jcet.pos+eop.230923.v180.snx.gz jcet.pos+eop.230924.v180.snx.gz jcet.pos+eop.230925.v180.snx.gz jcet.pos+eop.230926.v180.snx.gz jcet.pos+eop.230927.v180.snx.gz jcet.pos+eop.230928.v180.snx.gz jcet.pos+eop.230929.v180.snx.gz jcet.pos+eop.230930.v180.snx.gz jcet.pos+eop.231001.v180.snx.gz jcet.pos+eop.231002.v180.snx.gz jcet.pos+eop.231003.v180.snx.gz jcet.pos+eop.231004.v180.snx.gz jcet.pos+eop.231005.v180.snx.gz jcet.pos+eop.231006.v180.snx.gz jcet.pos+eop.231007.v180.snx.gz jcet.pos+eop.231008.v180.snx.gz jcet.pos+eop.231009.v180.snx.gz jcet.pos+eop.231010.v180.snx.gz jcet.pos+eop.231011.v180.snx.gz jcet.pos+eop.231012.v180.snx.gz jcet.pos+eop.231013.v180.snx.gz jcet.pos+eop.231014.v180.snx.gz jcet.pos+eop.231015.v180.snx.gz jcet.pos+eop.231016.v180.snx.gz jcet.pos+eop.231017.v180.snx.gz jcet.pos+eop.231018.v180.snx.gz jcet.pos+eop.231019.v180.snx.gz jcet.pos+eop.231020.v180.snx.gz jcet.pos+eop.231021.v180.snx.gz jcet.pos+eop.231022.v180.snx.gz jcet.pos+eop.231023.v180.snx.gz jcet.pos+eop.231024.v180.snx.gz jcet.pos+eop.231025.v180.snx.gz jcet.pos+eop.231026.v180.snx.gz jcet.pos+eop.231027.v180.snx.gz jcet.pos+eop.231028.v180.snx.gz jcet.pos+eop.231029.v180.snx.gz jcet.pos+eop.231030.v180.snx.gz jcet.pos+eop.231031.v180.snx.gz jcet.pos+eop.231101.v180.snx.gz jcet.pos+eop.231102.v180.snx.gz jcet.pos+eop.231103.v180.snx.gz jcet.pos+eop.231104.v180.snx.gz jcet.pos+eop.231105.v180.snx.gz jcet.pos+eop.231106.v180.snx.gz jcet.pos+eop.231107.v180.snx.gz jcet.pos+eop.231108.v180.snx.gz jcet.pos+eop.231109.v180.snx.gz jcet.pos+eop.231110.v180.snx.gz jcet.pos+eop.231111.v180.snx.gz jcet.pos+eop.231112.v180.snx.gz jcet.pos+eop.231113.v180.snx.gz jcet.pos+eop.231114.v180.snx.gz jcet.pos+eop.231115.v180.snx.gz jcet.pos+eop.231116.v180.snx.gz jcet.pos+eop.231117.v180.snx.gz jcet.pos+eop.231118.v180.snx.gz jcet.pos+eop.231119.v180.snx.gz jcet.pos+eop.231127.v180.snx.gz jcet.pos+eop.231128.v180.snx.gz jcet.pos+eop.231129.v180.snx.gz jcet.pos+eop.231130.v180.snx.gz jcet.pos+eop.231201.v180.snx.gz jcet.pos+eop.231202.v180.snx.gz
++ 1> LIST
+while read SNXFILE
+do
+zcat $SNXFILE > t1
+
+  
+arcline1=`sed -n "/$START/=" t1 `
+arcline2=`sed -n "/$STOP/=" t1 `
+echo $arcline1 > ppp1
+arcline11=`awk ' {print $1} ' ppp1`
+echo $arcline2 > ppp2
+arcline22=`awk ' {print $NF} ' ppp2`
+sed -n "${arcline11},${arcline22}p" t1 > t2
+grep RBIAS t2 > t3
+cut -c15-26 t3 > t4
+sort t4| uniq -c | grep -v "      1" > t5
+  FILE=t5
+ if [[ -s $FILE ]] ; then
+  sed -e "s/^/$SNXFILE /" t5 > t6
+   cat t6 >> RRBIAS
+    fi
+rm t?
+done < LIST
++ 0< LIST
++ read SNXFILE
++ zcat jcet.pos+eop.230720.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=555
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=662
++ echo 555
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=555
++ echo 662
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=662
++ sed -n 555,662p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ uniq -c
++ 1> t5
++ sort t4
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230721.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=564
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=664
++ echo 564
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=564
++ echo 664
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=664
++ sed -n 564,664p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230722.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=569
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=672
++ echo 569
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=569
++ echo 672
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=672
++ sed -n 569,672p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230723.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=569
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=672
++ echo 569
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=569
++ echo 672
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=672
++ sed -n 569,672p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230724.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=594
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=703
++ echo 594
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=594
++ echo 703
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=703
++ sed -n 594,703p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230725.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=575
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=686
++ echo 575
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=575
++ echo 686
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=686
++ sed -n 575,686p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ 1> t5
++ uniq -c
++ sort t4
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230726.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=546
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=654
++ echo 546
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=546
++ echo 654
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=654
++ sed -n 546,654p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230727.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=542
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=648
++ echo 542
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=542
++ echo 648
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=648
++ sed -n 542,648p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230728.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=489
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=588
++ echo 489
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=489
++ echo 588
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=588
++ sed -n 489,588p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230729.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=522
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=625
++ echo 522
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=522
++ echo 625
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=625
++ sed -n 522,625p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230730.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=471
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=564
++ echo 471
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=471
++ echo 564
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=564
++ sed -n 471,564p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230731.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=506
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=597
++ echo 506
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=506
++ echo 597
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=597
++ sed -n 506,597p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230801.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=477
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=567
++ echo 477
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=477
++ echo 567
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=567
++ sed -n 477,567p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230802.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=470
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=557
++ echo 470
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=470
++ echo 557
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=557
++ sed -n 470,557p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230803.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=483
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=570
++ echo 483
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=483
++ echo 570
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=570
++ sed -n 483,570p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230804.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=525
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=621
++ echo 525
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=525
++ echo 621
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=621
++ sed -n 525,621p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230805.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=524
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=620
++ echo 524
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=524
++ echo 620
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=620
++ sed -n 524,620p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230806.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=525
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=621
++ echo 525
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=525
++ echo 621
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=621
++ sed -n 525,621p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230807.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=526
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=622
++ echo 526
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=526
++ echo 622
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=622
++ sed -n 526,622p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230808.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=504
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=597
++ echo 504
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=504
++ echo 597
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=597
++ sed -n 504,597p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230809.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=516
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=608
++ echo 516
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=516
++ echo 608
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=608
++ sed -n 516,608p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230810.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=507
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=606
++ echo 507
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=507
++ echo 606
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=606
++ sed -n 507,606p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230811.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=479
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=572
++ echo 479
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=479
++ echo 572
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=572
++ sed -n 479,572p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230812.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=476
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=569
++ echo 476
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=476
++ echo 569
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=569
++ sed -n 476,569p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230813.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=467
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=557
++ echo 467
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=467
++ echo 557
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=557
++ sed -n 467,557p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230814.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=461
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=548
++ echo 461
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=461
++ echo 548
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=548
++ sed -n 461,548p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230815.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=465
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=554
++ echo 465
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=465
++ echo 554
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=554
++ sed -n 465,554p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ 1> t5
++ sort t4
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230816.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=465
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=549
++ echo 465
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=465
++ echo 549
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=549
++ sed -n 465,549p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ uniq -c
++ 1> t5
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230817.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=455
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=536
++ echo 455
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=455
++ echo 536
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=536
++ sed -n 455,536p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ uniq -c
++ 1> t5
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230818.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=465
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=549
++ echo 465
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=465
++ echo 549
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=549
++ sed -n 465,549p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ uniq -c
++ 1> t5
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230819.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=497
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=587
++ echo 497
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=497
++ echo 587
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=587
++ sed -n 497,587p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230820.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=535
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=631
++ echo 535
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=535
++ echo 631
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=631
++ sed -n 535,631p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230821.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=604
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=713
++ echo 604
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=604
++ echo 713
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=713
++ sed -n 604,713p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ 1> t5
++ sort t4
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230822.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=579
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=680
++ echo 579
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=579
++ echo 680
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=680
++ sed -n 579,680p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ uniq -c
++ 1> t5
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230823.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=586
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=687
++ echo 586
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=586
++ echo 687
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=687
++ sed -n 586,687p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230824.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=578
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=679
++ echo 578
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=578
++ echo 679
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=679
++ sed -n 578,679p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230825.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=587
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=694
++ echo 587
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=587
++ echo 694
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=694
++ sed -n 587,694p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230826.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=555
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=659
++ echo 555
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=555
++ echo 659
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=659
++ sed -n 555,659p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230827.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=535
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=630
++ echo 535
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=535
++ echo 630
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=630
++ sed -n 535,630p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230828.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=576
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=677
++ echo 576
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=576
++ echo 677
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=677
++ sed -n 576,677p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230829.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=546
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=644
++ echo 546
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=546
++ echo 644
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=644
++ sed -n 546,644p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230830.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=464
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=548
++ echo 464
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=464
++ echo 548
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=548
++ sed -n 464,548p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230831.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=401
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=476
++ echo 401
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=401
++ echo 476
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=476
++ sed -n 401,476p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230901.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=419
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=502
++ echo 419
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=419
++ echo 502
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=502
++ sed -n 419,502p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230902.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=497
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=589
++ echo 497
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=497
++ echo 589
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=589
++ sed -n 497,589p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230903.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=525
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=624
++ echo 525
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=525
++ echo 624
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=624
++ sed -n 525,624p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230904.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=536
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=641
++ echo 536
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=536
++ echo 641
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=641
++ sed -n 536,641p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230905.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=519
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=619
++ echo 519
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=519
++ echo 619
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=619
++ sed -n 519,619p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230906.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=521
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=621
++ echo 521
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=521
++ echo 621
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=621
++ sed -n 521,621p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230907.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=531
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=636
++ echo 531
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=531
++ echo 636
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=636
++ sed -n 531,636p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230908.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=530
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=635
++ echo 530
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=530
++ echo 635
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=635
++ sed -n 530,635p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230909.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=512
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=613
++ echo 512
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=512
++ echo 613
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=613
++ sed -n 512,613p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230910.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=528
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=630
++ echo 528
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=528
++ echo 630
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=630
++ sed -n 528,630p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230911.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=562
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=666
++ echo 562
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=562
++ echo 666
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=666
++ sed -n 562,666p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230912.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=538
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=641
++ echo 538
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=538
++ echo 641
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=641
++ sed -n 538,641p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230913.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=570
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=676
++ echo 570
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=570
++ echo 676
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=676
++ sed -n 570,676p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ uniq -c
++ 1> t5
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230914.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=569
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=672
++ echo 569
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=569
++ echo 672
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=672
++ sed -n 569,672p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ 1> t5
++ uniq -c
++ sort t4
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230915.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=579
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=688
++ echo 579
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=579
++ echo 688
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=688
++ sed -n 579,688p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ uniq -c
++ 1> t5
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230916.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=579
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=688
++ echo 579
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=579
++ echo 688
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=688
++ sed -n 579,688p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230917.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=492
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=591
++ echo 492
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=492
++ echo 591
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=591
++ sed -n 492,591p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230918.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=499
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=598
++ echo 499
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=499
++ echo 598
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=598
++ sed -n 499,598p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230919.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=537
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=642
++ echo 537
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=537
++ echo 642
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=642
++ sed -n 537,642p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230920.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=538
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=643
++ echo 538
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=538
++ echo 643
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=643
++ sed -n 538,643p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230921.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=538
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=643
++ echo 538
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=538
++ echo 643
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=643
++ sed -n 538,643p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230922.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=496
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=601
++ echo 496
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=496
++ echo 601
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=601
++ sed -n 496,601p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ uniq -c
++ 1> t5
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230923.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=495
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=600
++ echo 495
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=495
++ echo 600
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=600
++ sed -n 495,600p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230924.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=489
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=591
++ echo 489
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=489
++ echo 591
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=591
++ sed -n 489,591p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230925.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=530
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=638
++ echo 530
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=530
++ echo 638
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=638
++ sed -n 530,638p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230926.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=550
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=661
++ echo 550
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=550
++ echo 661
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=661
++ sed -n 550,661p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230927.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=548
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=659
++ echo 548
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=548
++ echo 659
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=659
++ sed -n 548,659p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230928.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=543
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=654
++ echo 543
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=543
++ echo 654
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=654
++ sed -n 543,654p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230929.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=521
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=620
++ echo 521
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=521
++ echo 620
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=620
++ sed -n 521,620p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ 1> t5
++ uniq -c
++ sort t4
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230930.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=510
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=606
++ echo 510
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=510
++ echo 606
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=606
++ sed -n 510,606p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231001.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=510
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=606
++ echo 510
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=510
++ echo 606
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=606
++ sed -n 510,606p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231002.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=457
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=539
++ echo 457
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=457
++ echo 539
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=539
++ sed -n 457,539p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231003.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=475
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=560
++ echo 475
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=475
++ echo 560
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=560
++ sed -n 475,560p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231004.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=494
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=585
++ echo 494
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=494
++ echo 585
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=585
++ sed -n 494,585p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231005.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=490
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=581
++ echo 490
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=490
++ echo 581
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=581
++ sed -n 490,581p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231006.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=495
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=589
++ echo 495
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=495
++ echo 589
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=589
++ sed -n 495,589p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231007.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=479
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=567
++ echo 479
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=479
++ echo 567
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=567
++ sed -n 479,567p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231008.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=476
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=564
++ echo 476
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=476
++ echo 564
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=564
++ sed -n 476,564p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231009.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=484
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=575
++ echo 484
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=484
++ echo 575
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=575
++ sed -n 484,575p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231010.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=489
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=580
++ echo 489
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=489
++ echo 580
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=580
++ sed -n 489,580p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231011.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=495
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=586
++ echo 495
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=495
++ echo 586
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=586
++ sed -n 495,586p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ uniq -c
++ 1> t5
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231012.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=500
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=594
++ echo 500
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=500
++ echo 594
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=594
++ sed -n 500,594p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ uniq -c
++ 1> t5
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231013.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=491
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=582
++ echo 491
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=491
++ echo 582
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=582
++ sed -n 491,582p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ uniq -c
++ 1> t5
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231014.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=485
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=573
++ echo 485
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=485
++ echo 573
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=573
++ sed -n 485,573p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ 1> t5
++ uniq -c
++ sort t4
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231015.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=506
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=603
++ echo 506
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=506
++ echo 603
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=603
++ sed -n 506,603p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231016.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=467
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=558
++ echo 467
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=467
++ echo 558
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=558
++ sed -n 467,558p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231017.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=487
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=578
++ echo 487
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=487
++ echo 578
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=578
++ sed -n 487,578p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231018.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=483
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=574
++ echo 483
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=483
++ echo 574
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=574
++ sed -n 483,574p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231019.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=476
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=570
++ echo 476
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=476
++ echo 570
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=570
++ sed -n 476,570p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231020.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=458
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=549
++ echo 458
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=458
++ echo 549
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=549
++ sed -n 458,549p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231021.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=458
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=549
++ echo 458
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=458
++ echo 549
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=549
++ sed -n 458,549p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231022.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=451
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=539
++ echo 451
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=451
++ echo 539
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=539
++ sed -n 451,539p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231023.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=459
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=547
++ echo 459
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=459
++ echo 547
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=547
++ sed -n 459,547p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231024.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=459
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=544
++ echo 459
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=459
++ echo 544
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=544
++ sed -n 459,544p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231025.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=454
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=539
++ echo 454
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=454
++ echo 539
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=539
++ sed -n 454,539p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231026.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=483
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=576
++ echo 483
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=483
++ echo 576
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=576
++ sed -n 483,576p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231027.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=489
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=585
++ echo 489
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=489
++ echo 585
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=585
++ sed -n 489,585p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231028.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=487
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=584
++ echo 487
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=487
++ echo 584
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=584
++ sed -n 487,584p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231029.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=466
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=561
++ echo 466
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=466
++ echo 561
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=561
++ sed -n 466,561p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231030.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=454
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=543
++ echo 454
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=454
++ echo 543
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=543
++ sed -n 454,543p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231031.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=478
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=575
++ echo 478
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=478
++ echo 575
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=575
++ sed -n 478,575p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231101.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=470
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=559
++ echo 470
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=470
++ echo 559
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=559
++ sed -n 470,559p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231102.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=475
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=567
++ echo 475
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=475
++ echo 567
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=567
++ sed -n 475,567p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231103.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=465
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=554
++ echo 465
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=465
++ echo 554
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=554
++ sed -n 465,554p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231104.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=447
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=531
++ echo 447
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=447
++ echo 531
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=531
++ sed -n 447,531p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231105.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=447
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=531
++ echo 447
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=447
++ echo 531
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=531
++ sed -n 447,531p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231106.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=511
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=610
++ echo 511
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=511
++ echo 610
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=610
++ sed -n 511,610p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231107.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=521
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=617
++ echo 521
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=521
++ echo 617
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=617
++ sed -n 521,617p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231108.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=539
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=638
++ echo 539
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=539
++ echo 638
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=638
++ sed -n 539,638p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ uniq -c
++ 1> t5
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231109.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=547
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=649
++ echo 547
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=547
++ echo 649
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=649
++ sed -n 547,649p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ uniq -c
++ 1> t5
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231110.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=544
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=643
++ echo 544
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=544
++ echo 643
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=643
++ sed -n 544,643p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ uniq -c
++ 1> t5
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231111.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=543
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=642
++ echo 543
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=543
++ echo 642
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=642
++ sed -n 543,642p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231112.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=554
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=656
++ echo 554
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=554
++ echo 656
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=656
++ sed -n 554,656p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231113.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=538
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=633
++ echo 538
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=538
++ echo 633
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=633
++ sed -n 538,633p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231114.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=547
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=649
++ echo 547
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=547
++ echo 649
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=649
++ sed -n 547,649p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231115.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=559
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=665
++ echo 559
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=559
++ echo 665
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=665
++ sed -n 559,665p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231116.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=557
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=663
++ echo 557
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=557
++ echo 663
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=663
++ sed -n 557,663p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231117.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=591
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=706
++ echo 591
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=591
++ echo 706
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=706
++ sed -n 591,706p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231118.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=600
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=718
++ echo 600
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=600
++ echo 718
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=718
++ sed -n 600,718p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231119.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=601
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=719
++ echo 601
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=601
++ echo 719
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=719
++ sed -n 601,719p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231127.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=523
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=621
++ echo 523
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=523
++ echo 621
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=621
++ sed -n 523,621p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231128.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=518
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=613
++ echo 518
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=518
++ echo 613
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=613
++ sed -n 518,613p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ uniq -c
++ 1> t5
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231129.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=551
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=652
++ echo 551
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=551
++ echo 652
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=652
++ sed -n 551,652p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231130.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=504
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=597
++ echo 504
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=504
++ echo 597
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=597
++ sed -n 504,597p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231201.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=507
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=597
++ echo 507
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=507
++ echo 597
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=597
++ sed -n 507,597p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ uniq -c
++ 1> t5
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231202.v180.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SOLUTION\/ESTIMATE/=' t1
++ arcline1=510
+sed -n "/$STOP/=" t1 
++ sed -n '/-SOLUTION\/ESTIMATE/=' t1
++ arcline2=603
++ echo 510
++ 1> ppp1
+awk ' {print $1} ' ppp1
++ awk ' {print $1} ' ppp1
++ arcline11=510
++ echo 603
++ 1> ppp2
+awk ' {print $NF} ' ppp2
++ awk ' {print $NF} ' ppp2
++ arcline22=603
++ sed -n 510,603p t1
++ 1> t2
++ grep RBIAS t2
++ 1> t3
++ cut -c15-26 t3
++ 1> t4
++ grep -v '      1'
++ sort t4
++ 1> t5
++ uniq -c
++ FILE=t5
++ [[ -s t5 ]]
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
+exit 0
++ exit 0

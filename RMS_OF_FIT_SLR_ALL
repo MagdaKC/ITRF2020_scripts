@@ -1,0 +1,178 @@
+#!/bin/ksh
+#
+
+#   RMS_OF_FIT_SLR_ALL
+
+#             CASE to be either null, "WEEKLY", "MONTHLY", etc
+#             MODE to be either DR or EMT, depending on what type
+#                  of runs you are summarizing.
+
+set -xv
+#   RMS_OF_FIT_SLR_ALL
+
+SCR_NAME=RMS_OF_FIT_SLR_ALL
+SCR_PARM=4
+SCR_LIST="file SV CASE MODE"
+SCR_VERS=030825.0
+
+
+if [ `expr $#` -lt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+
+file=$1
+SV=$2
+CASE=${3:-WEEKLY}
+MODE=${4:-DR}
+
+Date=`date +%y%m%d`
+
+  if [ "$SV" = "L1" ]; then
+
+  DSK=umbc/epavlis/data01/LOCAL/magdak/MISSIONS
+  sat=GISL1
+  satn=7603901
+
+  elif [ "$SV" = "L2" ]; then
+
+  DSK=umbc/epavlis/data01/LOCAL/magdak/MISSIONS
+  sat=GISL2
+  satn=9207002
+  
+  elif [ "$SV" = "E1" ]; then
+
+  DSK=umbc/epavlis/data01/LOCAL/magdak/MISSIONS
+  sat=ETA1
+  satn=8900103
+
+  elif [ "$SV" = "E2" ]; then
+
+  DSK=umbc/epavlis/data01/LOCAL/magdak/MISSIONS
+  sat=ETA2
+  satn=8903903
+
+  elif [ "$SV" = "CHAMP" ]; then
+
+  DSK=space/MISSIONS
+  sat=CHAMP
+  satn=0309002
+
+  elif [ "$SV" = "STARL" ]; then
+
+  DSK=umbc/epavlis/data01/LOCAL/magdak/MISSIONS
+  sat=STARL
+  satn=8903903
+
+  elif [ "$SV" = "GFZ" ]; then
+
+  DSK=space/MISSIONS
+  sat=GFZ
+  satn=8601795
+
+  elif [ "$SV" = "AJISI" ]; then
+
+  DSK=umbc/epavlis/data01/LOCAL/magdak/MISSIONS
+  sat=AJISI
+  satn=8903903
+
+  elif [ "$SV" = " ERS1" ]; then
+
+  DSK=space/MISSIONS
+  sat=ERS1
+  satn=8903903
+
+  elif [ "$SV" = "TP" ]; then
+
+  DSK=space/MISSIONS
+  sat=TP
+  satn=8903903
+
+  fi
+
+disk1=/${DSK}/$sat/summaries/$MODE/$CASE/v${SNX_VER}
+
+if [ "$MODE" = "DR" ]; then
+
+cd $disk1
+
+\rm x1 x2 x3 x4 yyy1 yyy2 yyy3 zzzzzz sumRMS_Nobs_Elcut
+
+zcat ${file}.gz > temp
+
+#240528 lastline=`sed -n /NUMBER.OF.OBSERVATIONS.DELETED.DUE.TO.CUTOFF.ANGLE.=/= temp`
+lastline=`sed -n /NUMBER.OF.WEIGHTED.OBSERVATIONS.=/= temp`
+echo $lastline 
+
+echo $lastline > ppp1
+
+stopline=`awk ' {print $NF} ' ppp1`
+
+strtline=`expr $stopline - 2`
+
+sed -n "${strtline},${stopline}p" temp > zzzzzz
+
+/bin/grep 'WEIGHTED   RMS' zzzzzz > yyy1
+/bin/grep 'NUMBER OF WEIGHTED OBSERVATIONS =' zzzzzz > yyy2
+/bin/grep 'NUMBER OF OBSERVATIONS DELETED' zzzzzz > yyy3
+
+sed -e "s/0                    WEIGHTED   RMS  =      /${file}_: /g" yyy1 > x1    
+sed -e "s/0          NUMBER OF WEIGHTED OBSERVATIONS =//g" yyy2 > x2    
+sed -e "s/                   NUMBER OF OBSERVATIONS DELETED DUE TO CUTOFF ANGLE =   //g" yyy3 > x3    
+
+paste -d" " x1 x2 x3 > x4
+cat x4 >> $MAIN_PATH/OUTFILES/RMS_Nobs_Elcut.$Date.$sat
+
+
+elif [ "$MODE" = "EMT" ]; then
+
+
+
+
+cd $disk1
+
+
+\rm x1 x2 x3 x4 yyy1 yyy2 yyy3 zzzzzz sumRMS_Nobs_Elcut
+
+
+zcat ${file}.gz > temp
+
+#240528 lastline=`sed -n /NUMBER.OF.OBSERVATIONS.DELETED.DUE.TO.CUTOFF.ANGLE.=/= temp`
+lastline=`sed -n /NUMBER.OF.WEIGHTED.OBSERVATIONS.=/= temp`
+echo $lastline 
+
+echo $lastline > ppp1
+
+stopline=`awk ' {print $NF} ' ppp1`
+
+strtline=`expr $stopline - 2`
+
+sed -n "${strtline},${stopline}p" temp > zzzzzz
+
+/bin/grep 'WEIGHTED   RMS' zzzzzz > yyy1
+/bin/grep 'NUMBER OF WEIGHTED OBSERVATIONS =' zzzzzz > yyy2
+/bin/grep 'NUMBER OF OBSERVATIONS DELETED' zzzzzz > yyy3
+
+sed -e "s/0                    WEIGHTED   RMS  =      /${file}_: /g" yyy1 > x1    
+sed -e "s/0          NUMBER OF WEIGHTED OBSERVATIONS =//g" yyy2 > x2    
+sed -e "s/                   NUMBER OF OBSERVATIONS DELETED DUE TO CUTOFF ANGLE =   //g" yyy3 > x3    
+
+paste -d" " x1 x2 x3 > x4
+cat x4 >> $MAIN_PATH/OUTFILES/RMS_Nobs_Elcut.$Date.$sat
+
+\rm tttdirslct x1 x2 x3 x4 yyy1 yyy2 yyy3 zzzzzz sumRMS_Nobs_Elcut temp ppp1
+
+fi
+
+exit 0

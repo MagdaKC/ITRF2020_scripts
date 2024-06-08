@@ -1,0 +1,19 @@
+ read NYEAR2 NDOY2 Date_NEW_ARC2 NEW_ARC2 < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_NEW.${CASE}_v${SNX_VER}
+  #WEEKLY
+   if [ "$CASE" = "WEEKLY"  ]; then
+    read EYEAR2 EDOY2 Date_END_ARC2 END_ARC2 < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_NXT.${CASE}_v${SNX_VER}
+   elif [ "$CASE" = "DAILY"  ]; then
+    read EYEAR2 EDOY2 Date_END_ARC2 END_ARC2 < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/ARC_SETUP_END.${CASE}_v${SNX_VER}
+   fi
+
+
+XDOY2=`expr $XDOY - 1`
+EDOY3=`expr $EDOY2 - 1`
+
+
+/$diskC/scripts/ydoy2ymd $NYEAR2 $NDOY2 > D1a
+/$diskC/scripts/ydoy2ymd $EYEAR2 $EDOY2 > D2a
+/$diskC/scripts/ydoy2ymd $EYEAR2 $EDOY3 > D3a
+read D1 < D1a
+read D2 < D2a
+read D3 < D3a

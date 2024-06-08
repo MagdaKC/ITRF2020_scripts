@@ -1,0 +1,134 @@
+#!/bin/ksh
+#                                                               ecp 951107         
+# Usage: RVG_2_SP13_OPS prn infile outfile [SAT] [step] [gps2utc] [sol] [STAGE] [CASE] 
+#
+
+set -xv
+#${SCR_DBG}set -vx 
+
+# defaults
+
+#dsk2=raid2/MISSIONS
+#dsk=space/MISSIONS
+
+#DISK=${diskC}/MISSIONS
+#MAIN_PATH=/${diskC}
+#SCRIPTS=$MAIN_PATH/scripts/OPS
+#ECP_PATH=/umbc/research/epavlis
+
+#export DISK SCRIPTS MAIN_PATH ECP_PATH
+
+
+SCR_NAME=RVG_2_SP13_OPS  
+SCR_PARM=10
+SCR_LIST="prn infile outfile SAT step gps2utc sol STAGE CASE EOP"
+SCR_VERS=120306.0
+
+
+if [ `expr $#` -gt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+
+prn=$1
+infile=$2
+outfile=$3
+SAT=${4:-GISL1}
+
+step=${5:-120.d0}
+gps2utc=${6:--0.d0}
+sol=${7:-ILRS_LE12_OPS080706_}
+STAGE=${8:-WEEKLY}
+CASE=${9:-OPS}
+EOP=${10:-IERS}
+
+path0=/$DISK/$SAT/traj/$STAGE/v${SNX_VER}
+path1=$path0/SP3
+path2=$path0/ORB
+path3=$path0/STK
+
+diskC=$disk_n
+
+#
+# execute job
+#
+
+# link fort.40 (RVG file) to fort.10 (input for rv2sp13):
+
+#cp  $path0/RVG/$infile.rvg fort.10
+#zcat  $path0/RVG/$infile.rvg.Z > fort.10
+cat  $path0/RVG/$infile.rvg > fort.10
+
+ln -s /${diskC}/MISSIONS/d_base/tabs/mstr.current mstr.current
+
+# now get the input for rvg2sp3 for this satellite:
+
+cp  $MAIN_PATH/INFILES/tj2sp3.$SAT fort.4
+
+cat $MAIN_PATH/INFILES/eoptabl.OPS_${EOP} >>  fort.4
+
+cat $MAIN_PATH/INFILES/INF_OPS_ITRF2020/v${SNX_VER}/SINEX_OF_THIS_RUN.PPV > t0s
+
+read adum sinex < t0s
+
+cat $MAIN_PATH/INFILES/rv2sp13.OPS_${EOP} >  fort.5
+
+echo $sinex >> fort.5
+
+#cat /$DISK/PPV/products/WEEKLY/OPS/$sol/iers_sub2001.sprdct > fort.62
+cat /$DISK/PPV/products/$STAGE/OPS/$sol/iers_sub2001.sprdct > fort.62
+
+###/u/epavlis/EXECUTABLES/rv2sp13_120305.x < fort.5 > fort.6
+#/u/epavlis/EXECUTABLES/rv2sp13_140109.x < fort.5 > fort.6
+#/u/epavlis/EXECUTABLES/rv2sp13_151015.x  < fort.5 > fort.6
+#/u/epavlis/EXECUTABLES/rv2sp13_210202.x < fort.5 > fort.6 #20210202 mkc
+/umbc/research/epavlis/EXECUTABLES/PE2_EXECi64/rv2sp13_210202.x  < fort.5 > fort.6  #20210202 mkc
+
+
+# /${diskC}/EXECUTABLES/rv2sp13.x < fort.5 > fort.6
+
+ls -la
+
+cat fort.6 
+
+# move to archives the generated ascii trajectory files:
+
+  cp fort.50 $path3/$outfile.stk
+
+  cp fort.15 $path0/$outfile.mod
+  cp fort.25 $path0/$outfile.eci
+  cp fort.35 $path0/$outfile.tod
+  cp fort.45 $path0/$outfile.ecf
+
+  cp fort.20 $path1/$outfile.sp3
+
+  cp  fort.6  /$DISK/$SAT/output/TJ2RVG2SP3.$STAGE.$outfile
+
+
+gzip  -f $path1/$outfile.sp3
+gzip  -f $path2/$outfile.orb
+gzip  -f $path3/$outfile.stk
+gzip  -f $path0/RVG/$outfile.rvg
+
+gzip  -f $path0/$outfile.mod
+gzip  -f $path0/$outfile.eci
+gzip  -f $path0/$outfile.tod
+gzip  -f $path0/$outfile.ecf
+
+gzip -f $path0/RVG/$infile.rvg
+
+##cd ..
+##\rm -r /tmp/tj2sp3$$
+
+exit 0

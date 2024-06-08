@@ -1,0 +1,187 @@
+#!/bin/csh -xv
+#
+# Purpose: To eventually plot residuals for GEODYN. 3/31/05
+#
+# Usage: resi_plot3 inxyfile goodmin goodmax badmin badmax titlename
+#
+# usually the ranges are -50 to 50
+#
+# modified to plot daily results. 1/21/2011
+#
+# Usage: resi_plot4 xdate
+#      xdate = o10113 (for example)
+#
+
+#set BIN=/umbc/research/evans/GMT/GMT4.5.5/bin
+set DATA=/umbc/research/evans/GMT/GMT4.5.5/share/cpt
+set EXE=/umbc/research/evans/EXECUTABLES
+#set EXE=/umbc/research/evans/EXES2
+
+set xdate=$1
+ set snx_ver=$2
+
+set rtit="Residuals for arc $xdate"
+set tit=JCET_AC_$xdate
+
+set dir1="/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/residuals_ascii_xtnd/EMT/WEEKLY"
+set dir2="/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/residuals_ascii_xtnd/EMT/WEEKLY"
+set dir3="/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/residuals_ascii_xtnd/EMT/WEEKLY"
+set dir4="/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/residuals_ascii_xtnd/EMT/WEEKLY"
+set dir5="/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/residuals_ascii_xtnd/EMT/WEEKLY"
+set dir6="/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/reference"
+
+
+
+#230606
+set infil=${xdate}.wv${snx_ver}x.RES2PLOT
+set infilx=${xdate}.wv${snx_ver}x.RES2PLOT_comb
+
+cat $dir1/v${snx_ver}/$infil > $infilx
+cat $dir2/v${snx_ver}/$infil >> $infilx
+cat $dir3/v${snx_ver}/$infil >> $infilx
+cat $dir4/v${snx_ver}/$infil >> $infilx
+cat $dir5/v${snx_ver}/$infil >> $infilx
+
+set gmin=-50.
+set gmax=50.
+set bmin=-200.
+set bmax=200.
+
+
+# This first part plots a map of the world (Mollweide projection).
+
+set trng=${gmin}/${gmax}/1
+set btrng=${bmin}/${bmax}/5
+set rrng=0/360/-90/90/${gmin}/${gmax}
+set rrng2=0/360/-90/90 #/${gmin}/${gmax}
+set brrng=0/360/-90/90/${bmin}/${bmax}
+set brrng2=0/360/-90/90 #/${bmin}/${bmax}
+
+# Read the raw data and split the files into edited and unedited data
+
+echo "Ready to read data"
+cut -c1-2 $infilx > year
+cut -c4-5 $infilx > month
+cut -c7-8 $infilx > day
+cut -c20-34 $infilx > secs
+cut -c36-44 $infilx > siteid
+cut -c47-54 $infilx > sitename
+cut -c74-86 $infilx > res
+cut -c90-97 $infilx > flg
+cut -c99-123 $infilx > latlon
+
+echo res > mult1000b.inf
+$EXE/mult1000b.x
+#$EXE/mult1000b.x res
+
+paste -d" " latlon res res flg > alldata
+
+grep -e " 1.000" alldata > gdats
+grep -e "-1.000" alldata > bdats
+
+paste -d" " year month day siteid secs latlon res flg > alldata2
+grep -e " 1.000" alldata2 > xalldata
+sort -k 4,4 -o xalldata2 xalldata
+
+paste -d" " year month day siteid sitename secs latlon res flg  > alldata3
+grep -e " 1.000" alldata3 > xalldata
+sort -k 4,4 -o xalldata3 xalldata
+
+echo xalldata2 > resi_stats3.inf
+echo xalldata3 >> resi_stats3.inf
+echo $infil >> resi_stats3.inf
+$EXE/resi_stats3.x
+#$EXE/resi_stats3.x xalldata2 xalldata3 $infil
+
+gmt gmtset -G.gmtdefaults PS_MEDIA letter
+gmt gmtset -G.gmtdefaults4 PS_MEDIA letter
+
+# Plot bad (edited) data
+
+#gmt psbasemap -R$brrng -JW180/9i -B30g30/30g30:."${rtit}": -K -Y2.3i -X1.5i -U/-0.5i/-1.25i/"${tit}_daily_edtd_residuals.tiff" > t.ps
+#gmt psbasemap -R$brrng -JW180/9i -B30g30/30g30:."${rtit}": -K -Y1.5i -U/-0.5i/-1.25i/"${tit}_daily_edtd_residuals.tiff" > t.ps
+#gmt psbasemap -R$brrng -JW180/9i -Jz100 -B30g30/30g30:."${rtit}": -K -Y1.5i > t.ps
+gmt psbasemap -R$brrng -JW0/9i -Jz100 -B30g30/30g30:."${rtit}": -K -Y1.5i > t.ps
+gmt pscoast -R -JW -Jz -G255/255/255 -O -K -Dl -W200/200/200 >> t.ps
+gmt makecpt -C$DATA/GMT_rainbow.cpt -T$btrng -Z > b.cpt 
+gmt psscale -Cb.cpt -D4.5i/-0.1i/5i/0.25ih -O -K -Ba50:"Edited Residuals":/:mm: >> t.ps
+gmt psxyz bdats -R -JW -Jz -O -Cb.cpt -Sc0.1c -: >> t.ps
+
+cp t.ps ${tit}_weekly_edtd_residuals.ps
+#convert -quality 100 ${tit}_daily_edtd_residuals.ps ${tit}_daily_edtd_residuals.tiff
+#convert ${tit}_weekly_edtd_residuals.ps ${tit}_weekly_edtd_residuals.pdf
+ps2pdf ${tit}_weekly_edtd_residuals.ps ${tit}_weekly_edtd_residuals.pdf
+
+# Plot good (unedited) data
+
+#gmt psbasemap -R$rrng -JW180/9i -B30g30/30g30:."${rtit}": -K -Y2.3i -X1.5 -U/-0.5i/-1.25i/"${tit}_daily_admtd_residuals.tiff" > r2.ps
+#gmt psbasemap -R$rrng -JW180/9i -Jz25 -B30g30/30g30:."${rtit}": -Y1.5i -K  > r2.ps
+gmt psbasemap -R$rrng -JW0/9i -Jz25 -B30g30/30g30:."${rtit}": -Y1.5i -K  > r2.ps
+gmt pscoast -R -JW -Jz -G255/255/255 -O -K -Dl -W150/150/150 >> r2.ps
+gmt makecpt -C$DATA/GMT_rainbow -T$trng -Z > g.cpt 
+gmt psscale -Cg.cpt -D4.5i/-0.1i/5i/0.25ih -O -K -Ba10:"Admitted Residuals":/:mm: >> r2.ps
+gmt psxyz gdats -R -JW -Jz -O -Cg.cpt -Sc0.1c -: >> r2.ps
+
+cp $dir6/WEEKLY_REPORT_COVER_PAGE_v${SNX_VER} .
+enscript -f Courier8 -R -G -B -h -p WEEKLY_REPORT_COVER_PAGE.ps WEEKLY_REPORT_COVER_PAGE_v${SNX_VER}
+#convert W_REPORT_COVER_PAGE.ps W_REPORT_COVER_PAGE.pdf
+#ps2pdf W_REPORT_COVER_PAGE.ps W_REPORT_COVER_PAGE.pdf
+ ps2pdf WEEKLY_REPORT_COVER_PAGE.ps WEEKLY_REPORT_COVER_PAGE.pdf
+cp sate_stats.dat ${tit}_weekly_sate_stats.txt
+cp ${tit}_weekly_sate_stats.txt /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY/.
+cp std_low_to_high.txt /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY/std_low_to_high_${xdate}.txt
+cp npts_high_to_low.txt /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY/npts_high_to_low_${xdate}.txt
+cp npts_over_std_hi_to_lo.txt /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/ITRF2020/WEEKLY/npts_over_std_hi_to_lo_${xdate}.txt
+
+enscript -f Courier7 -r  -G -B -h -p ${tit}_weekly_sate_stats.ps ${tit}_weekly_sate_stats.txt
+#convert ${tit}_weekly_sate_stats.ps ${tit}_weekly_sate_stats.pdf
+ps2pdf ${tit}_weekly_sate_stats.ps ${tit}_weekly_sate_stats.pdf
+cp r2.ps ${tit}_weekly_admtd_residuals.ps
+#convert -quality 100 ${tit}_daily_admtd_residuals.ps ${tit}_daily_admtd_residuals.tiff
+#convert ${tit}_weekly_admtd_residuals.ps ${tit}_weekly_admtd_residuals.pdf
+ps2pdf ${tit}_weekly_admtd_residuals.ps ${tit}_weekly_admtd_residuals.pdf
+
+enscript -f Courier7 -r  -h -p std_low_to_high.ps std_low_to_high.txt
+ps2pdf std_low_to_high.ps std_low_to_high.pdf
+enscript -f Courier7 -r -h -p npts_high_to_low.ps npts_high_to_low.txt
+ps2pdf npts_high_to_low.ps npts_high_to_low.pdf
+
+enscript -f Courier7 -r  -h -p npts_over_std_hi_to_lo.ps npts_over_std_hi_to_lo.txt
+ps2pdf npts_over_std_hi_to_lo.ps npts_over_std_hi_to_lo.pdf
+
+
+grep -v "JCET" npts_high_to_low.txt > npts_high_to_low_2.txt
+grep -v "JCET" std_low_to_high.txt > std_low_to_high_2.txt
+grep -v "JCET" npts_over_std_hi_to_lo.txt > npts_over_std_hi_to_lo_2.txt
+
+grep "\S" npts_high_to_low_2.txt > npts_high_to_low_3.txt
+grep "\S" std_low_to_high_2.txt > std_low_to_high_3.txt
+grep "\S" npts_over_std_hi_to_lo_2.txt > npts_over_std_hi_to_lo_3.txt
+
+
+paste  npts_high_to_low_3.txt std_low_to_high_3.txt  npts_over_std_hi_to_lo_3.txt  | expand --tabs=10 > all_30.txt
+echo "\t\t\t\t JCET AC Station Performance Metrics for Arc: ${xdate}" > TT
+echo "\t\t\t\t ====================================================\n" >> TT
+echo  "\t\t\t JUICE: JCET Uniformly Independent Classification Entry  Score \n">> TT
+ #printf "%77s \n " "JUICE: JCET Uniformly Independent Classification Entry  Score " >> TT
+
+#echo "normal text @color{1 0 0}red text @font{Courier-Bold10}Courier-Bold 10pt @font{Helvetica-BoldOblique12}Helvetica-BoldOblique 12pt @font{default}default font again" > TT
+#echo -e "\t\t\t\t @font{Helvetica-BoldOblique12 JCET AC Station Performance Metrics for Arc: ${xdate} @font{default}default" >> TT
+
+cat TT all_30.txt > JCET_AC_Station_Performance_Metrics.txt
+#enscript -f Courier7 -r -h -p  JCET_AC_Station_Performance_Metrics.ps JCET_AC_Station_Performance_Metrics.txt
+enscript -f Courier10 -r -G -B -h -p  JCET_AC_Station_Performance_Metrics.ps JCET_AC_Station_Performance_Metrics.txt
+ps2pdf JCET_AC_Station_Performance_Metrics.ps  std+high+npts_to_low.pdf
+cp std+high+npts_to_low.pdf JCET_AC_Station_Performance_Metrics.pdf
+
+cp JCET_AC_Station_Performance_Metrics.pdf /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/summaries/REANAL2017/WEEKLY/JCET_AC_Station_Performance_Metrics_${xdate}.pdf
+mkdir WEEKLY
+mkdir WEEKLY/$xdate
+mv W_REPORT_COVER_PAGE *.txt *.ps *.pdf WEEKLY/$xdate
+cp JCET_AC_Station_Performance_Metrics.pdf /afs/umbc.edu/public/www/geodesy/WEEKLY_PDF/.
+mv *.pdf WEEKLY/$xdate
+
+rm -f tx res flg latlon alldata gdats bdats year day month siteid secs sitename alldata[2,3] xalldata xalldata[2,3]
+rm -f resi_stats3.inf mult1000b.inf r2.ps t.ps g.cpt *_comb sate_stats.dat b.cpt *sate_stat.txt *.ps
+#rm -f W_REPORT*
+

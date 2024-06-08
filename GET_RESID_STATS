@@ -1,0 +1,75 @@
+#!/bin/ksh
+#
+
+set -xv
+
+#    resid_stats
+
+ARC=$1
+LABEL=${2:-w1}
+SAT=${3:-PPV}
+CASE=${4:-WEEKLY}
+STAGE=${5:-EMT}
+
+#CASE=DR
+#STAGE=WEEKLY
+disk=${diskC}/MISSIONS
+
+MAIN_PATH=/umbc/epavlis/data01/LOCAL/magdak
+disk=${MAIN_PATH}/MISSIONS
+
+cd /tmp
+mkdir resst$$
+cd resst$$
+
+if [ "$SAT" = "GISLV" ]; then
+    if [ "${SNX_VER}" = "320" ]; then
+  LIST="GISL1 GISL2 LARES2"
+     else 
+  LIST="GISL1 GISL2"
+    fi
+
+elif [ "$SAT" = "PPV" ]; then
+
+    if [ "${SNX_VER}" = "320" ]; then
+  LIST="GISL1 GISL2 ETA1 ETA2 LARES2"
+     else
+  LIST="GISL1 GISL2 ETA1 ETA2"
+     fi
+
+fi
+
+
+echo "  DAY  NNP  RMS        MJD        NS   NobsL12" > $MAIN_PATH/INFILES/INF_OPS_ITRF2020/EOPSTATS.$ARC
+
+#for SAT in GISL1 GISL2 ETA1 ETA2
+for SV in $LIST
+do
+
+zcat /${disk}/$SV/residuals_ascii/${STAGE}/${CASE}/v${SNX_VER}/${ARC}.${LABEL}.ascii.gz > t0
+
+grep -v Time t0 >> resall
+
+#sed -n "2,\$p" t0 >> resall
+
+done
+
+sort -b -n -k 9,9  -o fort.10 resall
+
+/umbc/research/epavlis/EXECUTABLES/PE2_EXEC/resid_stats.x
+
+#FROM HERCULES
+gzip -d /$disk/$SAT/output/DATACATS/$CASE/$STAGE/${ARC}_v${SNX_VER}.${LABEL}.tar.gz
+#tar -xvf /$disk/$SAT/output/DATACATS/$CASE/$STAGE/${ARC}_v${SNX_VER}.${LABEL}.tar
+tar -xf /$disk/$SAT/output/DATACATS/$CASE/$STAGE/${ARC}_v${SNX_VER}.${LABEL}.tar --xform='s|.*/||' -C /tmp/resst$$ --wildcards --no-anchored "*.HISTO_by_day"
+
+#paste -d" "  fort.20 /tmp/resst$$/${disk}/$SAT/output/DATACATS/$CASE/$STAGE/v${SNX_VER}/${ARC}_v${SNX_VER}/$SAT.HISTO_by_day >> $MAIN_PATH/INFILES/INF_OPS_ITRF2020/EOPSTATS.$ARC
+paste -d" "  fort.20 /tmp/resst$$/$SAT.HISTO_by_day >> $MAIN_PATH/INFILES/INF_OPS_ITRF2020/EOPSTATS.$ARC
+
+
+gzip -f /$disk/$SAT/output/DATACATS/$CASE/$STAGE/${ARC}_v${SNX_VER}.${LABEL}.tar
+#\rm -r /$disk/$SAT/output/DATACATS/$CASE/$STAGE/v${SNX_VER}/${ARC}_v${SNX_VER}
+
+cd ..
+\rm -r resst$$
+SLV.HISTO_by_day

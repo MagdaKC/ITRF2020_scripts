@@ -1,0 +1,89 @@
+#!/bin/ksh
+#
+
+${SCR_DBG}set -vx
+set -vx
+
+#    MAKE_DATA_CATALOG  
+
+SCR_NAME=MAKE_DATA_CATALOG
+SCR_PARM=4
+SCR_LIST="infile SAT CASE STAGE"
+SCR_VERS=051110.0
+
+
+if [ `expr $#` -lt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+
+infile=$1
+SAT=$2
+CASE=${3:-EMT}
+STAGE=${4:-WEEKLY}
+
+dsk=umbc/epavlis/data01/LOCAL/magdak/MISSIONS
+
+
+if [ ! -d /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/$SAT/output/DATACATS/$STAGE/$CASE ]; then
+      mkdir -p /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/$SAT/output/DATACATS/$STAGE/$CASE/v${SNX_VER}
+fi
+
+disk=/$dsk/$SAT/output/$CASE/$STAGE/v${SNX_VER}
+
+whrto=/$dsk/$SAT/output/DATACATS/$STAGE/$CASE/v${SNX_VER}
+
+cd $disk
+
+
+
+#zcat ${infile}.gz> t0
+cat ${infile} > t0
+
+arcline=`sed -n "/^ OUTPUT        START              STOP         MEAS.                  STATION/=" t0 `
+#arcline=`sed -n "/^    MEMORY ALLOCATION NUMBER 1/=" t0 `
+
+frstline=`expr $arcline + 3`
+#frstline=`expr $arcline + 6`
+
+arcline=`sed -n "/^ NUM. PHYSICAL BLOCKS   /=" t0 `
+
+lastline=`expr $arcline - 6`
+
+sed -n "${frstline},${lastline}p" t0 > t1
+
+/umbc/epavlis/data01/LOCAL/magdak/scripts/crush t1 > t2
+
+#/bin/grep -v -e BINARY -e '[A-z]' -e RUN -e "IS NOT INCLUDED IN THE TRACKING COMPLEMENT" t2 > t3a
+#/bin/grep -v -e '[A-z]' -e "\*" t3a > t3
+#grep -v -e BINARY -e '[A-z]' -e RUN -e "IS NOT INCLUDED IN THE TRACKING COMPLEMENT" t2 > t3a
+#grep -v -e '[A-z]' -e "\*" t3a > t3
+grep -v -e BINARY -e '[A-Z]' -e '[a-z]' -e RUN -e "IS NOT INCLUDED IN THE TRACKING COMPLEMENT" t2 > t3a
+grep -v -e '[A-Z]' -e '[a-z]' -e "\*" t3a > t3
+
+
+sed -e "s/: /:0/g" t3 > t4
+
+grep -v "0.000000000000D+00" t4 > t5
+grep -v "PASS FILE" t5 > t6
+sort -k 7,7 -k 2,2 -k 3,3 t6 -o t7
+cut -c58-65 t7 > t80
+sort -u t80 > t8
+mv t7 $whrto/${infile}
+mv t8 $whrto/${infile}_STA
+
+\rm t0 t1 t2 t3 t4
+
+exit 0
+

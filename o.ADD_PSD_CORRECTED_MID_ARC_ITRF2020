@@ -1,0 +1,577 @@
+/umbc/epavlis/data01/LOCAL/magdak/scripts/ITRF2020/OPS//ADD_PSD_CORRECTED_MID_ARC_ITRF2020_221213[3]: #set: not found [No such file or directory]
+#  ADD_PSD_CORRECTED
+#
+# Imports are: CASEDIR CASE STAGE SV YR DATA LOCALDSK
+#
+
+#if [ `expr $#` -lt 5 ]; then
+#   echo "Usage: ADD_PSD_CORRECTED ARC "
+#   exit 101
+#fi
+
+#echo " # "
+#echo " #  ADD_PSD_CORRECTED $* "
+#echo " # "
+
+# date '+DATE: %m/%d/%y%nTIME: %H:%M:%S'
+
+SCR_NAME=ADD_PSD_CORRECTED
++ SCR_NAME=ADD_PSD_CORRECTED
+SCR_PARM=1
++ SCR_PARM=1
+SCR_LIST="ARC "
++ SCR_LIST='ARC '
+SCR_VERS=151204.0
++ SCR_VERS=151204.0
+#ARC=o10701
+
+
+
+ARC=$1
+
+
++ ARC=w30917
+mkdir  /tmp/magda/ADD_PSD_MID_$$_$ARC
++ mkdir /tmp/magda/ADD_PSD_MID_17049_w30917
+cd  /tmp/magda/ADD_PSD_MID_$$_$ARC
++ cd /tmp/magda/ADD_PSD_MID_17049_w30917
+MAIN_PATH=/umbc/epavlis/data01/LOCAL/magdak
++ MAIN_PATH=/umbc/epavlis/data01/LOCAL/magdak
+disk=$MAIN_PATH/MISSIONS
++ disk=/umbc/epavlis/data01/LOCAL/magdak/MISSIONS
+diskC=$disk_n
+
++ diskC=''
+ ### PROPGATE to mid arc
+
+
+cat $MAIN_PATH/INFILES/INF_OPS_ITRF2020/MID-ARC_INFO.${CASE}_v${SNX_VER} > ftn05
+
++ cat /umbc/epavlis/data01/LOCAL/magdak/INFILES/INF_OPS_ITRF2020/MID-ARC_INFO._v
++ 1> ftn05
+cat: /umbc/epavlis/data01/LOCAL/magdak/INFILES/INF_OPS_ITRF2020/MID-ARC_INFO._v: No such file or directory
+#  post-Arequipa quake positions:
+
+#   zcat /${disk}/d_base/site/DAILY/SLRF2020/w30101_230214_UF.adj.gz > ftn10
+#zcat /${disk}/d_base/site/DAILY/SLRF2020/SLRF2020.adj.gz > s1
+zcat /${disk}/d_base/site/DAILY/SLRF2020/SLRF2020.adj.gz > ftn10
+
+
++ zcat //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/d_base/site/DAILY/SLRF2020/SLRF2020.adj.gz
++ 1> ftn10
+/umbc/research/epavlis/EXECUTABLES/stapropgt.x  < ftn05 > PGT.$ARC
+
++ /umbc/research/epavlis/EXECUTABLES/stapropgt.x
++ 0< ftn05 1> PGT.w30917
+At line 43 of file stapropgt.f
+Fortran runtime error: End of file
+#/bin/grep -v SIGVEL ftn11 > s1 
+cat ftn11 > s1 
+
+
++ cat ftn11
++ 1> s1
+cp $MAIN_PATH/MISSIONS/d_base/site/ITRF2020_PSD/IMPLEMENT_PSD_2022_DAILY/PSD_CORRECTED_STAPOS/*.ITRF2020 .
+
+
++ cp /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/d_base/site/ITRF2020_PSD/IMPLEMENT_PSD_2022_DAILY/PSD_CORRECTED_STAPOS/21611S001.7237.A.2.ITRF2020 /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/d_base/site/ITRF2020_PSD/IMPLEMENT_PSD_2022_DAILY/PSD_CORRECTED_STAPOS/21704M001.7328.A.3.ITRF2020 /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/d_base/site/ITRF2020_PSD/IMPLEMENT_PSD_2022_DAILY/PSD_CORRECTED_STAPOS/21704S002.7308.A.3.ITRF2020 /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/d_base/site/ITRF2020_PSD/IMPLEMENT_PSD_2022_DAILY/PSD_CORRECTED_STAPOS/21726S001.7838.A.4.ITRF2020 /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/d_base/site/ITRF2020_PSD/IMPLEMENT_PSD_2022_DAILY/PSD_CORRECTED_STAPOS/21749S001.7358.A.4.ITRF2020 /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/d_base/site/ITRF2020_PSD/IMPLEMENT_PSD_2022_DAILY/PSD_CORRECTED_STAPOS/40497M001.7110.A.4.ITRF2020 /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/d_base/site/ITRF2020_PSD/IMPLEMENT_PSD_2022_DAILY/PSD_CORRECTED_STAPOS/41719M001.7405.A.5.ITRF2020 /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/d_base/site/ITRF2020_PSD/IMPLEMENT_PSD_2022_DAILY/PSD_CORRECTED_STAPOS/42202M003.7403.A.7.ITRF2020 .
+rm ARC_4* 
++ rm 'ARC_4*'
+rm: cannot remove ‘ARC_4*’: No such file or directory
+cat *.ITRF2020 > ALL_ARC
+
+
+
++ cat 21611S001.7237.A.2.ITRF2020 21704M001.7328.A.3.ITRF2020 21704S002.7308.A.3.ITRF2020 21726S001.7838.A.4.ITRF2020 21749S001.7358.A.4.ITRF2020 40497M001.7110.A.4.ITRF2020 41719M001.7405.A.5.ITRF2020 42202M003.7403.A.7.ITRF2020
++ 1> ALL_ARC
+grep "^$ARC" ALL_ARC > temp_arc
++ grep ^w30917 ALL_ARC
++ 1> temp_arc
+cut -c8-122 temp_arc > replace_STAPOS
++ cut -c8-122 temp_arc
++ 1> replace_STAPOS
+grep -v  CONST replace_STAPOS > replace_STAPOS2
+
++ grep -v CONST replace_STAPOS
++ 1> replace_STAPOS2
+while read  STAT1 STAT2
+do
+
+echo $STAT1 $STAT2
+grep $STAT1 replace_STAPOS > replace_STAPOS_1
+grep $STAT1 s1 > s1_1
+grep $STAT2 replace_STAPOS > replace_STAPOS_2
+cp replace_STAPOS_2 replace_STAPOS_$STAT2
+grep $STAT2 s1 > s1_2
+cp s1_2 s1_2_$STAT2
+ 
+
+if [ -s "replace_STAPOS_$STAT2" ] && [ -s "s1_2_$STAT2" ]
+then
+
+arcline1=`sed -n "/$STAT1/=" s1 `
+echo $arcline1 > ppp1
+arcline11=`awk ' {print $1} ' ppp1`
+arcline12=` expr $arcline11 - 1 `
+sed -n "${arcline12}p" s1 > s2_1
+cat s2_1 > s2_3
+cat replace_STAPOS_1 >> s2_3
+arcline21=` expr $arcline11 - 1 `
+arcline22=` expr $arcline11 - 2 `
+
+arcline1=`sed -n "/$STAT2/=" s1 `
+echo $arcline1 > ppp1
+arcline11=`awk ' {print $1} ' ppp1`
+arcline12=` expr $arcline11 - 1 `
+sed -n "${arcline12}p" s1 > s2_2
+cat s2_2 > s2_4
+cat replace_STAPOS_2 >> s2_4
+echo "CONSTADJ" > A1
+cat s2_3 >> A1
+cat s2_4 >> A1
+echo "CONSTEND" >> A1
+arcline33=` expr $arcline11 + 4 `
+if  [ "${STAT1}" = "74050000" ]; then
+sed -e "s/74057904/74057914/" s2_4 > s2_5
+echo "CONSTADJ" > A1
+cat s2_3 >> A1
+cat s2_4 >> A1
+echo "INSTRMNT 3     0                           0.84700                    SLRF2020 018037001 41719M001 " >> A1
+grep -v "INSTRMNT 3" s2_5 > s2_6
+cat s2_6 >> A1
+echo "CONSTEND" >> A1
+fi
+# sed "${arcline22},${arcline21}d" s1 > s11
+# sed "${arcline12}d" s11 > s22
+# sed "${arcline33}d" s22 > s33
+
+ sed -e "${arcline22},${arcline21}d" -e   "${arcline12}d" -e "${arcline33}d" s1 > s33
+ if  [ "${STAT1}" = "74050000" ]; then
+    grep -v -e $STAT2 -e $STAT1 -e "41719M001"  s33 > s44
+elif  [ "${STAT1}" = "74030000" ]; then
+   grep -v -e $STAT2 -e $STAT1 -e "42202M003"  s33 > s44
+
+	   else
+	    grep -v -e $STAT2 -e $STAT1 s33 > s44
+		 fi
+ cp s44 s44_$STAT1
+cat A1 >> s44
+mv A1 s1_$STAT1
+cp s44 s1
+rm s33 s44 s11 s11 ppp1 s?_? A1 replace_STAPOS_?
+   else
+   echo "$file not found."
+rm s33 s44 s11 s11 ppp1 s?_? A1 replace_STAPOS_?
+
+				                fi
+done < /$MAIN_PATH/INFILES/STATIONS_PSD_CORR
+
++ 0< //umbc/epavlis/data01/LOCAL/magdak/INFILES/STATIONS_PSD_CORR
++ read STAT1 STAT2
++ echo 71100000 71100411
+71100000 71100411
++ grep 71100000 replace_STAPOS
++ 1> replace_STAPOS_1
++ grep 71100000 s1
++ 1> s1_1
++ grep 71100411 replace_STAPOS
++ 1> replace_STAPOS_2
++ cp replace_STAPOS_2 replace_STAPOS_71100411
++ grep 71100411 s1
++ 1> s1_2
++ cp s1_2 s1_2_71100411
++ [ -s replace_STAPOS_71100411 ]
++ echo ' not found.'
+ not found.
++ rm s33 s44 s11 s11 ppp1 s1_1 s1_2 A1 replace_STAPOS_1 replace_STAPOS_2
+rm: cannot remove ‘s33’: No such file or directory
+rm: cannot remove ‘s44’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘ppp1’: No such file or directory
+rm: cannot remove ‘A1’: No such file or directory
++ read STAT1 STAT2
++ echo 71100000 71100412
+71100000 71100412
++ grep 71100000 replace_STAPOS
++ 1> replace_STAPOS_1
++ grep 71100000 s1
++ 1> s1_1
++ grep 71100412 replace_STAPOS
++ 1> replace_STAPOS_2
++ cp replace_STAPOS_2 replace_STAPOS_71100412
++ grep 71100412 s1
++ 1> s1_2
++ cp s1_2 s1_2_71100412
++ [ -s replace_STAPOS_71100412 ]
++ [ -s s1_2_71100412 ]
++ echo ' not found.'
+ not found.
++ rm s33 s44 s11 s11 ppp1 s1_1 s1_2 A1 replace_STAPOS_1 replace_STAPOS_2
+rm: cannot remove ‘s33’: No such file or directory
+rm: cannot remove ‘s44’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘ppp1’: No such file or directory
+rm: cannot remove ‘A1’: No such file or directory
++ read STAT1 STAT2
++ echo 72370000 72371901
+72370000 72371901
++ grep 72370000 replace_STAPOS
++ 1> replace_STAPOS_1
++ grep 72370000 s1
++ 1> s1_1
++ grep 72371901 replace_STAPOS
++ 1> replace_STAPOS_2
++ cp replace_STAPOS_2 replace_STAPOS_72371901
++ grep 72371901 s1
++ 1> s1_2
++ cp s1_2 s1_2_72371901
++ [ -s replace_STAPOS_72371901 ]
++ [ -s s1_2_72371901 ]
++ echo ' not found.'
+ not found.
++ rm s33 s44 s11 s11 ppp1 s1_1 s1_2 A1 replace_STAPOS_1 replace_STAPOS_2
+rm: cannot remove ‘s33’: No such file or directory
+rm: cannot remove ‘s44’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘ppp1’: No such file or directory
+rm: cannot remove ‘A1’: No such file or directory
++ read STAT1 STAT2
++ echo 72490000 72496101
+72490000 72496101
++ grep 72490000 replace_STAPOS
++ 1> replace_STAPOS_1
++ grep 72490000 s1
++ 1> s1_1
++ grep 72496101 replace_STAPOS
++ 1> replace_STAPOS_2
++ cp replace_STAPOS_2 replace_STAPOS_72496101
++ grep 72496101 s1
++ 1> s1_2
++ cp s1_2 s1_2_72496101
++ [ -s replace_STAPOS_72496101 ]
++ echo ' not found.'
+ not found.
++ rm s33 s44 s11 s11 ppp1 s1_1 s1_2 A1 replace_STAPOS_1 replace_STAPOS_2
+rm: cannot remove ‘s33’: No such file or directory
+rm: cannot remove ‘s44’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘ppp1’: No such file or directory
+rm: cannot remove ‘A1’: No such file or directory
++ read STAT1 STAT2
++ echo 72490000 72496102
+72490000 72496102
++ grep 72490000 replace_STAPOS
++ 1> replace_STAPOS_1
++ grep 72490000 s1
++ 1> s1_1
++ grep 72496102 replace_STAPOS
++ 1> replace_STAPOS_2
++ cp replace_STAPOS_2 replace_STAPOS_72496102
++ grep 72496102 s1
++ 1> s1_2
++ cp s1_2 s1_2_72496102
++ [ -s replace_STAPOS_72496102 ]
++ echo ' not found.'
+ not found.
++ rm s33 s44 s11 s11 ppp1 s1_1 s1_2 A1 replace_STAPOS_1 replace_STAPOS_2
+rm: cannot remove ‘s33’: No such file or directory
+rm: cannot remove ‘s44’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘ppp1’: No such file or directory
+rm: cannot remove ‘A1’: No such file or directory
++ read STAT1 STAT2
++ echo 73080000 73085001
+73080000 73085001
++ grep 73080000 replace_STAPOS
++ 1> replace_STAPOS_1
++ grep 73080000 s1
++ 1> s1_1
++ grep 73085001 replace_STAPOS
++ 1> replace_STAPOS_2
++ cp replace_STAPOS_2 replace_STAPOS_73085001
++ grep 73085001 s1
++ 1> s1_2
++ cp s1_2 s1_2_73085001
++ [ -s replace_STAPOS_73085001 ]
++ [ -s s1_2_73085001 ]
++ echo ' not found.'
+ not found.
++ rm s33 s44 s11 s11 ppp1 s1_1 s1_2 A1 replace_STAPOS_1 replace_STAPOS_2
+rm: cannot remove ‘s33’: No such file or directory
+rm: cannot remove ‘s44’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘ppp1’: No such file or directory
+rm: cannot remove ‘A1’: No such file or directory
++ read STAT1 STAT2
++ echo 73580000 73588901
+73580000 73588901
++ grep 73580000 replace_STAPOS
++ 1> replace_STAPOS_1
++ grep 73580000 s1
++ 1> s1_1
++ grep 73588901 replace_STAPOS
++ 1> replace_STAPOS_2
++ cp replace_STAPOS_2 replace_STAPOS_73588901
++ grep 73588901 s1
++ 1> s1_2
++ cp s1_2 s1_2_73588901
++ [ -s replace_STAPOS_73588901 ]
++ [ -s s1_2_73588901 ]
++ echo ' not found.'
+ not found.
++ rm s33 s44 s11 s11 ppp1 s1_1 s1_2 A1 replace_STAPOS_1 replace_STAPOS_2
+rm: cannot remove ‘s33’: No such file or directory
+rm: cannot remove ‘s44’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘ppp1’: No such file or directory
+rm: cannot remove ‘A1’: No such file or directory
++ read STAT1 STAT2
++ echo 74030000 74031303
+74030000 74031303
++ grep 74030000 replace_STAPOS
++ 1> replace_STAPOS_1
++ grep 74030000 s1
++ 1> s1_1
++ grep 74031303 replace_STAPOS
++ 1> replace_STAPOS_2
++ cp replace_STAPOS_2 replace_STAPOS_74031303
++ grep 74031303 s1
++ 1> s1_2
++ cp s1_2 s1_2_74031303
++ [ -s replace_STAPOS_74031303 ]
++ echo ' not found.'
+ not found.
++ rm s33 s44 s11 s11 ppp1 s1_1 s1_2 A1 replace_STAPOS_1 replace_STAPOS_2
+rm: cannot remove ‘s33’: No such file or directory
+rm: cannot remove ‘s44’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘ppp1’: No such file or directory
+rm: cannot remove ‘A1’: No such file or directory
++ read STAT1 STAT2
++ echo 74030000 74031304
+74030000 74031304
++ grep 74030000 replace_STAPOS
++ 1> replace_STAPOS_1
++ grep 74030000 s1
++ 1> s1_1
++ grep 74031304 replace_STAPOS
++ 1> replace_STAPOS_2
++ cp replace_STAPOS_2 replace_STAPOS_74031304
++ grep 74031304 s1
++ 1> s1_2
++ cp s1_2 s1_2_74031304
++ [ -s replace_STAPOS_74031304 ]
++ echo ' not found.'
+ not found.
++ rm s33 s44 s11 s11 ppp1 s1_1 s1_2 A1 replace_STAPOS_1 replace_STAPOS_2
+rm: cannot remove ‘s33’: No such file or directory
+rm: cannot remove ‘s44’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘ppp1’: No such file or directory
+rm: cannot remove ‘A1’: No such file or directory
++ read STAT1 STAT2
++ echo 74030000 74031305
+74030000 74031305
++ grep 74030000 replace_STAPOS
++ 1> replace_STAPOS_1
++ grep 74030000 s1
++ 1> s1_1
++ grep 74031305 replace_STAPOS
++ 1> replace_STAPOS_2
++ cp replace_STAPOS_2 replace_STAPOS_74031305
++ grep 74031305 s1
++ 1> s1_2
++ cp s1_2 s1_2_74031305
++ [ -s replace_STAPOS_74031305 ]
++ echo ' not found.'
+ not found.
++ rm s33 s44 s11 s11 ppp1 s1_1 s1_2 A1 replace_STAPOS_1 replace_STAPOS_2
+rm: cannot remove ‘s33’: No such file or directory
+rm: cannot remove ‘s44’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘ppp1’: No such file or directory
+rm: cannot remove ‘A1’: No such file or directory
++ read STAT1 STAT2
++ echo 74030000 74031306
+74030000 74031306
++ grep 74030000 replace_STAPOS
++ 1> replace_STAPOS_1
++ grep 74030000 s1
++ 1> s1_1
++ grep 74031306 replace_STAPOS
++ 1> replace_STAPOS_2
++ cp replace_STAPOS_2 replace_STAPOS_74031306
++ grep 74031306 s1
++ 1> s1_2
++ cp s1_2 s1_2_74031306
++ [ -s replace_STAPOS_74031306 ]
++ [ -s s1_2_74031306 ]
++ echo ' not found.'
+ not found.
++ rm s33 s44 s11 s11 ppp1 s1_1 s1_2 A1 replace_STAPOS_1 replace_STAPOS_2
+rm: cannot remove ‘s33’: No such file or directory
+rm: cannot remove ‘s44’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘ppp1’: No such file or directory
+rm: cannot remove ‘A1’: No such file or directory
++ read STAT1 STAT2
++ echo 74030000 74031307
+74030000 74031307
++ grep 74030000 replace_STAPOS
++ 1> replace_STAPOS_1
++ grep 74030000 s1
++ 1> s1_1
++ grep 74031307 replace_STAPOS
++ 1> replace_STAPOS_2
++ cp replace_STAPOS_2 replace_STAPOS_74031307
++ grep 74031307 s1
++ 1> s1_2
++ cp s1_2 s1_2_74031307
++ [ -s replace_STAPOS_74031307 ]
++ echo ' not found.'
+ not found.
++ rm s33 s44 s11 s11 ppp1 s1_1 s1_2 A1 replace_STAPOS_1 replace_STAPOS_2
+rm: cannot remove ‘s33’: No such file or directory
+rm: cannot remove ‘s44’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘ppp1’: No such file or directory
+rm: cannot remove ‘A1’: No such file or directory
++ read STAT1 STAT2
++ echo 74050000 74057904
+74050000 74057904
++ grep 74050000 replace_STAPOS
++ 1> replace_STAPOS_1
++ grep 74050000 s1
++ 1> s1_1
++ grep 74057904 replace_STAPOS
++ 1> replace_STAPOS_2
++ cp replace_STAPOS_2 replace_STAPOS_74057904
++ grep 74057904 s1
++ 1> s1_2
++ cp s1_2 s1_2_74057904
++ [ -s replace_STAPOS_74057904 ]
++ [ -s s1_2_74057904 ]
++ echo ' not found.'
+ not found.
++ rm s33 s44 s11 s11 ppp1 s1_1 s1_2 A1 replace_STAPOS_1 replace_STAPOS_2
+rm: cannot remove ‘s33’: No such file or directory
+rm: cannot remove ‘s44’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘ppp1’: No such file or directory
+rm: cannot remove ‘A1’: No such file or directory
++ read STAT1 STAT2
++ echo 74050000 74057914
+74050000 74057914
++ grep 74050000 replace_STAPOS
++ 1> replace_STAPOS_1
++ grep 74050000 s1
++ 1> s1_1
++ grep 74057914 replace_STAPOS
++ 1> replace_STAPOS_2
++ cp replace_STAPOS_2 replace_STAPOS_74057914
++ grep 74057914 s1
++ 1> s1_2
++ cp s1_2 s1_2_74057914
++ [ -s replace_STAPOS_74057914 ]
++ echo ' not found.'
+ not found.
++ rm s33 s44 s11 s11 ppp1 s1_1 s1_2 A1 replace_STAPOS_1 replace_STAPOS_2
+rm: cannot remove ‘s33’: No such file or directory
+rm: cannot remove ‘s44’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘ppp1’: No such file or directory
+rm: cannot remove ‘A1’: No such file or directory
++ read STAT1 STAT2
++ echo 78210000 78212801
+78210000 78212801
++ grep 78210000 replace_STAPOS
++ 1> replace_STAPOS_1
++ grep 78210000 s1
++ 1> s1_1
++ grep 78212801 replace_STAPOS
++ 1> replace_STAPOS_2
++ cp replace_STAPOS_2 replace_STAPOS_78212801
++ grep 78212801 s1
++ 1> s1_2
++ cp s1_2 s1_2_78212801
++ [ -s replace_STAPOS_78212801 ]
++ echo ' not found.'
+ not found.
++ rm s33 s44 s11 s11 ppp1 s1_1 s1_2 A1 replace_STAPOS_1 replace_STAPOS_2
+rm: cannot remove ‘s33’: No such file or directory
+rm: cannot remove ‘s44’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘ppp1’: No such file or directory
+rm: cannot remove ‘A1’: No such file or directory
++ read STAT1 STAT2
++ echo 78380000 78383602
+78380000 78383602
++ grep 78380000 replace_STAPOS
++ 1> replace_STAPOS_1
++ grep 78380000 s1
++ 1> s1_1
++ grep 78383602 replace_STAPOS
++ 1> replace_STAPOS_2
++ cp replace_STAPOS_2 replace_STAPOS_78383602
++ grep 78383602 s1
++ 1> s1_2
++ cp s1_2 s1_2_78383602
++ [ -s replace_STAPOS_78383602 ]
++ echo ' not found.'
+ not found.
++ rm s33 s44 s11 s11 ppp1 s1_1 s1_2 A1 replace_STAPOS_1 replace_STAPOS_2
+rm: cannot remove ‘s33’: No such file or directory
+rm: cannot remove ‘s44’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘ppp1’: No such file or directory
+rm: cannot remove ‘A1’: No such file or directory
++ read STAT1 STAT2
++ echo 78380000 78383603
+78380000 78383603
++ grep 78380000 replace_STAPOS
++ 1> replace_STAPOS_1
++ grep 78380000 s1
++ 1> s1_1
++ grep 78383603 replace_STAPOS
++ 1> replace_STAPOS_2
++ cp replace_STAPOS_2 replace_STAPOS_78383603
++ grep 78383603 s1
++ 1> s1_2
++ cp s1_2 s1_2_78383603
++ [ -s replace_STAPOS_78383603 ]
++ [ -s s1_2_78383603 ]
++ echo ' not found.'
+ not found.
++ rm s33 s44 s11 s11 ppp1 s1_1 s1_2 A1 replace_STAPOS_1 replace_STAPOS_2
+rm: cannot remove ‘s33’: No such file or directory
+rm: cannot remove ‘s44’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘s11’: No such file or directory
+rm: cannot remove ‘ppp1’: No such file or directory
+rm: cannot remove ‘A1’: No such file or directory
++ read STAT1 STAT2
+#compress -f  s1
+gzip  -f  s1
++ gzip -f s1
+cp s1.gz /${disk}/d_base/site/DAILY/SLRF2020/MID-ARC_EPOCH/${ARC}.adj.gz
+
+
++ cp s1.gz //umbc/epavlis/data01/LOCAL/magdak/MISSIONS/d_base/site/DAILY/SLRF2020/MID-ARC_EPOCH/w30917.adj.gz
+exit 222
++ exit 222

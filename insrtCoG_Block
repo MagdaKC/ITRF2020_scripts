@@ -1,0 +1,85 @@
+#!/bin/ksh
+#
+${SCR_DBG}set -xv
+set -xv
+#insrtCoG_Block     
+
+#
+
+SCR_NAME=insrtCoG_Block
+SCR_PARM=2
+SCR_LIST="arcdate modelver"
+SCR_VERS=230712.0
+Date=`date +%y%m%d`
+
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+echo " # "
+echo " #  $SCR_NAME $* "
+echo " # "
+echo " #  Version $SCR_VERS "
+echo " # "
+echo " #  Run Date $DateTime "
+echo " # "
+
+infile=$1           #  Local file that contains the skeleton records of the CoG Block from SLCT_SITES_4_CoG_BLK
+arcdate=$2          #  The date of the arc yymmdd
+modelver=$3         #  yyyy-mm-dd of the model release, e.g. 2020-06-08
+
+#--------1---------2---------3---------4---------5---------6---------7---------8---------9---------0---------1---------2
+
+gen_date=$Date         #  yymmdd of the execution date
+
+sys_path=/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/${SAT}/SYSTEMS         
+
+mkdir -p $sys_path/CoG_BLOCKS_ON_THE_FLY
+
+cat $infile > $sys_path/sys${arcdate}
+
+cd $sys_path
+
+\rm -r *.dat fort.5
+
+echo $modelver > fort.5
+
+echo ${sys_path} >> fort.5
+
+echo ${gen_date} >> fort.5
+
+cat /umbc/research/epavlis/INFILES/TARGET_SIGNATURE_GEOMETRY_TOP >> fort.5
+
+echo $arcdate >> fort.5
+
+#echo $infile >> fort.5
+
+#cat $sys_path/DIR_SYSTEMS_${infile} >> fort.5
+
+
+OUTDIR=/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/output
+
+cp /umbc/research/epavlis/INFILES/CoG_tabs/*.dat .
+
+
+# now run insrtCoG_Block to create the corresponding members:
+
+/umbc/research/epavlis/EXECUTABLES/PE2_EXECi64/insrtCoG_Block.x  < fort.5 > out6
+
+# The generated files endup under:
+
+#  /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISLV/SYSTEMS/CoG_BLOCKS_ON_THE_FLY/CoG_yymmdd
+
+#  or:
+
+#  /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/SYSTEMS/CoG_BLOCKS_ON_THE_FLY/CoG_yymmdd
+
+
+mv out6 $OUTDIR/insrtCoG_Block.out6_${gen_date}.$arcdate
+mv fort.30 $OUTDIR/insrtCoG_Block.EMPTYu30_${gen_date}.$arcdate
+
+gzip -f  $OUTDIR/insrtCoG_Block.out6_${gen_date}.$arcdate
+gzip -f  $OUTDIR/insrtCoG_Block.EMPTYu30_${gen_date}.$arcdate
+
+\rm -r *.dat fort.5
+chmod 775 /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/${SAT}/SYSTEMS/CoG_BLOCKS_ON_THE_FLY/*
+
+exit 0

@@ -1,0 +1,424 @@
+#!/bin/csh -xv
+#
+# Purpose: To plot residuals by day on polar plots. 5/26/05
+#
+# Usage: polar_resi ofile
+#
+# inxyfile is input residual file
+# ofile is like temp as characters will be added to save data for each day
+# title is the title of the plot
+#
+# Modified for daily solutions plots from GEODYN. 1/26/2011
+#
+# Updated to include data from Lares-2. 8/5/2022
+#
+# Usage: polar_resi_multi8 xdate
+#           where xdate = arc (o10115, for example)
+#
+
+#set BIN=/umbc/research/evans/GMT2/GMT4.5.5/bin
+set DATA=/umbc/research/evans/GMT2/GMT4.5.5/share
+set EXE=/umbc/research/evans/EXECUTABLES
+
+set infil=$1
+ set snx_ver=$2
+set LVER=wv70
+set LVER2=wv170
+
+#set rtit=$infil
+#set infil=${infil}.${LVER}x.RES2PLOT
+#set infilr2=${infil}.${LVER2}x.RES2PLOT
+set rtit=$infil
+set infil=${infil}.wv${snx_ver}x.RES2PLOT
+
+
+set dir1="/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL1/residuals_ascii_xtnd/EMT/WEEKLY"
+set dir2="/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2/residuals_ascii_xtnd/EMT/WEEKLY"
+set dir3="/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1/residuals_ascii_xtnd/EMT/WEEKLY"
+set dir4="/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2/residuals_ascii_xtnd/EMT/WEEKLY"
+set dir5="/umbc/epavlis/data01/LOCAL/magdak/MISSIONS/LARES2/residuals_ascii_xtnd/EMT/WEEKLY"
+
+# This first part plots a map of the world (Mollweide projection).
+
+#set trng=${gmin}/${gmax}/5
+#set btrng=${bmin}/${bmax}/50
+set rrng=-180/180/0/90 #/${gmin}/${gmax}
+set rrngsh=-180/180/-90/0 #/${gmin}/${gmax}
+set srng=0/360/-90/0
+#set brrng=0/360/-90/90/${bmin}/${bmax}
+
+# Do this for each file - 4x
+# Read the raw L1 data and split the files into edited and unedited data
+
+set ofil=L1out
+
+cut -c20-34 $dir1/v${snx_ver}/$infil > timsecs
+cut -c74-86 $dir1/v${snx_ver}/$infil > res
+cut -c90-97 $dir1/v${snx_ver}/$infil > flg
+cut -c99-123 $dir1/v${snx_ver}/$infil > latlon
+
+echo res > mult1000b.inf
+$EXE/mult1000b.x
+#$EXE/mult1000b.x res
+
+paste -d" " latlon res res flg timsecs > alldata
+
+#grep -e " 1.000" alldata > gdats
+#grep -e "-1.000" alldata > bdats
+cp -f alldata gdats
+
+echo "gdats" > splitdata4.inf
+echo $ofil >> splitdata4.inf
+$EXE/splitdata4.x
+#$EXE/splitdata4.x gdats $ofil
+
+# Read the raw L2 data and split the files into edited and unedited data
+
+set ofil=L2out
+
+cut -c20-34 $dir2/v${snx_ver}/$infil > timsecs
+cut -c74-86 $dir2/v${snx_ver}/$infil > res
+cut -c90-97 $dir2/v${snx_ver}/$infil > flg
+cut -c99-123 $dir2/v${snx_ver}/$infil > latlon
+
+echo res > mult1000b.inf
+$EXE/mult1000b.x
+#$EXE/mult1000b.x res
+
+paste -d" " latlon res res flg timsecs > alldataa
+
+#grep -e " 1.000" alldata > gdats
+#grep -e "-1.000" alldata > bdats
+cp -f alldataa gdats
+
+echo "gdats" > splitdata4.inf
+echo $ofil >> splitdata4.inf
+$EXE/splitdata4.x
+#$EXE/splitdata4.x gdats $ofil
+
+# Read the raw ETA1 data and split the files into edited and unedited data
+
+set ofil=E1out
+
+cut -c20-34 $dir3/v${snx_ver}/$infil > timsecs
+cut -c74-86 $dir3/v${snx_ver}/$infil > res
+cut -c90-97 $dir3/v${snx_ver}/$infil > flg
+cut -c99-123 $dir3/v${snx_ver}/$infil > latlon
+
+echo res > mult1000b.inf
+$EXE/mult1000b.x
+#$EXE/mult1000b.x res
+
+paste -d" " latlon res res flg timsecs > alldatab
+
+#grep -e " 1.000" alldata > gdats
+#grep -e "-1.000" alldata > bdats
+cp -f alldatab gdats
+
+echo "gdats" > splitdata4.inf
+echo $ofil >> splitdata4.inf
+$EXE/splitdata4.x
+#$EXE/splitdata4.x gdats $ofil
+
+# Read the raw ETA2 data and split the files into edited and unedited data
+
+set ofil=E2out
+
+cut -c20-34 $dir4/v${snx_ver}/$infil > timsecs
+cut -c74-86 $dir4/v${snx_ver}/$infil > res
+cut -c90-97 $dir4/v${snx_ver}/$infil > flg
+cut -c99-123 $dir4/v${snx_ver}/$infil > latlon
+
+echo res > mult1000b.inf
+$EXE/mult1000b.x
+#$EXE/mult1000b.x res
+
+paste -d" " latlon res res flg timsecs > alldatac
+
+#grep -e " 1.000" alldata > gdats
+#grep -e "-1.000" alldata > bdats
+cp -f alldatac gdats
+
+echo "gdats" > splitdata4.inf
+echo $ofil >> splitdata4.inf
+$EXE/splitdata4.x
+#$EXE/splitdata4.x gdats $ofil
+
+# Read the raw Lares-2 data and split the files into edited and unedited data
+
+set ofil=R2out
+
+cut -c20-34 $dir5/v${snx_ver}/$infil > timsecs
+cut -c74-86 $dir5/v${snx_ver}/$infil > res
+cut -c90-97 $dir5/v${snx_ver}/$infil > flg
+cut -c99-123 $dir5/v${snx_ver}/$infil > latlon
+
+echo res > mult1000b.inf
+$EXE/mult1000b.x
+#$EXE/mult1000b.x res
+
+paste -d" " latlon res res flg timsecs > alldata
+
+#grep -e " 1.000" alldata > gdats
+#grep -e "-1.000" alldata > bdats
+cp -f alldata gdats
+
+echo "gdats" > splitdata4.inf
+echo $ofil >> splitdata4.inf
+$EXE/splitdata4.x
+#$EXE/splitdata4.x gdats $ofil
+
+cat L1out0[1-7] > L1out
+cat L2out0[1-7] > L2out
+cat E1out0[1-7] > E1out
+cat E2out0[1-7] > E2out
+cat R2out0[1-7] > R2out
+
+cat L1out0[1-7]S > L1outS
+cat L2out0[1-7]S > L2outS
+cat E1out0[1-7]S > E1outS
+cat E2out0[1-7]S > E2outS
+cat R2out0[1-7]S > R2outS
+
+# CREATE DATES FOR TITLES
+
+echo "$rtit" > creat_dates.inf
+$EXE/creat_dates.x
+#$EXE/creat_dates.x $rtit
+
+set rtit1=`cat zdate1.dat`
+set rtit2=`cat zdate2.dat`
+set rtit3=`cat zdate3.dat`
+set rtit4=`cat zdate4.dat`
+set rtit5=`cat zdate5.dat`
+set rtit6=`cat zdate6.dat`
+set rtit7=`cat zdate7.dat`
+
+set NH="NH"
+set SH="SH"
+set xL1="red = L1"
+set xL2="blue = L2"
+set xE1="green = ETA1"
+set xE2="cyan = ETA2"
+set xR2="magenta = Lares-2"
+
+# CHANGE FONT SIZE
+
+gmt gmtset -G.gmtdefaults FONT_TITLE 24
+gmt gmtset -G.gmtdefaults4 FONT_TITLE 24
+gmt gmtset -G.gmtdefaults PS_MEDIA letter
+gmt gmtset -G.gmtdefaults4 PS_MEDIA letter
+
+# SH - DAY 1
+
+gmt psbasemap -R$rrngsh -JS180/-90/1.8i -B30g30/30g10:: -Y2.5i -K > t1.ps
+gmt pscoast -R -JS -G255/255/255 -Dc -W1/200/200/200 -O -K >> t1.ps
+gmt psxy L1out01S -R -JS -G255/0/0 -Sc0.1c -O -K -: >> t1.ps
+gmt psxy L2out01S -R -JS -G0/0/255 -Sc0.1c -O -K -: >> t1.ps
+gmt psxy E1out01S -R -JS -G0/255/0 -Sc0.1c -O -K -: >> t1.ps
+gmt psxy E2out01S -R -JS -G0/255/255 -Sc0.1c -O -K -: >> t1.ps
+gmt psxy R2out01S -R -JS -G255/0/255 -Sc0.1c -O -K -: >> t1.ps
+echo " 0 0 BR 0. $rtit1" | gmt pstext -R -JS -F+f20,Helvetica,black+j+a -N -O -K -Y-1.0i -X0.65i >> t1.ps
+echo " 0 0 BR 0. $xL1" | gmt pstext -R -JS -F+f20,Helvetica,red+j+a -N -O -K -Y-0.75i -X-1.25i >> t1.ps
+echo " 0 0 BR 0. $SH" | gmt pstext -R -JS -F+f20,Helvetica,black+j+a -N -O -K -Y2.5i -X-0.65i >> t1.ps
+
+# Plot good (unedited) data - NORTHERN HEMISPHERE DAY 1
+
+gmt psbasemap -R$rrng -JS180/90/1.8i -B30g30/30g10:."DAY 1": -Y2.0i -X1.25i -O -K >> t1.ps
+gmt pscoast -R -JS -G255/255/255 -Dc -W1/200/200/200 -O -K >> t1.ps
+gmt psxy L1out01 -R -JS -G255/0/0 -Sc0.1c -O -K -: >> t1.ps
+gmt psxy L2out01 -R -JS -G0/0/255 -Sc0.1c -O -K -: >> t1.ps
+gmt psxy E1out01 -R -JS -G0/255/0 -Sc0.1c -O -K -: >> t1.ps
+gmt psxy E2out01 -R -JS -G0/255/255 -Sc0.1c -O -K -: >> t1.ps
+gmt psxy R2out01 -R -JS -G255/0/255 -Sc0.1c -O -K -: >> t1.ps
+echo " 0 0 BR 0. $NH" | gmt pstext -R -JS -F+f20,Helvetica,black+j+a -N -O -K -Y-1.0i -X-1.25i >> t1.ps
+
+
+# SH - DAY 2
+
+gmt psbasemap -R$rrngsh -JS180/-90/1.8i -B30g30/30g10:: -Y-1.75i -X3.8i -O -K >> t1.ps
+gmt pscoast -R -JS -G255/255/255 -Dc -W1/200/200/200 -K -O >> t1.ps
+gmt psxy L1out02S -R -JS -G255/0/0 -Sc0.1c -K -O -: >> t1.ps
+gmt psxy L2out02S -R -JS -G0/0/255 -Sc0.1c -O -K -: >> t1.ps
+gmt psxy E1out02S -R -JS -G0/255/0 -Sc0.1c -O -K -: >> t1.ps
+gmt psxy E2out02S -R -JS -G0/255/255 -Sc0.1c -O -K -: >> t1.ps
+gmt psxy R2out02S -R -JS -G255/0/255 -Sc0.1c -O -K -: >> t1.ps
+echo " 0 0 BR 0. $rtit2" | gmt pstext -R -JS -F+f20,Helvetica,black+j+a -N -O -K -Y-1.0i -X0.65i >> t1.ps
+echo " 0 0 BR 0. $xL2" | gmt pstext -R -JS -F+f20,Helvetica,blue+j+a -N -O -K -Y-0.75i -X-2.1i >> t1.ps
+
+# NH - DAY 2
+
+gmt psbasemap -R$rrng -JS180/90/1.8i -B30g30/30g10:."DAY 2": -Y4.5i -X1.45i -O -K >> t1.ps
+gmt pscoast -R -JS -G255/255/255 -Dc -W1/200/200/200 -O -K >> t1.ps
+gmt psxy L1out02 -R -JS -G255/0/0 -Sc0.1c -K -O -: >> t1.ps
+gmt psxy L2out02 -R -JS -G0/0/255 -Sc0.1c -O -K -: >> t1.ps
+gmt psxy E1out02 -R -JS -G0/255/0 -Sc0.1c -O -K -: >> t1.ps
+gmt psxy E2out02 -R -JS -G0/255/255 -Sc0.1c -O -K -: >> t1.ps
+gmt psxy R2out02 -R -JS -G255/0/255 -Sc0.1c -O -K -: >> t1.ps
+
+# SH - DAY 3
+
+gmt psbasemap -R$rrngsh -JS180/-90/1.8i -B30g30/30g10:: -Y-2.75i -X2.5i -O -K >> t1.ps
+gmt pscoast -R -JS -G255/255/255 -Dc -W1/200/200/200 -K -O >> t1.ps
+gmt psxy L1out03S -R -JS -G255/0/0 -Sc0.1c -O -K -: >> t1.ps
+gmt psxy L2out03S -R -JS -G0/0/255 -Sc0.1c -O -K -: >> t1.ps
+gmt psxy E1out03S -R -JS -G0/255/0 -Sc0.1c -O -K -: >> t1.ps
+gmt psxy E2out03S -R -JS -G0/255/255 -Sc0.1c -O -K -: >> t1.ps
+gmt psxy R2out03S -R -JS -G255/0/255 -Sc0.1c -O -K -: >> t1.ps
+echo " 0 0 BR 0. $rtit3" | gmt pstext -R -JS -F+f20,Helvetica,black+j+a -N -O -K -Y-1.0i -X0.65i >> t1.ps
+echo " 0 0 BR 0. $xE1" | gmt pstext -R -JS -F+f20,Helvetica,green+j+a -N -O -K -Y-0.75i -X-2.45i >> t1.ps
+
+# NH - DAY 3
+
+gmt psbasemap -R$rrng -JS180/90/1.8i -B30g30/30g10:."DAY 3": -K -O -Y4.5i -X1.8i >> t1.ps
+gmt pscoast -R -JS -G255/255/255 -Dc -W1/200/200/200 -O -K >> t1.ps
+gmt psxy L1out03 -R -JS -G255/0/0 -Sc0.1c -O -K -: >> t1.ps
+gmt psxy L2out03 -R -JS -G0/0/255 -Sc0.1c -O -K -: >> t1.ps
+gmt psxy E1out03 -R -JS -G0/255/0 -Sc0.1c -O -K -: >> t1.ps
+gmt psxy E2out03 -R -JS -G0/255/255 -Sc0.1c -O -K -: >> t1.ps
+gmt psxy R2out03 -R -JS -G255/0/255 -Sc0.1c -O -K -: >> t1.ps
+
+# SOUTHERN HEMISPHERE - DAY 4
+
+gmt psbasemap -R$rrngsh -JS180/-90/1.8i -B30g30/30g10:: -Y-2.75i -X2.6i -O -K >> t1.ps
+gmt pscoast -R -JS -G255/255/255 -Dc -W1/200/200/200 -O -K >> t1.ps
+gmt psxy L1out04S -R -JS -G255/0/0 -Sc0.1c -O -K -: >> t1.ps
+gmt psxy L2out04S -R -JS -G0/0/255 -Sc0.1c -O -K -: >> t1.ps
+gmt psxy E1out04S -R -JS -G0/255/0 -Sc0.1c -O -K -: >> t1.ps
+gmt psxy E2out04S -R -JS -G0/255/255 -Sc0.1c -O -K -: >> t1.ps
+gmt psxy R2out04S -R -JS -G255/0/255 -Sc0.1c -O -K -: >> t1.ps
+echo " 0 0 BR 0. $rtit4" | gmt pstext -R -JS -F+f20,Helvetica,black+j+a -N -O -K -Y-1.0i -X0.65i >> t1.ps
+echo " 0 0 BR 0. $xE2" | gmt pstext -R -JS -F+f20,Helvetica,cyan+j+a -N -O -K -Y-0.75i -X-3.0i  >> t1.ps
+echo " 0 0 BR 0. $xR2" | gmt pstext -R -JS -F+f20,Helvetica,magenta+j+a -N -O -K -Y-0i -X3.4i  >> t1.ps
+
+# Plot good (unedited) data - NORTHERN HEMISPHERE DAY 4
+
+gmt psbasemap -R$rrng -JS180/90/1.8i -B30g30/30g10:."DAY 4": -Y4.5i -X-1.05i -K -O >> t1.ps
+gmt pscoast -R -JS -G255/255/255 -Dc -W1/200/200/200 -O -K >> t1.ps
+gmt psxy L1out04 -R -JS -G255/0/0 -Sc0.1c -O -K -: >> t1.ps
+gmt psxy L2out04 -R -JS -G0/0/255 -Sc0.1c -O -K -: >> t1.ps
+gmt psxy E1out04 -R -JS -G0/255/0 -Sc0.1c -O -K -: >> t1.ps
+gmt psxy E2out04 -R -JS -G0/255/255 -Sc0.1c -O -K -: >> t1.ps
+gmt psxy R2out04 -R -JS -G255/0/255 -Sc0.1c -O -: >> t1.ps
+
+# PLOT 2
+
+# SH - DAY 5
+
+gmt psbasemap -R$rrngsh -JS180/-90/1.8i -B30g30/30g10:: -Y2.5i -K > t2.ps
+gmt pscoast -R -JS -G255/255/255 -Dc -W1/200/200/200 -K -O >> t2.ps
+gmt psxy L1out05S -R -JS -G255/0/0 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy L2out05S -R -JS -G0/0/255 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy E1out05S -R -JS -G0/255/0 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy E2out05S -R -JS -G0/255/255 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy R2out05S -R -JS -G255/0/255 -Sc0.1c -O -K -: >> t2.ps
+echo " 0 0 BR 0. $rtit5" | gmt pstext -R -JS -F+f20,Helvetica,black+j+a -N -O -K -Y-1.0i -X0.65i >> t2.ps
+echo " 0 0 BR 0. $xL1" | gmt pstext -R -JS -F+f20,Helvetica,red+j+a -N -O -K -Y-0.75i -X-1.25i >> t2.ps
+echo " 0 0 BR 0. $SH" | gmt pstext -R -JS -F+f20,Helvetica,black+j+a -N -O -K -Y2.5i -X-0.65i >> t2.ps
+
+# NH - DAY 5
+
+gmt psbasemap -R$rrng -JS180/90/1.8i -B30g30/30g10:."DAY 5": -Y2.0i -X1.25i -O -K >> t2.ps
+gmt pscoast -R -JS -G255/255/255 -Dc -W1/200/200/200 -O -K >> t2.ps
+gmt psxy L1out05 -R -JS -G255/0/0 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy L2out05 -R -JS -G0/0/255 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy E1out05 -R -JS -G0/255/0 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy E2out05 -R -JS -G0/255/255 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy R2out05 -R -JS -G255/0/255 -Sc0.1c -O -K -: >> t2.ps
+echo " 0 0 BR 0. $NH" | gmt pstext -R -JS -F+f20,Helvetica,black+j+a -N -O -K -Y-1.0i -X-1.25i >> t2.ps
+
+# SH - DAY 6
+
+gmt psbasemap -R$rrngsh -JS180/-90/1.8i -B30g30/30g10:: -Y-1.75i -X3.8i -O -K >> t2.ps
+gmt pscoast -R -JS -G255/255/255 -Dc -W1/200/200/200 -K -O >> t2.ps
+gmt psxy L1out06S -R -JS -G255/0/0 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy L2out06S -R -JS -G0/0/255 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy E1out06S -R -JS -G0/255/0 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy E2out06S -R -JS -G0/255/255 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy R2out06S -R -JS -G255/0/255 -Sc0.1c -O -K -: >> t2.ps
+echo " 0 0 BR 0. $rtit6" | gmt pstext -R -JS -F+f20,Helvetica,black+j+a -N -O -K -Y-1.0i -X0.65i >> t2.ps
+echo " 0 0 BR 0. $xL2" | gmt pstext -R -JS -F+f20,Helvetica,blue+j+a -N -O -K -Y-0.75i -X-2.1i  >> t2.ps
+
+
+# NH - DAY 6
+
+gmt psbasemap -R$rrng -JS180/90/1.8i -B30g30/30g10:."DAY 6": -O -K -Y4.5i -X1.45i >> t2.ps
+gmt pscoast -R -JS -G255/255/255 -Dc -W1/200/200/200 -O -K >> t2.ps
+gmt psxy L1out06 -R -JS -G255/0/0 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy L2out06 -R -JS -G0/0/255 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy E1out06 -R -JS -G0/255/0 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy E2out06 -R -JS -G0/255/255 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy R2out06 -R -JS -G255/0/255 -Sc0.1c -O -K -: >> t2.ps
+
+# SOUTHERN HEMISPHERE - DAY 7
+
+gmt psbasemap -R$rrngsh -JS180/-90/1.8i -B30g30/30g10:: -Y-2.75i -X2.5i -O -K >> t2.ps
+gmt pscoast -R -JS -G255/255/255 -Dc -W1/200/200/200 -O -K >> t2.ps
+gmt psxy L1out07S -R -JS -G255/0/0 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy L2out07S -R -JS -G0/0/255 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy E1out07S -R -JS -G0/255/0 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy E2out07S -R -JS -G0/255/255 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy R2out07S -R -JS -G255/0/255 -Sc0.1c -O -K -: >> t2.ps
+echo " 0 0 BR 0. $rtit7" | gmt pstext -R -JS -F+f20,Helvetica,black+j+a -N -O -K -Y-1.0i -X0.65i >> t2.ps
+echo " 0 0 BR 0. $xE1" | gmt pstext -R -JS -F+f20,Helvetica,green+j+a -N -O -K -Y-0.75i -X-2.45i >> t2.ps
+
+
+# Plot good (unedited) data - NORTHERN HEMISPHERE DAY 7
+
+gmt psbasemap -R$rrng -JS180/90/1.8i -B30g30/30g10:."DAY 7": -Y4.5i -X1.8i -O -K >> t2.ps
+gmt pscoast -R -JS -G255/255/255 -Dc -W1/200/200/200 -O -K >> t2.ps
+gmt psxy L1out07 -R -JS -G255/0/0 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy L2out07 -R -JS -G0/0/255 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy E1out07 -R -JS -G0/255/0 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy E2out07 -R -JS -G0/255/255 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy R2out07 -R -JS -G255/0/255 -Sc0.1c -O -K -: >> t2.ps
+
+# SOUTHERN HEMISPHERE - ALL DAYS
+
+set dash="-"
+gmt psbasemap -R$rrngsh -JS180/-90/1.8i -B30g30/30g10:: -Y-2.75i -X2.6i -O -K >> t2.ps
+gmt pscoast -R -JS -G255/255/255 -Dc -W1/200/200/200 -O -K >> t2.ps
+gmt psxy L1outS -R -JS -G255/0/0 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy L2outS -R -JS -G0/0/255 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy E1outS -R -JS -G0/255/0 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy E2outS -R -JS -G0/255/255 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy R2outS -R -JS -G255/0/255 -Sc0.1c -O -K -: >> t2.ps
+echo " 0 0 BR 0. $rtit1" | gmt pstext -R -JS -F+f20,Helvetica,black+j+a -N -O -K -Y-1.0i -X0.65i >> t2.ps
+echo " 0 0 BR 0. $dash" | gmt pstext -R -JS -F+f20,Helvetica,black+j+a -N -O -K -Y-0.25i -X-0.65i >> t2.ps
+echo " 0 0 BR 0. $rtit7" | gmt pstext -R -JS -F+f20,Helvetica,black+j+a -N -O -K -Y-0.25i -X0.65i >> t2.ps
+echo " 0 0 BR 0. $xE2" | gmt pstext -R -JS -F+f20,Helvetica,cyan+j+a -N -O -K -Y-0.2i -X-3i >> t2.ps
+echo " 0 0 BR 0. $xR2" | gmt pstext -R -JS -F+f20,Helvetica,magenta+j+a -N -O -K -Y-0.2i -X3.5i >> t2.ps
+
+# Plot good (unedited) data - NORTHERN HEMISPHERE ALL DAYS
+
+gmt psbasemap -R$rrng -JS180/90/1.8i -B30g30/30g10:."ENTIRE WEEK": -Y4.65i -X-1.1i -O -K >> t2.ps
+gmt pscoast -R -JS -G255/255/255 -Dc -W1/200/200/200 -O -K >> t2.ps
+gmt psxy L1out -R -JS -G255/0/0 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy L2out -R -JS -G0/0/255 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy E1out -R -JS -G0/255/0 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy E2out -R -JS -G0/255/255 -Sc0.1c -O -K -: >> t2.ps
+gmt psxy R2out -R -JS -G255/0/255 -Sc0.1c -O -: >> t2.ps
+
+# RESET FONT SIZE
+
+gmt gmtset -G.gmtdefaults FONT_TITLE 36
+gmt gmtset -G.gmtdefaults4 FONT_TITLE 36
+
+
+#convert t1.ps ${rtit}_weekly_sate_trks1.pdf
+ps2pdf t1.ps ${rtit}_weekly_sate_trks1.pdf
+cp t1.ps ${rtit}_weekly_sate_trks1.ps
+#convert t2.ps ${rtit}_weekly_sate_trks2.pdf
+ps2pdf t2.ps ${rtit}_weekly_sate_trks2.pdf
+cp t2.ps ${rtit}_weekly_sate_trks2.ps
+
+#cp t2.jpg residuals.jpg
+
+mkdir WEEKLY
+mkdir WEEKLY/$rtit
+mv *.pdf WEEKLY/$rtit
+
+rm -f res flg latlon alldata? L1out* L2out* E1out* E2out* R2out* gdats bdats zdate*
+rm -f mult1000b.inf splitdata4.inf g.cpt t[1-3].ps timsecs alldata tx creat_dates.inf
+rm -f D_* *ps 
+

@@ -1,0 +1,73 @@
+#  RUN_SERIES_DAILY2010
+
+#
+
+SCR_NAME=RUN_SERIES_DAILY2010
++ SCR_NAME=RUN_SERIES_DAILY2010
+SCR_PARM=4
++ SCR_PARM=4
+SCR_LIST="CASE ETA_IN GROUP JOB_FILE"
++ SCR_LIST='CASE ETA_IN GROUP JOB_FILE'
+SCR_VERS=220210.0
+
++ SCR_VERS=220210.0
+SCR_DBG="#"
++ SCR_DBG='#'
+export SCR_DBG
+
++ export SCR_DBG
+if [ `expr $#` -lt $SCR_PARM ]; then
+   echo "Usage: $SCR_NAME ${SCR_LIST}\007"
+   exit 101
+fi
+
+expr $#
++ expr 4
++ [ 4 -lt 4 ]
+Date=`date +%y%m%d`
+
+date +%y%m%d
++ date +%y%m%d
++ Date=231122
+DateTime=`date '+DATE: %m/%d/%y  TIME: %H:%M:%S'`
+
+date '+DATE: %m/%d/%y  TIME: %H:%M:%S'
++ date '+DATE: %m/%d/%y  TIME: %H:%M:%S'
++ DateTime='DATE: 11/22/23  TIME: 14:02:18'
+echo " # "
++ echo ' # '
+ # 
+echo " #  $SCR_NAME $* "
++ echo ' #  RUN_SERIES_DAILY2010 DAILY YES REANAL17 . '
+ #  RUN_SERIES_DAILY2010 DAILY YES REANAL17 . 
+echo " # "
++ echo ' # '
+ # 
+echo " #  Version $SCR_VERS "
++ echo ' #  Version 220210.0 '
+ #  Version 220210.0 
+echo " # "
++ echo ' # '
+ # 
+echo " #  Run Date $DateTime "
++ echo ' #  Run Date DATE: 11/22/23  TIME: 14:02:18 '
+ #  Run Date DATE: 11/22/23  TIME: 14:02:18 
+echo " # "
+
+
++ echo ' # '
+ # 
+CASE=${1:-DAILY}
++ CASE=DAILY
+ETA_IN=${2:-YES}
++ ETA_IN=YES
+GROUP=${3:-A}
++ GROUP=REANAL17
+JOB_FILE=${4:-}
+
++ JOB_FILE=.
+####chmod -R 777 /umbc/epavlis/data01/LOCAL/magdak/tmp/magda
+exec > /umbc/epavlis/data01/LOCAL/magdak/tmp/magda/RUN_SERIES_IERS_DAILY_OPS2017.${CASE}.$Date.$$.log 2>&1
+
++ exec
++ 1> /umbc/epavlis/data01/LOCAL/magdak/tmp/magda/RUN_SERIES_IERS_DAILY_OPS2017.DAILY.231122.20205.log 2>& 1

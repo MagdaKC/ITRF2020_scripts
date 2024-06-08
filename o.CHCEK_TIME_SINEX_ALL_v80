@@ -1,0 +1,6661 @@
+set -xv
++ set -xv
+# read SNXDIR SNXFILE < $MAIN_PATH/INFILES/INF_OPS_ITRF2020/v${SNX_VER}/SINEX_OF_THIS_RUN.PPV
+echo put $SNXFILE
+
++ echo put
+put
+ START="+SNX 2.00"
+
++ START='+SNX 2.00'
+cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
++ cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/PPV/sinex/ILRS/WEEKLY/v80/
+rm LIST TIME_STOP_WRONG_v80 TIME_DIF_NAME_and_INSIDE
++ rm LIST TIME_STOP_WRONG_v80 TIME_DIF_NAME_and_INSIDE
+rm: cannot remove ‘TIME_STOP_WRONG_v80’: No such file or directory
+rm: cannot remove ‘TIME_DIF_NAME_and_INSIDE’: No such file or directory
+ls -1 *.snx.gz > LIST
++ ls -1 jcet.pos+eop.220709.v80.snx.gz jcet.pos+eop.220716.v80.snx.gz jcet.pos+eop.220813.v80.snx.gz jcet.pos+eop.220820.v80.snx.gz jcet.pos+eop.220827.v80.snx.gz jcet.pos+eop.220903.v80.snx.gz jcet.pos+eop.220910.v80.snx.gz jcet.pos+eop.220917.v80.snx.gz jcet.pos+eop.220924.v80.snx.gz jcet.pos+eop.221001.v80.snx.gz jcet.pos+eop.221008.v80.snx.gz jcet.pos+eop.221015.v80.snx.gz jcet.pos+eop.221022.v80.snx.gz jcet.pos+eop.221029.v80.snx.gz jcet.pos+eop.221105.v80.snx.gz jcet.pos+eop.221112.v80.snx.gz jcet.pos+eop.221119.v80.snx.gz jcet.pos+eop.221126.v80.snx.gz jcet.pos+eop.221203.v80.snx.gz jcet.pos+eop.221210.v80.snx.gz jcet.pos+eop.221217.v80.snx.gz jcet.pos+eop.221224.v80.snx.gz jcet.pos+eop.221231.v80.snx.gz jcet.pos+eop.230107.v80.snx.gz jcet.pos+eop.230114.v80.snx.gz jcet.pos+eop.230121.v80.snx.gz jcet.pos+eop.230128.v80.snx.gz jcet.pos+eop.230204.v80.snx.gz jcet.pos+eop.230211.v80.snx.gz jcet.pos+eop.230218.v80.snx.gz jcet.pos+eop.230225.v80.snx.gz jcet.pos+eop.230304.v80.snx.gz jcet.pos+eop.230311.v80.snx.gz jcet.pos+eop.230318.v80.snx.gz jcet.pos+eop.230325.v80.snx.gz jcet.pos+eop.230401.v80.snx.gz jcet.pos+eop.230408.v80.snx.gz jcet.pos+eop.230415.v80.snx.gz jcet.pos+eop.230422.v80.snx.gz jcet.pos+eop.230429.v80.snx.gz jcet.pos+eop.230506.v80.snx.gz jcet.pos+eop.230513.v80.snx.gz jcet.pos+eop.230520.v80.snx.gz jcet.pos+eop.230527.v80.snx.gz jcet.pos+eop.230603.v80.snx.gz jcet.pos+eop.230610.v80.snx.gz jcet.pos+eop.230616.v80.snx.gz jcet.pos+eop.230617.v80.snx.gz jcet.pos+eop.230624.v80.snx.gz jcet.pos+eop.230701.v80.snx.gz jcet.pos+eop.230708.v80_ORH_LE.snx.gz jcet.pos+eop.230708.v80.snx.gz jcet.pos+eop.230715.v80.snx.gz jcet.pos+eop.230722.v80.snx.gz jcet.pos+eop.230729.v80.snx.gz jcet.pos+eop.230805.v80.snx.gz jcet.pos+eop.230812.v80.snx.gz jcet.pos+eop.230819.v80.snx.gz jcet.pos+eop.230826.v80.snx.gz jcet.pos+eop.230902.v80.snx.gz jcet.pos+eop.230909.v80.snx.gz jcet.pos+eop.230916.v80.snx.gz jcet.pos+eop.230923.v80.snx.gz jcet.pos+eop.230930.v80.snx.gz jcet.pos+eop.231007.v80.snx.gz jcet.pos+eop.231014.v80.snx.gz jcet.pos+eop.231021.v80.snx.gz jcet.pos+eop.231028.v80.snx.gz jcet.pos+eop.231104.v80.snx.gz jcet.pos+eop.231111.v80.snx.gz jcet.pos+eop.231118.v80.snx.gz
++ 1> LIST
+while read SNXFILE
+do
+zcat $SNXFILE > t1
+
+  
+arcline1=`sed -n "/$START/=" t1 `
+sed -n "${arcline1}p"   t1 > t2
+#+SNX 2.00 JCT 23:337:44529 JCT 23:330:03948 23:336:83335 L 00092 2 E S
+#jcet.pos+eop.231202.v180.snx.gz
+cut -c33-57 t2 > t3
+sed -e "s/:/ /g" t3 > t4
+
+read YY1 DD1 SS1 YY2 DD2 SS2 < t4
+DD11=`expr $DD1 + 6`
+if [ $DD2 -eq $DD11 ] ; then
+echo "date is ok"
+else
+echo "$SNXFILE" >> TIME_STOP_WRONG_v80
+fi
+YY3=`echo $SNXFILE|cut -c14-15`    
+MM3=`echo $SNXFILE|cut -c16-17`    
+DD3=`echo $SNXFILE|cut -c18-19`    
+
+/umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy $YY3 $MM3 $DD3 > t5
+DD4=$(awk '{print substr($1,3,3)}' t5)
+YY4=$(awk '{print substr($1,1,2)}' t5)
+#YY4 - year form sinex name
+#YY1 -start Year in sinex file
+#YY2 -stop Year in sinex file
+if [ $YY4 -eq $YY2 -a  $DD4 -eq $DD2 ] ; then
+echo "OK"
+else
+echo "$SNXFILE" >> TIME_DIF_NAME_and_INSIDE
+fi
+
+rm t?
+#exit 0
+done < LIST
++ 0< LIST
++ read SNXFILE
++ zcat jcet.pos+eop.220709.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 184 + 6
++ DD11=190
++ [ 190 -eq 190 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.220709.v80.snx.gz
++ YY3=22
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.220709.v80.snx.gz
++ MM3=07
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.220709.v80.snx.gz
++ DD3=09
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 22 07 09
++ 1> t5
+@ year=22
+if ( 22 < 1900 ) then
+@ year=22 + 1900
+endif
+if ( 1922 < 1980 ) then
+@ year=1922 + 100
+endif
+set mm=07
+set dd=09
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2022 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 09 < = 0 || 09 > 31 ) then
+if ( 07 < = 0 || 07 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 07 )
+@ doy=09 + 0
+@ i=1 + 1
+end
+while ( 2 < = 07 )
+@ doy=09 + 31
+@ i=2 + 1
+end
+while ( 3 < = 07 )
+@ doy=09 + 59
+@ i=3 + 1
+end
+while ( 4 < = 07 )
+@ doy=09 + 90
+@ i=4 + 1
+end
+while ( 5 < = 07 )
+@ doy=09 + 120
+@ i=5 + 1
+end
+while ( 6 < = 07 )
+@ doy=09 + 151
+@ i=6 + 1
+end
+while ( 7 < = 07 )
+@ doy=09 + 181
+@ i=7 + 1
+end
+while ( 8 < = 07 )
+echo 190 2022
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=190
++ awk '{print substr($1,1,2)}' t5
++ YY4=22
++ [ 22 -eq 22 -a 190 -eq 190 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.220716.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 191 + 6
++ DD11=197
++ [ 197 -eq 197 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.220716.v80.snx.gz
++ YY3=22
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.220716.v80.snx.gz
++ MM3=07
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.220716.v80.snx.gz
++ DD3=16
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 22 07 16
++ 1> t5
+@ year=22
+if ( 22 < 1900 ) then
+@ year=22 + 1900
+endif
+if ( 1922 < 1980 ) then
+@ year=1922 + 100
+endif
+set mm=07
+set dd=16
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2022 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 16 < = 0 || 16 > 31 ) then
+if ( 07 < = 0 || 07 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 07 )
+@ doy=16 + 0
+@ i=1 + 1
+end
+while ( 2 < = 07 )
+@ doy=16 + 31
+@ i=2 + 1
+end
+while ( 3 < = 07 )
+@ doy=16 + 59
+@ i=3 + 1
+end
+while ( 4 < = 07 )
+@ doy=16 + 90
+@ i=4 + 1
+end
+while ( 5 < = 07 )
+@ doy=16 + 120
+@ i=5 + 1
+end
+while ( 6 < = 07 )
+@ doy=16 + 151
+@ i=6 + 1
+end
+while ( 7 < = 07 )
+@ doy=16 + 181
+@ i=7 + 1
+end
+while ( 8 < = 07 )
+echo 197 2022
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=197
++ awk '{print substr($1,1,2)}' t5
++ YY4=22
++ [ 22 -eq 22 -a 197 -eq 197 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.220813.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 219 + 6
++ DD11=225
++ [ 225 -eq 225 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.220813.v80.snx.gz
++ YY3=22
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.220813.v80.snx.gz
++ MM3=08
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.220813.v80.snx.gz
++ DD3=13
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 22 08 13
++ 1> t5
+@ year=22
+if ( 22 < 1900 ) then
+@ year=22 + 1900
+endif
+if ( 1922 < 1980 ) then
+@ year=1922 + 100
+endif
+set mm=08
+set dd=13
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2022 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 13 < = 0 || 13 > 31 ) then
+if ( 08 < = 0 || 08 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 08 )
+@ doy=13 + 0
+@ i=1 + 1
+end
+while ( 2 < = 08 )
+@ doy=13 + 31
+@ i=2 + 1
+end
+while ( 3 < = 08 )
+@ doy=13 + 59
+@ i=3 + 1
+end
+while ( 4 < = 08 )
+@ doy=13 + 90
+@ i=4 + 1
+end
+while ( 5 < = 08 )
+@ doy=13 + 120
+@ i=5 + 1
+end
+while ( 6 < = 08 )
+@ doy=13 + 151
+@ i=6 + 1
+end
+while ( 7 < = 08 )
+@ doy=13 + 181
+@ i=7 + 1
+end
+while ( 8 < = 08 )
+@ doy=13 + 212
+@ i=8 + 1
+end
+while ( 9 < = 08 )
+echo 225 2022
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=225
++ awk '{print substr($1,1,2)}' t5
++ YY4=22
++ [ 22 -eq 22 -a 225 -eq 225 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.220820.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 226 + 6
++ DD11=232
++ [ 232 -eq 232 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ echo jcet.pos+eop.220820.v80.snx.gz
++ cut -c14-15
++ YY3=22
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.220820.v80.snx.gz
++ MM3=08
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.220820.v80.snx.gz
++ DD3=20
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 22 08 20
++ 1> t5
+@ year=22
+if ( 22 < 1900 ) then
+@ year=22 + 1900
+endif
+if ( 1922 < 1980 ) then
+@ year=1922 + 100
+endif
+set mm=08
+set dd=20
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2022 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 20 < = 0 || 20 > 31 ) then
+if ( 08 < = 0 || 08 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 08 )
+@ doy=20 + 0
+@ i=1 + 1
+end
+while ( 2 < = 08 )
+@ doy=20 + 31
+@ i=2 + 1
+end
+while ( 3 < = 08 )
+@ doy=20 + 59
+@ i=3 + 1
+end
+while ( 4 < = 08 )
+@ doy=20 + 90
+@ i=4 + 1
+end
+while ( 5 < = 08 )
+@ doy=20 + 120
+@ i=5 + 1
+end
+while ( 6 < = 08 )
+@ doy=20 + 151
+@ i=6 + 1
+end
+while ( 7 < = 08 )
+@ doy=20 + 181
+@ i=7 + 1
+end
+while ( 8 < = 08 )
+@ doy=20 + 212
+@ i=8 + 1
+end
+while ( 9 < = 08 )
+echo 232 2022
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=232
++ awk '{print substr($1,1,2)}' t5
++ YY4=22
++ [ 22 -eq 22 -a 232 -eq 232 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.220827.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 233 + 6
++ DD11=239
++ [ 239 -eq 239 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.220827.v80.snx.gz
++ YY3=22
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.220827.v80.snx.gz
++ MM3=08
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.220827.v80.snx.gz
++ DD3=27
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 22 08 27
++ 1> t5
+@ year=22
+if ( 22 < 1900 ) then
+@ year=22 + 1900
+endif
+if ( 1922 < 1980 ) then
+@ year=1922 + 100
+endif
+set mm=08
+set dd=27
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2022 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 27 < = 0 || 27 > 31 ) then
+if ( 08 < = 0 || 08 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 08 )
+@ doy=27 + 0
+@ i=1 + 1
+end
+while ( 2 < = 08 )
+@ doy=27 + 31
+@ i=2 + 1
+end
+while ( 3 < = 08 )
+@ doy=27 + 59
+@ i=3 + 1
+end
+while ( 4 < = 08 )
+@ doy=27 + 90
+@ i=4 + 1
+end
+while ( 5 < = 08 )
+@ doy=27 + 120
+@ i=5 + 1
+end
+while ( 6 < = 08 )
+@ doy=27 + 151
+@ i=6 + 1
+end
+while ( 7 < = 08 )
+@ doy=27 + 181
+@ i=7 + 1
+end
+while ( 8 < = 08 )
+@ doy=27 + 212
+@ i=8 + 1
+end
+while ( 9 < = 08 )
+echo 239 2022
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=239
++ awk '{print substr($1,1,2)}' t5
++ YY4=22
++ [ 22 -eq 22 -a 239 -eq 239 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.220903.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 240 + 6
++ DD11=246
++ [ 246 -eq 246 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ echo jcet.pos+eop.220903.v80.snx.gz
++ cut -c14-15
++ YY3=22
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.220903.v80.snx.gz
++ MM3=09
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.220903.v80.snx.gz
++ DD3=03
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 22 09 03
++ 1> t5
+@ year=22
+if ( 22 < 1900 ) then
+@ year=22 + 1900
+endif
+if ( 1922 < 1980 ) then
+@ year=1922 + 100
+endif
+set mm=09
+set dd=03
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2022 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 03 < = 0 || 03 > 31 ) then
+if ( 09 < = 0 || 09 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 09 )
+@ doy=03 + 0
+@ i=1 + 1
+end
+while ( 2 < = 09 )
+@ doy=03 + 31
+@ i=2 + 1
+end
+while ( 3 < = 09 )
+@ doy=03 + 59
+@ i=3 + 1
+end
+while ( 4 < = 09 )
+@ doy=03 + 90
+@ i=4 + 1
+end
+while ( 5 < = 09 )
+@ doy=03 + 120
+@ i=5 + 1
+end
+while ( 6 < = 09 )
+@ doy=03 + 151
+@ i=6 + 1
+end
+while ( 7 < = 09 )
+@ doy=03 + 181
+@ i=7 + 1
+end
+while ( 8 < = 09 )
+@ doy=03 + 212
+@ i=8 + 1
+end
+while ( 9 < = 09 )
+@ doy=03 + 243
+@ i=9 + 1
+end
+while ( 10 < = 09 )
+echo 246 2022
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=246
++ awk '{print substr($1,1,2)}' t5
++ YY4=22
++ [ 22 -eq 22 -a 246 -eq 246 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.220910.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 247 + 6
++ DD11=253
++ [ 253 -eq 253 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.220910.v80.snx.gz
++ YY3=22
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.220910.v80.snx.gz
++ MM3=09
+echo $SNXFILE|cut -c18-19
++ echo jcet.pos+eop.220910.v80.snx.gz
++ cut -c18-19
++ DD3=10
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 22 09 10
++ 1> t5
+@ year=22
+if ( 22 < 1900 ) then
+@ year=22 + 1900
+endif
+if ( 1922 < 1980 ) then
+@ year=1922 + 100
+endif
+set mm=09
+set dd=10
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2022 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 10 < = 0 || 10 > 31 ) then
+if ( 09 < = 0 || 09 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 09 )
+@ doy=10 + 0
+@ i=1 + 1
+end
+while ( 2 < = 09 )
+@ doy=10 + 31
+@ i=2 + 1
+end
+while ( 3 < = 09 )
+@ doy=10 + 59
+@ i=3 + 1
+end
+while ( 4 < = 09 )
+@ doy=10 + 90
+@ i=4 + 1
+end
+while ( 5 < = 09 )
+@ doy=10 + 120
+@ i=5 + 1
+end
+while ( 6 < = 09 )
+@ doy=10 + 151
+@ i=6 + 1
+end
+while ( 7 < = 09 )
+@ doy=10 + 181
+@ i=7 + 1
+end
+while ( 8 < = 09 )
+@ doy=10 + 212
+@ i=8 + 1
+end
+while ( 9 < = 09 )
+@ doy=10 + 243
+@ i=9 + 1
+end
+while ( 10 < = 09 )
+echo 253 2022
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=253
++ awk '{print substr($1,1,2)}' t5
++ YY4=22
++ [ 22 -eq 22 -a 253 -eq 253 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.220917.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 254 + 6
++ DD11=260
++ [ 260 -eq 260 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.220917.v80.snx.gz
++ YY3=22
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.220917.v80.snx.gz
++ MM3=09
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.220917.v80.snx.gz
++ DD3=17
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 22 09 17
++ 1> t5
+@ year=22
+if ( 22 < 1900 ) then
+@ year=22 + 1900
+endif
+if ( 1922 < 1980 ) then
+@ year=1922 + 100
+endif
+set mm=09
+set dd=17
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2022 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 17 < = 0 || 17 > 31 ) then
+if ( 09 < = 0 || 09 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 09 )
+@ doy=17 + 0
+@ i=1 + 1
+end
+while ( 2 < = 09 )
+@ doy=17 + 31
+@ i=2 + 1
+end
+while ( 3 < = 09 )
+@ doy=17 + 59
+@ i=3 + 1
+end
+while ( 4 < = 09 )
+@ doy=17 + 90
+@ i=4 + 1
+end
+while ( 5 < = 09 )
+@ doy=17 + 120
+@ i=5 + 1
+end
+while ( 6 < = 09 )
+@ doy=17 + 151
+@ i=6 + 1
+end
+while ( 7 < = 09 )
+@ doy=17 + 181
+@ i=7 + 1
+end
+while ( 8 < = 09 )
+@ doy=17 + 212
+@ i=8 + 1
+end
+while ( 9 < = 09 )
+@ doy=17 + 243
+@ i=9 + 1
+end
+while ( 10 < = 09 )
+echo 260 2022
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=260
++ awk '{print substr($1,1,2)}' t5
++ YY4=22
++ [ 22 -eq 22 -a 260 -eq 260 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.220924.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 261 + 6
++ DD11=267
++ [ 267 -eq 267 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.220924.v80.snx.gz
++ YY3=22
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.220924.v80.snx.gz
++ MM3=09
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.220924.v80.snx.gz
++ DD3=24
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 22 09 24
++ 1> t5
+@ year=22
+if ( 22 < 1900 ) then
+@ year=22 + 1900
+endif
+if ( 1922 < 1980 ) then
+@ year=1922 + 100
+endif
+set mm=09
+set dd=24
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2022 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 24 < = 0 || 24 > 31 ) then
+if ( 09 < = 0 || 09 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 09 )
+@ doy=24 + 0
+@ i=1 + 1
+end
+while ( 2 < = 09 )
+@ doy=24 + 31
+@ i=2 + 1
+end
+while ( 3 < = 09 )
+@ doy=24 + 59
+@ i=3 + 1
+end
+while ( 4 < = 09 )
+@ doy=24 + 90
+@ i=4 + 1
+end
+while ( 5 < = 09 )
+@ doy=24 + 120
+@ i=5 + 1
+end
+while ( 6 < = 09 )
+@ doy=24 + 151
+@ i=6 + 1
+end
+while ( 7 < = 09 )
+@ doy=24 + 181
+@ i=7 + 1
+end
+while ( 8 < = 09 )
+@ doy=24 + 212
+@ i=8 + 1
+end
+while ( 9 < = 09 )
+@ doy=24 + 243
+@ i=9 + 1
+end
+while ( 10 < = 09 )
+echo 267 2022
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=267
++ awk '{print substr($1,1,2)}' t5
++ YY4=22
++ [ 22 -eq 22 -a 267 -eq 267 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.221001.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 268 + 6
++ DD11=274
++ [ 274 -eq 274 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.221001.v80.snx.gz
++ YY3=22
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.221001.v80.snx.gz
++ MM3=10
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.221001.v80.snx.gz
++ DD3=01
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 22 10 01
++ 1> t5
+@ year=22
+if ( 22 < 1900 ) then
+@ year=22 + 1900
+endif
+if ( 1922 < 1980 ) then
+@ year=1922 + 100
+endif
+set mm=10
+set dd=01
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2022 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 01 < = 0 || 01 > 31 ) then
+if ( 10 < = 0 || 10 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 10 )
+@ doy=01 + 0
+@ i=1 + 1
+end
+while ( 2 < = 10 )
+@ doy=01 + 31
+@ i=2 + 1
+end
+while ( 3 < = 10 )
+@ doy=01 + 59
+@ i=3 + 1
+end
+while ( 4 < = 10 )
+@ doy=01 + 90
+@ i=4 + 1
+end
+while ( 5 < = 10 )
+@ doy=01 + 120
+@ i=5 + 1
+end
+while ( 6 < = 10 )
+@ doy=01 + 151
+@ i=6 + 1
+end
+while ( 7 < = 10 )
+@ doy=01 + 181
+@ i=7 + 1
+end
+while ( 8 < = 10 )
+@ doy=01 + 212
+@ i=8 + 1
+end
+while ( 9 < = 10 )
+@ doy=01 + 243
+@ i=9 + 1
+end
+while ( 10 < = 10 )
+@ doy=01 + 273
+@ i=10 + 1
+end
+while ( 11 < = 10 )
+echo 274 2022
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=274
++ awk '{print substr($1,1,2)}' t5
++ YY4=22
++ [ 22 -eq 22 -a 274 -eq 274 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.221008.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 275 + 6
++ DD11=281
++ [ 281 -eq 281 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.221008.v80.snx.gz
++ YY3=22
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.221008.v80.snx.gz
++ MM3=10
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.221008.v80.snx.gz
++ DD3=08
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 22 10 08
++ 1> t5
+@ year=22
+if ( 22 < 1900 ) then
+@ year=22 + 1900
+endif
+if ( 1922 < 1980 ) then
+@ year=1922 + 100
+endif
+set mm=10
+set dd=08
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2022 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 08 < = 0 || 08 > 31 ) then
+if ( 10 < = 0 || 10 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 10 )
+@ doy=08 + 0
+@ i=1 + 1
+end
+while ( 2 < = 10 )
+@ doy=08 + 31
+@ i=2 + 1
+end
+while ( 3 < = 10 )
+@ doy=08 + 59
+@ i=3 + 1
+end
+while ( 4 < = 10 )
+@ doy=08 + 90
+@ i=4 + 1
+end
+while ( 5 < = 10 )
+@ doy=08 + 120
+@ i=5 + 1
+end
+while ( 6 < = 10 )
+@ doy=08 + 151
+@ i=6 + 1
+end
+while ( 7 < = 10 )
+@ doy=08 + 181
+@ i=7 + 1
+end
+while ( 8 < = 10 )
+@ doy=08 + 212
+@ i=8 + 1
+end
+while ( 9 < = 10 )
+@ doy=08 + 243
+@ i=9 + 1
+end
+while ( 10 < = 10 )
+@ doy=08 + 273
+@ i=10 + 1
+end
+while ( 11 < = 10 )
+echo 281 2022
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=281
++ awk '{print substr($1,1,2)}' t5
++ YY4=22
++ [ 22 -eq 22 -a 281 -eq 281 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.221015.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 282 + 6
++ DD11=288
++ [ 288 -eq 288 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.221015.v80.snx.gz
++ YY3=22
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.221015.v80.snx.gz
++ MM3=10
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.221015.v80.snx.gz
++ DD3=15
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 22 10 15
++ 1> t5
+@ year=22
+if ( 22 < 1900 ) then
+@ year=22 + 1900
+endif
+if ( 1922 < 1980 ) then
+@ year=1922 + 100
+endif
+set mm=10
+set dd=15
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2022 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 15 < = 0 || 15 > 31 ) then
+if ( 10 < = 0 || 10 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 10 )
+@ doy=15 + 0
+@ i=1 + 1
+end
+while ( 2 < = 10 )
+@ doy=15 + 31
+@ i=2 + 1
+end
+while ( 3 < = 10 )
+@ doy=15 + 59
+@ i=3 + 1
+end
+while ( 4 < = 10 )
+@ doy=15 + 90
+@ i=4 + 1
+end
+while ( 5 < = 10 )
+@ doy=15 + 120
+@ i=5 + 1
+end
+while ( 6 < = 10 )
+@ doy=15 + 151
+@ i=6 + 1
+end
+while ( 7 < = 10 )
+@ doy=15 + 181
+@ i=7 + 1
+end
+while ( 8 < = 10 )
+@ doy=15 + 212
+@ i=8 + 1
+end
+while ( 9 < = 10 )
+@ doy=15 + 243
+@ i=9 + 1
+end
+while ( 10 < = 10 )
+@ doy=15 + 273
+@ i=10 + 1
+end
+while ( 11 < = 10 )
+echo 288 2022
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=288
++ awk '{print substr($1,1,2)}' t5
++ YY4=22
++ [ 22 -eq 22 -a 288 -eq 288 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.221022.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 289 + 6
++ DD11=295
++ [ 295 -eq 295 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.221022.v80.snx.gz
++ YY3=22
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.221022.v80.snx.gz
++ MM3=10
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.221022.v80.snx.gz
++ DD3=22
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 22 10 22
++ 1> t5
+@ year=22
+if ( 22 < 1900 ) then
+@ year=22 + 1900
+endif
+if ( 1922 < 1980 ) then
+@ year=1922 + 100
+endif
+set mm=10
+set dd=22
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2022 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 22 < = 0 || 22 > 31 ) then
+if ( 10 < = 0 || 10 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 10 )
+@ doy=22 + 0
+@ i=1 + 1
+end
+while ( 2 < = 10 )
+@ doy=22 + 31
+@ i=2 + 1
+end
+while ( 3 < = 10 )
+@ doy=22 + 59
+@ i=3 + 1
+end
+while ( 4 < = 10 )
+@ doy=22 + 90
+@ i=4 + 1
+end
+while ( 5 < = 10 )
+@ doy=22 + 120
+@ i=5 + 1
+end
+while ( 6 < = 10 )
+@ doy=22 + 151
+@ i=6 + 1
+end
+while ( 7 < = 10 )
+@ doy=22 + 181
+@ i=7 + 1
+end
+while ( 8 < = 10 )
+@ doy=22 + 212
+@ i=8 + 1
+end
+while ( 9 < = 10 )
+@ doy=22 + 243
+@ i=9 + 1
+end
+while ( 10 < = 10 )
+@ doy=22 + 273
+@ i=10 + 1
+end
+while ( 11 < = 10 )
+echo 295 2022
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=295
++ awk '{print substr($1,1,2)}' t5
++ YY4=22
++ [ 22 -eq 22 -a 295 -eq 295 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.221029.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 296 + 6
++ DD11=302
++ [ 302 -eq 302 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.221029.v80.snx.gz
++ YY3=22
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.221029.v80.snx.gz
++ MM3=10
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.221029.v80.snx.gz
++ DD3=29
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 22 10 29
++ 1> t5
+@ year=22
+if ( 22 < 1900 ) then
+@ year=22 + 1900
+endif
+if ( 1922 < 1980 ) then
+@ year=1922 + 100
+endif
+set mm=10
+set dd=29
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2022 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 29 < = 0 || 29 > 31 ) then
+if ( 10 < = 0 || 10 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 10 )
+@ doy=29 + 0
+@ i=1 + 1
+end
+while ( 2 < = 10 )
+@ doy=29 + 31
+@ i=2 + 1
+end
+while ( 3 < = 10 )
+@ doy=29 + 59
+@ i=3 + 1
+end
+while ( 4 < = 10 )
+@ doy=29 + 90
+@ i=4 + 1
+end
+while ( 5 < = 10 )
+@ doy=29 + 120
+@ i=5 + 1
+end
+while ( 6 < = 10 )
+@ doy=29 + 151
+@ i=6 + 1
+end
+while ( 7 < = 10 )
+@ doy=29 + 181
+@ i=7 + 1
+end
+while ( 8 < = 10 )
+@ doy=29 + 212
+@ i=8 + 1
+end
+while ( 9 < = 10 )
+@ doy=29 + 243
+@ i=9 + 1
+end
+while ( 10 < = 10 )
+@ doy=29 + 273
+@ i=10 + 1
+end
+while ( 11 < = 10 )
+echo 302 2022
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=302
++ awk '{print substr($1,1,2)}' t5
++ YY4=22
++ [ 22 -eq 22 -a 302 -eq 302 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.221105.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 303 + 6
++ DD11=309
++ [ 309 -eq 309 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.221105.v80.snx.gz
++ YY3=22
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.221105.v80.snx.gz
++ MM3=11
+echo $SNXFILE|cut -c18-19
++ echo jcet.pos+eop.221105.v80.snx.gz
++ cut -c18-19
++ DD3=05
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 22 11 05
++ 1> t5
+@ year=22
+if ( 22 < 1900 ) then
+@ year=22 + 1900
+endif
+if ( 1922 < 1980 ) then
+@ year=1922 + 100
+endif
+set mm=11
+set dd=05
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2022 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 05 < = 0 || 05 > 31 ) then
+if ( 11 < = 0 || 11 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 11 )
+@ doy=05 + 0
+@ i=1 + 1
+end
+while ( 2 < = 11 )
+@ doy=05 + 31
+@ i=2 + 1
+end
+while ( 3 < = 11 )
+@ doy=05 + 59
+@ i=3 + 1
+end
+while ( 4 < = 11 )
+@ doy=05 + 90
+@ i=4 + 1
+end
+while ( 5 < = 11 )
+@ doy=05 + 120
+@ i=5 + 1
+end
+while ( 6 < = 11 )
+@ doy=05 + 151
+@ i=6 + 1
+end
+while ( 7 < = 11 )
+@ doy=05 + 181
+@ i=7 + 1
+end
+while ( 8 < = 11 )
+@ doy=05 + 212
+@ i=8 + 1
+end
+while ( 9 < = 11 )
+@ doy=05 + 243
+@ i=9 + 1
+end
+while ( 10 < = 11 )
+@ doy=05 + 273
+@ i=10 + 1
+end
+while ( 11 < = 11 )
+@ doy=05 + 304
+@ i=11 + 1
+end
+while ( 12 < = 11 )
+echo 309 2022
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=309
++ awk '{print substr($1,1,2)}' t5
++ YY4=22
++ [ 22 -eq 22 -a 309 -eq 309 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.221112.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 310 + 6
++ DD11=316
++ [ 316 -eq 316 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.221112.v80.snx.gz
++ YY3=22
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.221112.v80.snx.gz
++ MM3=11
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.221112.v80.snx.gz
++ DD3=12
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 22 11 12
++ 1> t5
+@ year=22
+if ( 22 < 1900 ) then
+@ year=22 + 1900
+endif
+if ( 1922 < 1980 ) then
+@ year=1922 + 100
+endif
+set mm=11
+set dd=12
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2022 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 12 < = 0 || 12 > 31 ) then
+if ( 11 < = 0 || 11 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 11 )
+@ doy=12 + 0
+@ i=1 + 1
+end
+while ( 2 < = 11 )
+@ doy=12 + 31
+@ i=2 + 1
+end
+while ( 3 < = 11 )
+@ doy=12 + 59
+@ i=3 + 1
+end
+while ( 4 < = 11 )
+@ doy=12 + 90
+@ i=4 + 1
+end
+while ( 5 < = 11 )
+@ doy=12 + 120
+@ i=5 + 1
+end
+while ( 6 < = 11 )
+@ doy=12 + 151
+@ i=6 + 1
+end
+while ( 7 < = 11 )
+@ doy=12 + 181
+@ i=7 + 1
+end
+while ( 8 < = 11 )
+@ doy=12 + 212
+@ i=8 + 1
+end
+while ( 9 < = 11 )
+@ doy=12 + 243
+@ i=9 + 1
+end
+while ( 10 < = 11 )
+@ doy=12 + 273
+@ i=10 + 1
+end
+while ( 11 < = 11 )
+@ doy=12 + 304
+@ i=11 + 1
+end
+while ( 12 < = 11 )
+echo 316 2022
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=316
++ awk '{print substr($1,1,2)}' t5
++ YY4=22
++ [ 22 -eq 22 -a 316 -eq 316 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.221119.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 317 + 6
++ DD11=323
++ [ 323 -eq 323 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.221119.v80.snx.gz
++ YY3=22
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.221119.v80.snx.gz
++ MM3=11
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.221119.v80.snx.gz
++ DD3=19
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 22 11 19
++ 1> t5
+@ year=22
+if ( 22 < 1900 ) then
+@ year=22 + 1900
+endif
+if ( 1922 < 1980 ) then
+@ year=1922 + 100
+endif
+set mm=11
+set dd=19
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2022 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 19 < = 0 || 19 > 31 ) then
+if ( 11 < = 0 || 11 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 11 )
+@ doy=19 + 0
+@ i=1 + 1
+end
+while ( 2 < = 11 )
+@ doy=19 + 31
+@ i=2 + 1
+end
+while ( 3 < = 11 )
+@ doy=19 + 59
+@ i=3 + 1
+end
+while ( 4 < = 11 )
+@ doy=19 + 90
+@ i=4 + 1
+end
+while ( 5 < = 11 )
+@ doy=19 + 120
+@ i=5 + 1
+end
+while ( 6 < = 11 )
+@ doy=19 + 151
+@ i=6 + 1
+end
+while ( 7 < = 11 )
+@ doy=19 + 181
+@ i=7 + 1
+end
+while ( 8 < = 11 )
+@ doy=19 + 212
+@ i=8 + 1
+end
+while ( 9 < = 11 )
+@ doy=19 + 243
+@ i=9 + 1
+end
+while ( 10 < = 11 )
+@ doy=19 + 273
+@ i=10 + 1
+end
+while ( 11 < = 11 )
+@ doy=19 + 304
+@ i=11 + 1
+end
+while ( 12 < = 11 )
+echo 323 2022
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=323
++ awk '{print substr($1,1,2)}' t5
++ YY4=22
++ [ 22 -eq 22 -a 323 -eq 323 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.221126.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 324 + 6
++ DD11=330
++ [ 330 -eq 330 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.221126.v80.snx.gz
++ YY3=22
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.221126.v80.snx.gz
++ MM3=11
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.221126.v80.snx.gz
++ DD3=26
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 22 11 26
++ 1> t5
+@ year=22
+if ( 22 < 1900 ) then
+@ year=22 + 1900
+endif
+if ( 1922 < 1980 ) then
+@ year=1922 + 100
+endif
+set mm=11
+set dd=26
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2022 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 26 < = 0 || 26 > 31 ) then
+if ( 11 < = 0 || 11 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 11 )
+@ doy=26 + 0
+@ i=1 + 1
+end
+while ( 2 < = 11 )
+@ doy=26 + 31
+@ i=2 + 1
+end
+while ( 3 < = 11 )
+@ doy=26 + 59
+@ i=3 + 1
+end
+while ( 4 < = 11 )
+@ doy=26 + 90
+@ i=4 + 1
+end
+while ( 5 < = 11 )
+@ doy=26 + 120
+@ i=5 + 1
+end
+while ( 6 < = 11 )
+@ doy=26 + 151
+@ i=6 + 1
+end
+while ( 7 < = 11 )
+@ doy=26 + 181
+@ i=7 + 1
+end
+while ( 8 < = 11 )
+@ doy=26 + 212
+@ i=8 + 1
+end
+while ( 9 < = 11 )
+@ doy=26 + 243
+@ i=9 + 1
+end
+while ( 10 < = 11 )
+@ doy=26 + 273
+@ i=10 + 1
+end
+while ( 11 < = 11 )
+@ doy=26 + 304
+@ i=11 + 1
+end
+while ( 12 < = 11 )
+echo 330 2022
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=330
++ awk '{print substr($1,1,2)}' t5
++ YY4=22
++ [ 22 -eq 22 -a 330 -eq 330 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.221203.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 331 + 6
++ DD11=337
++ [ 337 -eq 337 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.221203.v80.snx.gz
++ YY3=22
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.221203.v80.snx.gz
++ MM3=12
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.221203.v80.snx.gz
++ DD3=03
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 22 12 03
++ 1> t5
+@ year=22
+if ( 22 < 1900 ) then
+@ year=22 + 1900
+endif
+if ( 1922 < 1980 ) then
+@ year=1922 + 100
+endif
+set mm=12
+set dd=03
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2022 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 03 < = 0 || 03 > 31 ) then
+if ( 12 < = 0 || 12 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 12 )
+@ doy=03 + 0
+@ i=1 + 1
+end
+while ( 2 < = 12 )
+@ doy=03 + 31
+@ i=2 + 1
+end
+while ( 3 < = 12 )
+@ doy=03 + 59
+@ i=3 + 1
+end
+while ( 4 < = 12 )
+@ doy=03 + 90
+@ i=4 + 1
+end
+while ( 5 < = 12 )
+@ doy=03 + 120
+@ i=5 + 1
+end
+while ( 6 < = 12 )
+@ doy=03 + 151
+@ i=6 + 1
+end
+while ( 7 < = 12 )
+@ doy=03 + 181
+@ i=7 + 1
+end
+while ( 8 < = 12 )
+@ doy=03 + 212
+@ i=8 + 1
+end
+while ( 9 < = 12 )
+@ doy=03 + 243
+@ i=9 + 1
+end
+while ( 10 < = 12 )
+@ doy=03 + 273
+@ i=10 + 1
+end
+while ( 11 < = 12 )
+@ doy=03 + 304
+@ i=11 + 1
+end
+while ( 12 < = 12 )
+@ doy=03 + 334
+@ i=12 + 1
+end
+while ( 13 < = 12 )
+echo 337 2022
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=337
++ awk '{print substr($1,1,2)}' t5
++ YY4=22
++ [ 22 -eq 22 -a 337 -eq 337 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.221210.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 338 + 6
++ DD11=344
++ [ 344 -eq 344 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.221210.v80.snx.gz
++ YY3=22
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.221210.v80.snx.gz
++ MM3=12
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.221210.v80.snx.gz
++ DD3=10
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 22 12 10
++ 1> t5
+@ year=22
+if ( 22 < 1900 ) then
+@ year=22 + 1900
+endif
+if ( 1922 < 1980 ) then
+@ year=1922 + 100
+endif
+set mm=12
+set dd=10
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2022 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 10 < = 0 || 10 > 31 ) then
+if ( 12 < = 0 || 12 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 12 )
+@ doy=10 + 0
+@ i=1 + 1
+end
+while ( 2 < = 12 )
+@ doy=10 + 31
+@ i=2 + 1
+end
+while ( 3 < = 12 )
+@ doy=10 + 59
+@ i=3 + 1
+end
+while ( 4 < = 12 )
+@ doy=10 + 90
+@ i=4 + 1
+end
+while ( 5 < = 12 )
+@ doy=10 + 120
+@ i=5 + 1
+end
+while ( 6 < = 12 )
+@ doy=10 + 151
+@ i=6 + 1
+end
+while ( 7 < = 12 )
+@ doy=10 + 181
+@ i=7 + 1
+end
+while ( 8 < = 12 )
+@ doy=10 + 212
+@ i=8 + 1
+end
+while ( 9 < = 12 )
+@ doy=10 + 243
+@ i=9 + 1
+end
+while ( 10 < = 12 )
+@ doy=10 + 273
+@ i=10 + 1
+end
+while ( 11 < = 12 )
+@ doy=10 + 304
+@ i=11 + 1
+end
+while ( 12 < = 12 )
+@ doy=10 + 334
+@ i=12 + 1
+end
+while ( 13 < = 12 )
+echo 344 2022
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=344
++ awk '{print substr($1,1,2)}' t5
++ YY4=22
++ [ 22 -eq 22 -a 344 -eq 344 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.221217.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 345 + 6
++ DD11=351
++ [ 351 -eq 351 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.221217.v80.snx.gz
++ YY3=22
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.221217.v80.snx.gz
++ MM3=12
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.221217.v80.snx.gz
++ DD3=17
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 22 12 17
++ 1> t5
+@ year=22
+if ( 22 < 1900 ) then
+@ year=22 + 1900
+endif
+if ( 1922 < 1980 ) then
+@ year=1922 + 100
+endif
+set mm=12
+set dd=17
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2022 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 17 < = 0 || 17 > 31 ) then
+if ( 12 < = 0 || 12 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 12 )
+@ doy=17 + 0
+@ i=1 + 1
+end
+while ( 2 < = 12 )
+@ doy=17 + 31
+@ i=2 + 1
+end
+while ( 3 < = 12 )
+@ doy=17 + 59
+@ i=3 + 1
+end
+while ( 4 < = 12 )
+@ doy=17 + 90
+@ i=4 + 1
+end
+while ( 5 < = 12 )
+@ doy=17 + 120
+@ i=5 + 1
+end
+while ( 6 < = 12 )
+@ doy=17 + 151
+@ i=6 + 1
+end
+while ( 7 < = 12 )
+@ doy=17 + 181
+@ i=7 + 1
+end
+while ( 8 < = 12 )
+@ doy=17 + 212
+@ i=8 + 1
+end
+while ( 9 < = 12 )
+@ doy=17 + 243
+@ i=9 + 1
+end
+while ( 10 < = 12 )
+@ doy=17 + 273
+@ i=10 + 1
+end
+while ( 11 < = 12 )
+@ doy=17 + 304
+@ i=11 + 1
+end
+while ( 12 < = 12 )
+@ doy=17 + 334
+@ i=12 + 1
+end
+while ( 13 < = 12 )
+echo 351 2022
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=351
++ awk '{print substr($1,1,2)}' t5
++ YY4=22
++ [ 22 -eq 22 -a 351 -eq 351 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.221224.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 352 + 6
++ DD11=358
++ [ 358 -eq 358 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.221224.v80.snx.gz
++ YY3=22
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.221224.v80.snx.gz
++ MM3=12
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.221224.v80.snx.gz
++ DD3=24
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 22 12 24
++ 1> t5
+@ year=22
+if ( 22 < 1900 ) then
+@ year=22 + 1900
+endif
+if ( 1922 < 1980 ) then
+@ year=1922 + 100
+endif
+set mm=12
+set dd=24
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2022 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 24 < = 0 || 24 > 31 ) then
+if ( 12 < = 0 || 12 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 12 )
+@ doy=24 + 0
+@ i=1 + 1
+end
+while ( 2 < = 12 )
+@ doy=24 + 31
+@ i=2 + 1
+end
+while ( 3 < = 12 )
+@ doy=24 + 59
+@ i=3 + 1
+end
+while ( 4 < = 12 )
+@ doy=24 + 90
+@ i=4 + 1
+end
+while ( 5 < = 12 )
+@ doy=24 + 120
+@ i=5 + 1
+end
+while ( 6 < = 12 )
+@ doy=24 + 151
+@ i=6 + 1
+end
+while ( 7 < = 12 )
+@ doy=24 + 181
+@ i=7 + 1
+end
+while ( 8 < = 12 )
+@ doy=24 + 212
+@ i=8 + 1
+end
+while ( 9 < = 12 )
+@ doy=24 + 243
+@ i=9 + 1
+end
+while ( 10 < = 12 )
+@ doy=24 + 273
+@ i=10 + 1
+end
+while ( 11 < = 12 )
+@ doy=24 + 304
+@ i=11 + 1
+end
+while ( 12 < = 12 )
+@ doy=24 + 334
+@ i=12 + 1
+end
+while ( 13 < = 12 )
+echo 358 2022
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=358
++ awk '{print substr($1,1,2)}' t5
++ YY4=22
++ [ 22 -eq 22 -a 358 -eq 358 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.221231.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 359 + 6
++ DD11=365
++ [ 365 -eq 365 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.221231.v80.snx.gz
++ YY3=22
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.221231.v80.snx.gz
++ MM3=12
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.221231.v80.snx.gz
++ DD3=31
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 22 12 31
++ 1> t5
+@ year=22
+if ( 22 < 1900 ) then
+@ year=22 + 1900
+endif
+if ( 1922 < 1980 ) then
+@ year=1922 + 100
+endif
+set mm=12
+set dd=31
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2022 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 31 < = 0 || 31 > 31 ) then
+if ( 12 < = 0 || 12 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 12 )
+@ doy=31 + 0
+@ i=1 + 1
+end
+while ( 2 < = 12 )
+@ doy=31 + 31
+@ i=2 + 1
+end
+while ( 3 < = 12 )
+@ doy=31 + 59
+@ i=3 + 1
+end
+while ( 4 < = 12 )
+@ doy=31 + 90
+@ i=4 + 1
+end
+while ( 5 < = 12 )
+@ doy=31 + 120
+@ i=5 + 1
+end
+while ( 6 < = 12 )
+@ doy=31 + 151
+@ i=6 + 1
+end
+while ( 7 < = 12 )
+@ doy=31 + 181
+@ i=7 + 1
+end
+while ( 8 < = 12 )
+@ doy=31 + 212
+@ i=8 + 1
+end
+while ( 9 < = 12 )
+@ doy=31 + 243
+@ i=9 + 1
+end
+while ( 10 < = 12 )
+@ doy=31 + 273
+@ i=10 + 1
+end
+while ( 11 < = 12 )
+@ doy=31 + 304
+@ i=11 + 1
+end
+while ( 12 < = 12 )
+@ doy=31 + 334
+@ i=12 + 1
+end
+while ( 13 < = 12 )
+echo 365 2022
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=365
++ awk '{print substr($1,1,2)}' t5
++ YY4=22
++ [ 22 -eq 22 -a 365 -eq 365 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230107.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 001 + 6
++ DD11=7
++ [ 007 -eq 7 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230107.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230107.v80.snx.gz
++ MM3=01
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230107.v80.snx.gz
++ DD3=07
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 01 07
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=01
+set dd=07
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 07 < = 0 || 07 > 31 ) then
+if ( 01 < = 0 || 01 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 01 )
+@ doy=07 + 0
+@ i=1 + 1
+end
+while ( 2 < = 01 )
+echo 7 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=007
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 007 -eq 007 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230114.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 008 + 6
++ DD11=14
++ [ 014 -eq 14 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230114.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230114.v80.snx.gz
++ MM3=01
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230114.v80.snx.gz
++ DD3=14
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 01 14
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=01
+set dd=14
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 14 < = 0 || 14 > 31 ) then
+if ( 01 < = 0 || 01 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 01 )
+@ doy=14 + 0
+@ i=1 + 1
+end
+while ( 2 < = 01 )
+echo 14 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=014
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 014 -eq 014 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230121.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 015 + 6
++ DD11=21
++ [ 021 -eq 21 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230121.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230121.v80.snx.gz
++ MM3=01
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230121.v80.snx.gz
++ DD3=21
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 01 21
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=01
+set dd=21
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 21 < = 0 || 21 > 31 ) then
+if ( 01 < = 0 || 01 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 01 )
+@ doy=21 + 0
+@ i=1 + 1
+end
+while ( 2 < = 01 )
+echo 21 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=021
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 021 -eq 021 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230128.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 022 + 6
++ DD11=28
++ [ 028 -eq 28 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230128.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230128.v80.snx.gz
++ MM3=01
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230128.v80.snx.gz
++ DD3=28
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 01 28
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=01
+set dd=28
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 28 < = 0 || 28 > 31 ) then
+if ( 01 < = 0 || 01 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 01 )
+@ doy=28 + 0
+@ i=1 + 1
+end
+while ( 2 < = 01 )
+echo 28 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=028
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 028 -eq 028 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230204.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 029 + 6
++ DD11=35
++ [ 035 -eq 35 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230204.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230204.v80.snx.gz
++ MM3=02
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230204.v80.snx.gz
++ DD3=04
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 02 04
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=02
+set dd=04
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 04 < = 0 || 04 > 31 ) then
+if ( 02 < = 0 || 02 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 02 )
+@ doy=04 + 0
+@ i=1 + 1
+end
+while ( 2 < = 02 )
+@ doy=04 + 31
+@ i=2 + 1
+end
+while ( 3 < = 02 )
+echo 35 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=035
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 035 -eq 035 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230211.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 036 + 6
++ DD11=42
++ [ 042 -eq 42 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230211.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230211.v80.snx.gz
++ MM3=02
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230211.v80.snx.gz
++ DD3=11
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 02 11
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=02
+set dd=11
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 11 < = 0 || 11 > 31 ) then
+if ( 02 < = 0 || 02 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 02 )
+@ doy=11 + 0
+@ i=1 + 1
+end
+while ( 2 < = 02 )
+@ doy=11 + 31
+@ i=2 + 1
+end
+while ( 3 < = 02 )
+echo 42 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=042
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 042 -eq 042 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230218.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 043 + 6
++ DD11=49
++ [ 049 -eq 49 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230218.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230218.v80.snx.gz
++ MM3=02
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230218.v80.snx.gz
++ DD3=18
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 02 18
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=02
+set dd=18
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 18 < = 0 || 18 > 31 ) then
+if ( 02 < = 0 || 02 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 02 )
+@ doy=18 + 0
+@ i=1 + 1
+end
+while ( 2 < = 02 )
+@ doy=18 + 31
+@ i=2 + 1
+end
+while ( 3 < = 02 )
+echo 49 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=049
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 049 -eq 049 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230225.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 050 + 6
++ DD11=56
++ [ 056 -eq 56 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230225.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230225.v80.snx.gz
++ MM3=02
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230225.v80.snx.gz
++ DD3=25
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 02 25
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=02
+set dd=25
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 25 < = 0 || 25 > 31 ) then
+if ( 02 < = 0 || 02 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 02 )
+@ doy=25 + 0
+@ i=1 + 1
+end
+while ( 2 < = 02 )
+@ doy=25 + 31
+@ i=2 + 1
+end
+while ( 3 < = 02 )
+echo 56 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=056
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 056 -eq 056 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230304.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 057 + 6
++ DD11=63
++ [ 063 -eq 63 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230304.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230304.v80.snx.gz
++ MM3=03
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230304.v80.snx.gz
++ DD3=04
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 03 04
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=03
+set dd=04
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 04 < = 0 || 04 > 31 ) then
+if ( 03 < = 0 || 03 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 03 )
+@ doy=04 + 0
+@ i=1 + 1
+end
+while ( 2 < = 03 )
+@ doy=04 + 31
+@ i=2 + 1
+end
+while ( 3 < = 03 )
+@ doy=04 + 59
+@ i=3 + 1
+end
+while ( 4 < = 03 )
+echo 63 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=063
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 063 -eq 063 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230311.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 064 + 6
++ DD11=70
++ [ 070 -eq 70 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230311.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230311.v80.snx.gz
++ MM3=03
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230311.v80.snx.gz
++ DD3=11
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 03 11
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=03
+set dd=11
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 11 < = 0 || 11 > 31 ) then
+if ( 03 < = 0 || 03 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 03 )
+@ doy=11 + 0
+@ i=1 + 1
+end
+while ( 2 < = 03 )
+@ doy=11 + 31
+@ i=2 + 1
+end
+while ( 3 < = 03 )
+@ doy=11 + 59
+@ i=3 + 1
+end
+while ( 4 < = 03 )
+echo 70 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=070
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 070 -eq 070 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230318.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 071 + 6
++ DD11=77
++ [ 077 -eq 77 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230318.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230318.v80.snx.gz
++ MM3=03
+echo $SNXFILE|cut -c18-19
++ echo jcet.pos+eop.230318.v80.snx.gz
++ cut -c18-19
++ DD3=18
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 03 18
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=03
+set dd=18
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 18 < = 0 || 18 > 31 ) then
+if ( 03 < = 0 || 03 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 03 )
+@ doy=18 + 0
+@ i=1 + 1
+end
+while ( 2 < = 03 )
+@ doy=18 + 31
+@ i=2 + 1
+end
+while ( 3 < = 03 )
+@ doy=18 + 59
+@ i=3 + 1
+end
+while ( 4 < = 03 )
+echo 77 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=077
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 077 -eq 077 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230325.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 078 + 6
++ DD11=84
++ [ 084 -eq 84 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230325.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230325.v80.snx.gz
++ MM3=03
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230325.v80.snx.gz
++ DD3=25
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 03 25
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=03
+set dd=25
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 25 < = 0 || 25 > 31 ) then
+if ( 03 < = 0 || 03 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 03 )
+@ doy=25 + 0
+@ i=1 + 1
+end
+while ( 2 < = 03 )
+@ doy=25 + 31
+@ i=2 + 1
+end
+while ( 3 < = 03 )
+@ doy=25 + 59
+@ i=3 + 1
+end
+while ( 4 < = 03 )
+echo 84 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=084
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 084 -eq 084 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230401.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 085 + 6
++ DD11=91
++ [ 091 -eq 91 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230401.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230401.v80.snx.gz
++ MM3=04
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230401.v80.snx.gz
++ DD3=01
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 04 01
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=04
+set dd=01
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 01 < = 0 || 01 > 31 ) then
+if ( 04 < = 0 || 04 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 04 )
+@ doy=01 + 0
+@ i=1 + 1
+end
+while ( 2 < = 04 )
+@ doy=01 + 31
+@ i=2 + 1
+end
+while ( 3 < = 04 )
+@ doy=01 + 59
+@ i=3 + 1
+end
+while ( 4 < = 04 )
+@ doy=01 + 90
+@ i=4 + 1
+end
+while ( 5 < = 04 )
+echo 91 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=091
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 091 -eq 091 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230408.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 092 + 6
++ DD11=98
++ [ 098 -eq 98 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230408.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230408.v80.snx.gz
++ MM3=04
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230408.v80.snx.gz
++ DD3=08
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 04 08
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=04
+set dd=08
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 08 < = 0 || 08 > 31 ) then
+if ( 04 < = 0 || 04 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 04 )
+@ doy=08 + 0
+@ i=1 + 1
+end
+while ( 2 < = 04 )
+@ doy=08 + 31
+@ i=2 + 1
+end
+while ( 3 < = 04 )
+@ doy=08 + 59
+@ i=3 + 1
+end
+while ( 4 < = 04 )
+@ doy=08 + 90
+@ i=4 + 1
+end
+while ( 5 < = 04 )
+echo 98 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=098
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 098 -eq 098 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230415.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 099 + 6
++ DD11=105
++ [ 105 -eq 105 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230415.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230415.v80.snx.gz
++ MM3=04
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230415.v80.snx.gz
++ DD3=15
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 04 15
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=04
+set dd=15
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 15 < = 0 || 15 > 31 ) then
+if ( 04 < = 0 || 04 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 04 )
+@ doy=15 + 0
+@ i=1 + 1
+end
+while ( 2 < = 04 )
+@ doy=15 + 31
+@ i=2 + 1
+end
+while ( 3 < = 04 )
+@ doy=15 + 59
+@ i=3 + 1
+end
+while ( 4 < = 04 )
+@ doy=15 + 90
+@ i=4 + 1
+end
+while ( 5 < = 04 )
+echo 105 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=105
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 105 -eq 105 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230422.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 106 + 6
++ DD11=112
++ [ 112 -eq 112 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230422.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230422.v80.snx.gz
++ MM3=04
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230422.v80.snx.gz
++ DD3=22
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 04 22
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=04
+set dd=22
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 22 < = 0 || 22 > 31 ) then
+if ( 04 < = 0 || 04 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 04 )
+@ doy=22 + 0
+@ i=1 + 1
+end
+while ( 2 < = 04 )
+@ doy=22 + 31
+@ i=2 + 1
+end
+while ( 3 < = 04 )
+@ doy=22 + 59
+@ i=3 + 1
+end
+while ( 4 < = 04 )
+@ doy=22 + 90
+@ i=4 + 1
+end
+while ( 5 < = 04 )
+echo 112 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=112
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 112 -eq 112 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230429.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 113 + 6
++ DD11=119
++ [ 119 -eq 119 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230429.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230429.v80.snx.gz
++ MM3=04
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230429.v80.snx.gz
++ DD3=29
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 04 29
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=04
+set dd=29
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 29 < = 0 || 29 > 31 ) then
+if ( 04 < = 0 || 04 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 04 )
+@ doy=29 + 0
+@ i=1 + 1
+end
+while ( 2 < = 04 )
+@ doy=29 + 31
+@ i=2 + 1
+end
+while ( 3 < = 04 )
+@ doy=29 + 59
+@ i=3 + 1
+end
+while ( 4 < = 04 )
+@ doy=29 + 90
+@ i=4 + 1
+end
+while ( 5 < = 04 )
+echo 119 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=119
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 119 -eq 119 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230506.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 120 + 6
++ DD11=126
++ [ 126 -eq 126 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ echo jcet.pos+eop.230506.v80.snx.gz
++ cut -c14-15
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230506.v80.snx.gz
++ MM3=05
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230506.v80.snx.gz
++ DD3=06
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 05 06
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=05
+set dd=06
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 06 < = 0 || 06 > 31 ) then
+if ( 05 < = 0 || 05 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 05 )
+@ doy=06 + 0
+@ i=1 + 1
+end
+while ( 2 < = 05 )
+@ doy=06 + 31
+@ i=2 + 1
+end
+while ( 3 < = 05 )
+@ doy=06 + 59
+@ i=3 + 1
+end
+while ( 4 < = 05 )
+@ doy=06 + 90
+@ i=4 + 1
+end
+while ( 5 < = 05 )
+@ doy=06 + 120
+@ i=5 + 1
+end
+while ( 6 < = 05 )
+echo 126 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=126
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 126 -eq 126 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230513.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 127 + 6
++ DD11=133
++ [ 133 -eq 133 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230513.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230513.v80.snx.gz
++ MM3=05
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230513.v80.snx.gz
++ DD3=13
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 05 13
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=05
+set dd=13
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 13 < = 0 || 13 > 31 ) then
+if ( 05 < = 0 || 05 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 05 )
+@ doy=13 + 0
+@ i=1 + 1
+end
+while ( 2 < = 05 )
+@ doy=13 + 31
+@ i=2 + 1
+end
+while ( 3 < = 05 )
+@ doy=13 + 59
+@ i=3 + 1
+end
+while ( 4 < = 05 )
+@ doy=13 + 90
+@ i=4 + 1
+end
+while ( 5 < = 05 )
+@ doy=13 + 120
+@ i=5 + 1
+end
+while ( 6 < = 05 )
+echo 133 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=133
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 133 -eq 133 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230520.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 134 + 6
++ DD11=140
++ [ 140 -eq 140 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230520.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230520.v80.snx.gz
++ MM3=05
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230520.v80.snx.gz
++ DD3=20
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 05 20
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=05
+set dd=20
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 20 < = 0 || 20 > 31 ) then
+if ( 05 < = 0 || 05 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 05 )
+@ doy=20 + 0
+@ i=1 + 1
+end
+while ( 2 < = 05 )
+@ doy=20 + 31
+@ i=2 + 1
+end
+while ( 3 < = 05 )
+@ doy=20 + 59
+@ i=3 + 1
+end
+while ( 4 < = 05 )
+@ doy=20 + 90
+@ i=4 + 1
+end
+while ( 5 < = 05 )
+@ doy=20 + 120
+@ i=5 + 1
+end
+while ( 6 < = 05 )
+echo 140 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=140
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 140 -eq 140 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230527.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 141 + 6
++ DD11=147
++ [ 147 -eq 147 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230527.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230527.v80.snx.gz
++ MM3=05
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230527.v80.snx.gz
++ DD3=27
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 05 27
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=05
+set dd=27
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 27 < = 0 || 27 > 31 ) then
+if ( 05 < = 0 || 05 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 05 )
+@ doy=27 + 0
+@ i=1 + 1
+end
+while ( 2 < = 05 )
+@ doy=27 + 31
+@ i=2 + 1
+end
+while ( 3 < = 05 )
+@ doy=27 + 59
+@ i=3 + 1
+end
+while ( 4 < = 05 )
+@ doy=27 + 90
+@ i=4 + 1
+end
+while ( 5 < = 05 )
+@ doy=27 + 120
+@ i=5 + 1
+end
+while ( 6 < = 05 )
+echo 147 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=147
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 147 -eq 147 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230603.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 148 + 6
++ DD11=154
++ [ 154 -eq 154 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230603.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230603.v80.snx.gz
++ MM3=06
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230603.v80.snx.gz
++ DD3=03
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 06 03
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=06
+set dd=03
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 03 < = 0 || 03 > 31 ) then
+if ( 06 < = 0 || 06 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 06 )
+@ doy=03 + 0
+@ i=1 + 1
+end
+while ( 2 < = 06 )
+@ doy=03 + 31
+@ i=2 + 1
+end
+while ( 3 < = 06 )
+@ doy=03 + 59
+@ i=3 + 1
+end
+while ( 4 < = 06 )
+@ doy=03 + 90
+@ i=4 + 1
+end
+while ( 5 < = 06 )
+@ doy=03 + 120
+@ i=5 + 1
+end
+while ( 6 < = 06 )
+@ doy=03 + 151
+@ i=6 + 1
+end
+while ( 7 < = 06 )
+echo 154 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=154
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 154 -eq 154 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230610.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 155 + 6
++ DD11=161
++ [ 161 -eq 161 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230610.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230610.v80.snx.gz
++ MM3=06
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230610.v80.snx.gz
++ DD3=10
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 06 10
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=06
+set dd=10
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 10 < = 0 || 10 > 31 ) then
+if ( 06 < = 0 || 06 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 06 )
+@ doy=10 + 0
+@ i=1 + 1
+end
+while ( 2 < = 06 )
+@ doy=10 + 31
+@ i=2 + 1
+end
+while ( 3 < = 06 )
+@ doy=10 + 59
+@ i=3 + 1
+end
+while ( 4 < = 06 )
+@ doy=10 + 90
+@ i=4 + 1
+end
+while ( 5 < = 06 )
+@ doy=10 + 120
+@ i=5 + 1
+end
+while ( 6 < = 06 )
+@ doy=10 + 151
+@ i=6 + 1
+end
+while ( 7 < = 06 )
+echo 161 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=161
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 161 -eq 161 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230616.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 161 + 6
++ DD11=167
++ [ 167 -eq 167 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230616.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230616.v80.snx.gz
++ MM3=06
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230616.v80.snx.gz
++ DD3=16
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 06 16
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=06
+set dd=16
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 16 < = 0 || 16 > 31 ) then
+if ( 06 < = 0 || 06 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 06 )
+@ doy=16 + 0
+@ i=1 + 1
+end
+while ( 2 < = 06 )
+@ doy=16 + 31
+@ i=2 + 1
+end
+while ( 3 < = 06 )
+@ doy=16 + 59
+@ i=3 + 1
+end
+while ( 4 < = 06 )
+@ doy=16 + 90
+@ i=4 + 1
+end
+while ( 5 < = 06 )
+@ doy=16 + 120
+@ i=5 + 1
+end
+while ( 6 < = 06 )
+@ doy=16 + 151
+@ i=6 + 1
+end
+while ( 7 < = 06 )
+echo 167 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=167
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 167 -eq 167 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230617.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 162 + 6
++ DD11=168
++ [ 168 -eq 168 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230617.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230617.v80.snx.gz
++ MM3=06
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230617.v80.snx.gz
++ DD3=17
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 06 17
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=06
+set dd=17
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 17 < = 0 || 17 > 31 ) then
+if ( 06 < = 0 || 06 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 06 )
+@ doy=17 + 0
+@ i=1 + 1
+end
+while ( 2 < = 06 )
+@ doy=17 + 31
+@ i=2 + 1
+end
+while ( 3 < = 06 )
+@ doy=17 + 59
+@ i=3 + 1
+end
+while ( 4 < = 06 )
+@ doy=17 + 90
+@ i=4 + 1
+end
+while ( 5 < = 06 )
+@ doy=17 + 120
+@ i=5 + 1
+end
+while ( 6 < = 06 )
+@ doy=17 + 151
+@ i=6 + 1
+end
+while ( 7 < = 06 )
+echo 168 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=168
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 168 -eq 168 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230624.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 169 + 6
++ DD11=175
++ [ 175 -eq 175 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230624.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230624.v80.snx.gz
++ MM3=06
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230624.v80.snx.gz
++ DD3=24
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 06 24
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=06
+set dd=24
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 24 < = 0 || 24 > 31 ) then
+if ( 06 < = 0 || 06 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 06 )
+@ doy=24 + 0
+@ i=1 + 1
+end
+while ( 2 < = 06 )
+@ doy=24 + 31
+@ i=2 + 1
+end
+while ( 3 < = 06 )
+@ doy=24 + 59
+@ i=3 + 1
+end
+while ( 4 < = 06 )
+@ doy=24 + 90
+@ i=4 + 1
+end
+while ( 5 < = 06 )
+@ doy=24 + 120
+@ i=5 + 1
+end
+while ( 6 < = 06 )
+@ doy=24 + 151
+@ i=6 + 1
+end
+while ( 7 < = 06 )
+echo 175 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=175
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 175 -eq 175 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230701.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 176 + 6
++ DD11=182
++ [ 182 -eq 182 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230701.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230701.v80.snx.gz
++ MM3=07
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230701.v80.snx.gz
++ DD3=01
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 07 01
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=07
+set dd=01
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 01 < = 0 || 01 > 31 ) then
+if ( 07 < = 0 || 07 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 07 )
+@ doy=01 + 0
+@ i=1 + 1
+end
+while ( 2 < = 07 )
+@ doy=01 + 31
+@ i=2 + 1
+end
+while ( 3 < = 07 )
+@ doy=01 + 59
+@ i=3 + 1
+end
+while ( 4 < = 07 )
+@ doy=01 + 90
+@ i=4 + 1
+end
+while ( 5 < = 07 )
+@ doy=01 + 120
+@ i=5 + 1
+end
+while ( 6 < = 07 )
+@ doy=01 + 151
+@ i=6 + 1
+end
+while ( 7 < = 07 )
+@ doy=01 + 181
+@ i=7 + 1
+end
+while ( 8 < = 07 )
+echo 182 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=182
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 182 -eq 182 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230708.v80_ORH_LE.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 183 + 6
++ DD11=189
++ [ 189 -eq 189 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230708.v80_ORH_LE.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230708.v80_ORH_LE.snx.gz
++ MM3=07
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230708.v80_ORH_LE.snx.gz
++ DD3=08
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 07 08
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=07
+set dd=08
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 08 < = 0 || 08 > 31 ) then
+if ( 07 < = 0 || 07 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 07 )
+@ doy=08 + 0
+@ i=1 + 1
+end
+while ( 2 < = 07 )
+@ doy=08 + 31
+@ i=2 + 1
+end
+while ( 3 < = 07 )
+@ doy=08 + 59
+@ i=3 + 1
+end
+while ( 4 < = 07 )
+@ doy=08 + 90
+@ i=4 + 1
+end
+while ( 5 < = 07 )
+@ doy=08 + 120
+@ i=5 + 1
+end
+while ( 6 < = 07 )
+@ doy=08 + 151
+@ i=6 + 1
+end
+while ( 7 < = 07 )
+@ doy=08 + 181
+@ i=7 + 1
+end
+while ( 8 < = 07 )
+echo 189 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=189
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 189 -eq 189 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230708.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 183 + 6
++ DD11=189
++ [ 189 -eq 189 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230708.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230708.v80.snx.gz
++ MM3=07
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230708.v80.snx.gz
++ DD3=08
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 07 08
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=07
+set dd=08
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 08 < = 0 || 08 > 31 ) then
+if ( 07 < = 0 || 07 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 07 )
+@ doy=08 + 0
+@ i=1 + 1
+end
+while ( 2 < = 07 )
+@ doy=08 + 31
+@ i=2 + 1
+end
+while ( 3 < = 07 )
+@ doy=08 + 59
+@ i=3 + 1
+end
+while ( 4 < = 07 )
+@ doy=08 + 90
+@ i=4 + 1
+end
+while ( 5 < = 07 )
+@ doy=08 + 120
+@ i=5 + 1
+end
+while ( 6 < = 07 )
+@ doy=08 + 151
+@ i=6 + 1
+end
+while ( 7 < = 07 )
+@ doy=08 + 181
+@ i=7 + 1
+end
+while ( 8 < = 07 )
+echo 189 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=189
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 189 -eq 189 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230715.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 190 + 6
++ DD11=196
++ [ 196 -eq 196 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230715.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230715.v80.snx.gz
++ MM3=07
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230715.v80.snx.gz
++ DD3=15
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 07 15
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=07
+set dd=15
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 15 < = 0 || 15 > 31 ) then
+if ( 07 < = 0 || 07 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 07 )
+@ doy=15 + 0
+@ i=1 + 1
+end
+while ( 2 < = 07 )
+@ doy=15 + 31
+@ i=2 + 1
+end
+while ( 3 < = 07 )
+@ doy=15 + 59
+@ i=3 + 1
+end
+while ( 4 < = 07 )
+@ doy=15 + 90
+@ i=4 + 1
+end
+while ( 5 < = 07 )
+@ doy=15 + 120
+@ i=5 + 1
+end
+while ( 6 < = 07 )
+@ doy=15 + 151
+@ i=6 + 1
+end
+while ( 7 < = 07 )
+@ doy=15 + 181
+@ i=7 + 1
+end
+while ( 8 < = 07 )
+echo 196 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=196
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 196 -eq 196 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230722.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 197 + 6
++ DD11=203
++ [ 203 -eq 203 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230722.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230722.v80.snx.gz
++ MM3=07
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230722.v80.snx.gz
++ DD3=22
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 07 22
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=07
+set dd=22
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 22 < = 0 || 22 > 31 ) then
+if ( 07 < = 0 || 07 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 07 )
+@ doy=22 + 0
+@ i=1 + 1
+end
+while ( 2 < = 07 )
+@ doy=22 + 31
+@ i=2 + 1
+end
+while ( 3 < = 07 )
+@ doy=22 + 59
+@ i=3 + 1
+end
+while ( 4 < = 07 )
+@ doy=22 + 90
+@ i=4 + 1
+end
+while ( 5 < = 07 )
+@ doy=22 + 120
+@ i=5 + 1
+end
+while ( 6 < = 07 )
+@ doy=22 + 151
+@ i=6 + 1
+end
+while ( 7 < = 07 )
+@ doy=22 + 181
+@ i=7 + 1
+end
+while ( 8 < = 07 )
+echo 203 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=203
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 203 -eq 203 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230729.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 204 + 6
++ DD11=210
++ [ 210 -eq 210 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230729.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230729.v80.snx.gz
++ MM3=07
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230729.v80.snx.gz
++ DD3=29
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 07 29
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=07
+set dd=29
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 29 < = 0 || 29 > 31 ) then
+if ( 07 < = 0 || 07 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 07 )
+@ doy=29 + 0
+@ i=1 + 1
+end
+while ( 2 < = 07 )
+@ doy=29 + 31
+@ i=2 + 1
+end
+while ( 3 < = 07 )
+@ doy=29 + 59
+@ i=3 + 1
+end
+while ( 4 < = 07 )
+@ doy=29 + 90
+@ i=4 + 1
+end
+while ( 5 < = 07 )
+@ doy=29 + 120
+@ i=5 + 1
+end
+while ( 6 < = 07 )
+@ doy=29 + 151
+@ i=6 + 1
+end
+while ( 7 < = 07 )
+@ doy=29 + 181
+@ i=7 + 1
+end
+while ( 8 < = 07 )
+echo 210 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=210
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 210 -eq 210 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230805.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 211 + 6
++ DD11=217
++ [ 217 -eq 217 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230805.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230805.v80.snx.gz
++ MM3=08
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230805.v80.snx.gz
++ DD3=05
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 08 05
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=08
+set dd=05
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 05 < = 0 || 05 > 31 ) then
+if ( 08 < = 0 || 08 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 08 )
+@ doy=05 + 0
+@ i=1 + 1
+end
+while ( 2 < = 08 )
+@ doy=05 + 31
+@ i=2 + 1
+end
+while ( 3 < = 08 )
+@ doy=05 + 59
+@ i=3 + 1
+end
+while ( 4 < = 08 )
+@ doy=05 + 90
+@ i=4 + 1
+end
+while ( 5 < = 08 )
+@ doy=05 + 120
+@ i=5 + 1
+end
+while ( 6 < = 08 )
+@ doy=05 + 151
+@ i=6 + 1
+end
+while ( 7 < = 08 )
+@ doy=05 + 181
+@ i=7 + 1
+end
+while ( 8 < = 08 )
+@ doy=05 + 212
+@ i=8 + 1
+end
+while ( 9 < = 08 )
+echo 217 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=217
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 217 -eq 217 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230812.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 218 + 6
++ DD11=224
++ [ 224 -eq 224 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230812.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230812.v80.snx.gz
++ MM3=08
+echo $SNXFILE|cut -c18-19
++ echo jcet.pos+eop.230812.v80.snx.gz
++ cut -c18-19
++ DD3=12
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 08 12
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=08
+set dd=12
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 12 < = 0 || 12 > 31 ) then
+if ( 08 < = 0 || 08 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 08 )
+@ doy=12 + 0
+@ i=1 + 1
+end
+while ( 2 < = 08 )
+@ doy=12 + 31
+@ i=2 + 1
+end
+while ( 3 < = 08 )
+@ doy=12 + 59
+@ i=3 + 1
+end
+while ( 4 < = 08 )
+@ doy=12 + 90
+@ i=4 + 1
+end
+while ( 5 < = 08 )
+@ doy=12 + 120
+@ i=5 + 1
+end
+while ( 6 < = 08 )
+@ doy=12 + 151
+@ i=6 + 1
+end
+while ( 7 < = 08 )
+@ doy=12 + 181
+@ i=7 + 1
+end
+while ( 8 < = 08 )
+@ doy=12 + 212
+@ i=8 + 1
+end
+while ( 9 < = 08 )
+echo 224 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=224
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 224 -eq 224 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230819.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 225 + 6
++ DD11=231
++ [ 231 -eq 231 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230819.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230819.v80.snx.gz
++ MM3=08
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230819.v80.snx.gz
++ DD3=19
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 08 19
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=08
+set dd=19
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 19 < = 0 || 19 > 31 ) then
+if ( 08 < = 0 || 08 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 08 )
+@ doy=19 + 0
+@ i=1 + 1
+end
+while ( 2 < = 08 )
+@ doy=19 + 31
+@ i=2 + 1
+end
+while ( 3 < = 08 )
+@ doy=19 + 59
+@ i=3 + 1
+end
+while ( 4 < = 08 )
+@ doy=19 + 90
+@ i=4 + 1
+end
+while ( 5 < = 08 )
+@ doy=19 + 120
+@ i=5 + 1
+end
+while ( 6 < = 08 )
+@ doy=19 + 151
+@ i=6 + 1
+end
+while ( 7 < = 08 )
+@ doy=19 + 181
+@ i=7 + 1
+end
+while ( 8 < = 08 )
+@ doy=19 + 212
+@ i=8 + 1
+end
+while ( 9 < = 08 )
+echo 231 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=231
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 231 -eq 231 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230826.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 232 + 6
++ DD11=238
++ [ 238 -eq 238 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230826.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230826.v80.snx.gz
++ MM3=08
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230826.v80.snx.gz
++ DD3=26
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 08 26
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=08
+set dd=26
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 26 < = 0 || 26 > 31 ) then
+if ( 08 < = 0 || 08 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 08 )
+@ doy=26 + 0
+@ i=1 + 1
+end
+while ( 2 < = 08 )
+@ doy=26 + 31
+@ i=2 + 1
+end
+while ( 3 < = 08 )
+@ doy=26 + 59
+@ i=3 + 1
+end
+while ( 4 < = 08 )
+@ doy=26 + 90
+@ i=4 + 1
+end
+while ( 5 < = 08 )
+@ doy=26 + 120
+@ i=5 + 1
+end
+while ( 6 < = 08 )
+@ doy=26 + 151
+@ i=6 + 1
+end
+while ( 7 < = 08 )
+@ doy=26 + 181
+@ i=7 + 1
+end
+while ( 8 < = 08 )
+@ doy=26 + 212
+@ i=8 + 1
+end
+while ( 9 < = 08 )
+echo 238 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=238
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 238 -eq 238 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230902.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 239 + 6
++ DD11=245
++ [ 245 -eq 245 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230902.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230902.v80.snx.gz
++ MM3=09
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230902.v80.snx.gz
++ DD3=02
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 09 02
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=09
+set dd=02
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 02 < = 0 || 02 > 31 ) then
+if ( 09 < = 0 || 09 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 09 )
+@ doy=02 + 0
+@ i=1 + 1
+end
+while ( 2 < = 09 )
+@ doy=02 + 31
+@ i=2 + 1
+end
+while ( 3 < = 09 )
+@ doy=02 + 59
+@ i=3 + 1
+end
+while ( 4 < = 09 )
+@ doy=02 + 90
+@ i=4 + 1
+end
+while ( 5 < = 09 )
+@ doy=02 + 120
+@ i=5 + 1
+end
+while ( 6 < = 09 )
+@ doy=02 + 151
+@ i=6 + 1
+end
+while ( 7 < = 09 )
+@ doy=02 + 181
+@ i=7 + 1
+end
+while ( 8 < = 09 )
+@ doy=02 + 212
+@ i=8 + 1
+end
+while ( 9 < = 09 )
+@ doy=02 + 243
+@ i=9 + 1
+end
+while ( 10 < = 09 )
+echo 245 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=245
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 245 -eq 245 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230909.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 246 + 6
++ DD11=252
++ [ 252 -eq 252 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230909.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230909.v80.snx.gz
++ MM3=09
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230909.v80.snx.gz
++ DD3=09
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 09 09
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=09
+set dd=09
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 09 < = 0 || 09 > 31 ) then
+if ( 09 < = 0 || 09 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 09 )
+@ doy=09 + 0
+@ i=1 + 1
+end
+while ( 2 < = 09 )
+@ doy=09 + 31
+@ i=2 + 1
+end
+while ( 3 < = 09 )
+@ doy=09 + 59
+@ i=3 + 1
+end
+while ( 4 < = 09 )
+@ doy=09 + 90
+@ i=4 + 1
+end
+while ( 5 < = 09 )
+@ doy=09 + 120
+@ i=5 + 1
+end
+while ( 6 < = 09 )
+@ doy=09 + 151
+@ i=6 + 1
+end
+while ( 7 < = 09 )
+@ doy=09 + 181
+@ i=7 + 1
+end
+while ( 8 < = 09 )
+@ doy=09 + 212
+@ i=8 + 1
+end
+while ( 9 < = 09 )
+@ doy=09 + 243
+@ i=9 + 1
+end
+while ( 10 < = 09 )
+echo 252 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=252
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 252 -eq 252 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230916.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 253 + 6
++ DD11=259
++ [ 259 -eq 259 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230916.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230916.v80.snx.gz
++ MM3=09
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230916.v80.snx.gz
++ DD3=16
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 09 16
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=09
+set dd=16
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 16 < = 0 || 16 > 31 ) then
+if ( 09 < = 0 || 09 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 09 )
+@ doy=16 + 0
+@ i=1 + 1
+end
+while ( 2 < = 09 )
+@ doy=16 + 31
+@ i=2 + 1
+end
+while ( 3 < = 09 )
+@ doy=16 + 59
+@ i=3 + 1
+end
+while ( 4 < = 09 )
+@ doy=16 + 90
+@ i=4 + 1
+end
+while ( 5 < = 09 )
+@ doy=16 + 120
+@ i=5 + 1
+end
+while ( 6 < = 09 )
+@ doy=16 + 151
+@ i=6 + 1
+end
+while ( 7 < = 09 )
+@ doy=16 + 181
+@ i=7 + 1
+end
+while ( 8 < = 09 )
+@ doy=16 + 212
+@ i=8 + 1
+end
+while ( 9 < = 09 )
+@ doy=16 + 243
+@ i=9 + 1
+end
+while ( 10 < = 09 )
+echo 259 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=259
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 259 -eq 259 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230923.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 260 + 6
++ DD11=266
++ [ 266 -eq 266 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230923.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230923.v80.snx.gz
++ MM3=09
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230923.v80.snx.gz
++ DD3=23
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 09 23
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=09
+set dd=23
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 23 < = 0 || 23 > 31 ) then
+if ( 09 < = 0 || 09 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 09 )
+@ doy=23 + 0
+@ i=1 + 1
+end
+while ( 2 < = 09 )
+@ doy=23 + 31
+@ i=2 + 1
+end
+while ( 3 < = 09 )
+@ doy=23 + 59
+@ i=3 + 1
+end
+while ( 4 < = 09 )
+@ doy=23 + 90
+@ i=4 + 1
+end
+while ( 5 < = 09 )
+@ doy=23 + 120
+@ i=5 + 1
+end
+while ( 6 < = 09 )
+@ doy=23 + 151
+@ i=6 + 1
+end
+while ( 7 < = 09 )
+@ doy=23 + 181
+@ i=7 + 1
+end
+while ( 8 < = 09 )
+@ doy=23 + 212
+@ i=8 + 1
+end
+while ( 9 < = 09 )
+@ doy=23 + 243
+@ i=9 + 1
+end
+while ( 10 < = 09 )
+echo 266 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=266
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 266 -eq 266 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.230930.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 267 + 6
++ DD11=273
++ [ 273 -eq 273 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.230930.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.230930.v80.snx.gz
++ MM3=09
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.230930.v80.snx.gz
++ DD3=30
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 09 30
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=09
+set dd=30
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 30 < = 0 || 30 > 31 ) then
+if ( 09 < = 0 || 09 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 09 )
+@ doy=30 + 0
+@ i=1 + 1
+end
+while ( 2 < = 09 )
+@ doy=30 + 31
+@ i=2 + 1
+end
+while ( 3 < = 09 )
+@ doy=30 + 59
+@ i=3 + 1
+end
+while ( 4 < = 09 )
+@ doy=30 + 90
+@ i=4 + 1
+end
+while ( 5 < = 09 )
+@ doy=30 + 120
+@ i=5 + 1
+end
+while ( 6 < = 09 )
+@ doy=30 + 151
+@ i=6 + 1
+end
+while ( 7 < = 09 )
+@ doy=30 + 181
+@ i=7 + 1
+end
+while ( 8 < = 09 )
+@ doy=30 + 212
+@ i=8 + 1
+end
+while ( 9 < = 09 )
+@ doy=30 + 243
+@ i=9 + 1
+end
+while ( 10 < = 09 )
+echo 273 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=273
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 273 -eq 273 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231007.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 274 + 6
++ DD11=280
++ [ 280 -eq 280 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.231007.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.231007.v80.snx.gz
++ MM3=10
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.231007.v80.snx.gz
++ DD3=07
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 10 07
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=10
+set dd=07
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 07 < = 0 || 07 > 31 ) then
+if ( 10 < = 0 || 10 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 10 )
+@ doy=07 + 0
+@ i=1 + 1
+end
+while ( 2 < = 10 )
+@ doy=07 + 31
+@ i=2 + 1
+end
+while ( 3 < = 10 )
+@ doy=07 + 59
+@ i=3 + 1
+end
+while ( 4 < = 10 )
+@ doy=07 + 90
+@ i=4 + 1
+end
+while ( 5 < = 10 )
+@ doy=07 + 120
+@ i=5 + 1
+end
+while ( 6 < = 10 )
+@ doy=07 + 151
+@ i=6 + 1
+end
+while ( 7 < = 10 )
+@ doy=07 + 181
+@ i=7 + 1
+end
+while ( 8 < = 10 )
+@ doy=07 + 212
+@ i=8 + 1
+end
+while ( 9 < = 10 )
+@ doy=07 + 243
+@ i=9 + 1
+end
+while ( 10 < = 10 )
+@ doy=07 + 273
+@ i=10 + 1
+end
+while ( 11 < = 10 )
+echo 280 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=280
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 280 -eq 280 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231014.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 281 + 6
++ DD11=287
++ [ 287 -eq 287 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.231014.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.231014.v80.snx.gz
++ MM3=10
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.231014.v80.snx.gz
++ DD3=14
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 10 14
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=10
+set dd=14
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 14 < = 0 || 14 > 31 ) then
+if ( 10 < = 0 || 10 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 10 )
+@ doy=14 + 0
+@ i=1 + 1
+end
+while ( 2 < = 10 )
+@ doy=14 + 31
+@ i=2 + 1
+end
+while ( 3 < = 10 )
+@ doy=14 + 59
+@ i=3 + 1
+end
+while ( 4 < = 10 )
+@ doy=14 + 90
+@ i=4 + 1
+end
+while ( 5 < = 10 )
+@ doy=14 + 120
+@ i=5 + 1
+end
+while ( 6 < = 10 )
+@ doy=14 + 151
+@ i=6 + 1
+end
+while ( 7 < = 10 )
+@ doy=14 + 181
+@ i=7 + 1
+end
+while ( 8 < = 10 )
+@ doy=14 + 212
+@ i=8 + 1
+end
+while ( 9 < = 10 )
+@ doy=14 + 243
+@ i=9 + 1
+end
+while ( 10 < = 10 )
+@ doy=14 + 273
+@ i=10 + 1
+end
+while ( 11 < = 10 )
+echo 287 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=287
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 287 -eq 287 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231021.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 288 + 6
++ DD11=294
++ [ 294 -eq 294 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.231021.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.231021.v80.snx.gz
++ MM3=10
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.231021.v80.snx.gz
++ DD3=21
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 10 21
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=10
+set dd=21
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 21 < = 0 || 21 > 31 ) then
+if ( 10 < = 0 || 10 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 10 )
+@ doy=21 + 0
+@ i=1 + 1
+end
+while ( 2 < = 10 )
+@ doy=21 + 31
+@ i=2 + 1
+end
+while ( 3 < = 10 )
+@ doy=21 + 59
+@ i=3 + 1
+end
+while ( 4 < = 10 )
+@ doy=21 + 90
+@ i=4 + 1
+end
+while ( 5 < = 10 )
+@ doy=21 + 120
+@ i=5 + 1
+end
+while ( 6 < = 10 )
+@ doy=21 + 151
+@ i=6 + 1
+end
+while ( 7 < = 10 )
+@ doy=21 + 181
+@ i=7 + 1
+end
+while ( 8 < = 10 )
+@ doy=21 + 212
+@ i=8 + 1
+end
+while ( 9 < = 10 )
+@ doy=21 + 243
+@ i=9 + 1
+end
+while ( 10 < = 10 )
+@ doy=21 + 273
+@ i=10 + 1
+end
+while ( 11 < = 10 )
+echo 294 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=294
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 294 -eq 294 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231028.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 295 + 6
++ DD11=301
++ [ 301 -eq 301 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.231028.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.231028.v80.snx.gz
++ MM3=10
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.231028.v80.snx.gz
++ DD3=28
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 10 28
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=10
+set dd=28
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 28 < = 0 || 28 > 31 ) then
+if ( 10 < = 0 || 10 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 10 )
+@ doy=28 + 0
+@ i=1 + 1
+end
+while ( 2 < = 10 )
+@ doy=28 + 31
+@ i=2 + 1
+end
+while ( 3 < = 10 )
+@ doy=28 + 59
+@ i=3 + 1
+end
+while ( 4 < = 10 )
+@ doy=28 + 90
+@ i=4 + 1
+end
+while ( 5 < = 10 )
+@ doy=28 + 120
+@ i=5 + 1
+end
+while ( 6 < = 10 )
+@ doy=28 + 151
+@ i=6 + 1
+end
+while ( 7 < = 10 )
+@ doy=28 + 181
+@ i=7 + 1
+end
+while ( 8 < = 10 )
+@ doy=28 + 212
+@ i=8 + 1
+end
+while ( 9 < = 10 )
+@ doy=28 + 243
+@ i=9 + 1
+end
+while ( 10 < = 10 )
+@ doy=28 + 273
+@ i=10 + 1
+end
+while ( 11 < = 10 )
+echo 301 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=301
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 301 -eq 301 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231104.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 302 + 6
++ DD11=308
++ [ 308 -eq 308 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.231104.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.231104.v80.snx.gz
++ MM3=11
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.231104.v80.snx.gz
++ DD3=04
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 11 04
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=11
+set dd=04
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 04 < = 0 || 04 > 31 ) then
+if ( 11 < = 0 || 11 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 11 )
+@ doy=04 + 0
+@ i=1 + 1
+end
+while ( 2 < = 11 )
+@ doy=04 + 31
+@ i=2 + 1
+end
+while ( 3 < = 11 )
+@ doy=04 + 59
+@ i=3 + 1
+end
+while ( 4 < = 11 )
+@ doy=04 + 90
+@ i=4 + 1
+end
+while ( 5 < = 11 )
+@ doy=04 + 120
+@ i=5 + 1
+end
+while ( 6 < = 11 )
+@ doy=04 + 151
+@ i=6 + 1
+end
+while ( 7 < = 11 )
+@ doy=04 + 181
+@ i=7 + 1
+end
+while ( 8 < = 11 )
+@ doy=04 + 212
+@ i=8 + 1
+end
+while ( 9 < = 11 )
+@ doy=04 + 243
+@ i=9 + 1
+end
+while ( 10 < = 11 )
+@ doy=04 + 273
+@ i=10 + 1
+end
+while ( 11 < = 11 )
+@ doy=04 + 304
+@ i=11 + 1
+end
+while ( 12 < = 11 )
+echo 308 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=308
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 308 -eq 308 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231111.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 309 + 6
++ DD11=315
++ [ 315 -eq 315 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.231111.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.231111.v80.snx.gz
++ MM3=11
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.231111.v80.snx.gz
++ DD3=11
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 11 11
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=11
+set dd=11
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 11 < = 0 || 11 > 31 ) then
+if ( 11 < = 0 || 11 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 11 )
+@ doy=11 + 0
+@ i=1 + 1
+end
+while ( 2 < = 11 )
+@ doy=11 + 31
+@ i=2 + 1
+end
+while ( 3 < = 11 )
+@ doy=11 + 59
+@ i=3 + 1
+end
+while ( 4 < = 11 )
+@ doy=11 + 90
+@ i=4 + 1
+end
+while ( 5 < = 11 )
+@ doy=11 + 120
+@ i=5 + 1
+end
+while ( 6 < = 11 )
+@ doy=11 + 151
+@ i=6 + 1
+end
+while ( 7 < = 11 )
+@ doy=11 + 181
+@ i=7 + 1
+end
+while ( 8 < = 11 )
+@ doy=11 + 212
+@ i=8 + 1
+end
+while ( 9 < = 11 )
+@ doy=11 + 243
+@ i=9 + 1
+end
+while ( 10 < = 11 )
+@ doy=11 + 273
+@ i=10 + 1
+end
+while ( 11 < = 11 )
+@ doy=11 + 304
+@ i=11 + 1
+end
+while ( 12 < = 11 )
+echo 315 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=315
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 315 -eq 315 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
++ zcat jcet.pos+eop.231118.v80.snx.gz
++ 1> t1
+sed -n "/$START/=" t1 
++ sed -n '/+SNX 2.00/=' t1
++ arcline1=16
++ sed -n 16p t1
++ 1> t2
++ cut -c33-57 t2
++ 1> t3
++ sed -e 's/:/ /g' t3
++ 1> t4
++ read YY1 DD1 SS1 YY2 DD2 SS2
++ 0< t4
+expr $DD1 + 6
++ expr 316 + 6
++ DD11=322
++ [ 322 -eq 322 ]
++ echo 'date is ok'
+date is ok
+echo $SNXFILE|cut -c14-15
++ cut -c14-15
++ echo jcet.pos+eop.231118.v80.snx.gz
++ YY3=23
+echo $SNXFILE|cut -c16-17
++ cut -c16-17
++ echo jcet.pos+eop.231118.v80.snx.gz
++ MM3=11
+echo $SNXFILE|cut -c18-19
++ cut -c18-19
++ echo jcet.pos+eop.231118.v80.snx.gz
++ DD3=18
++ /umbc/epavlis/data01/LOCAL/magdak/scripts/ymd2ydoy 23 11 18
++ 1> t5
+@ year=23
+if ( 23 < 1900 ) then
+@ year=23 + 1900
+endif
+if ( 1923 < 1980 ) then
+@ year=1923 + 100
+endif
+set mm=11
+set dd=18
+set indices= ( 1 2 3 4 5 6 7 8 9 10 11 12 )
+set months= ( 01 02 03 04 05 06 07 08 09 10 11 12 )
+switch ( 2023 )
+set days= ( 0 31 59 90 120 151 181 212 243 273 304 334 )
+@ ndays=365
+endsw
+if ( 18 < = 0 || 18 > 31 ) then
+if ( 11 < = 0 || 11 > 12 ) then
+@ i=1
+@ doy=0
+while ( 1 < = 11 )
+@ doy=18 + 0
+@ i=1 + 1
+end
+while ( 2 < = 11 )
+@ doy=18 + 31
+@ i=2 + 1
+end
+while ( 3 < = 11 )
+@ doy=18 + 59
+@ i=3 + 1
+end
+while ( 4 < = 11 )
+@ doy=18 + 90
+@ i=4 + 1
+end
+while ( 5 < = 11 )
+@ doy=18 + 120
+@ i=5 + 1
+end
+while ( 6 < = 11 )
+@ doy=18 + 151
+@ i=6 + 1
+end
+while ( 7 < = 11 )
+@ doy=18 + 181
+@ i=7 + 1
+end
+while ( 8 < = 11 )
+@ doy=18 + 212
+@ i=8 + 1
+end
+while ( 9 < = 11 )
+@ doy=18 + 243
+@ i=9 + 1
+end
+while ( 10 < = 11 )
+@ doy=18 + 273
+@ i=10 + 1
+end
+while ( 11 < = 11 )
+@ doy=18 + 304
+@ i=11 + 1
+end
+while ( 12 < = 11 )
+echo 322 2023
+awk {printf("%s%3.3d\n", substr($2,3,2), $1)}
++ awk '{print substr($1,3,3)}' t5
++ DD4=322
++ awk '{print substr($1,1,2)}' t5
++ YY4=23
++ [ 23 -eq 23 -a 322 -eq 322 ]
++ echo OK
+OK
++ rm t1 t2 t3 t4 t5
++ read SNXFILE
+exit 0
++ exit 0

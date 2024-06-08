@@ -1,0 +1,25 @@
+#!/bin/ksh
+#
+${SCR_DBG}set -xv
+set -xv
+
+
+
+while read A1 A2 A3 A4 A5 A6 A7 A8 A9 A10
+do 
+ NUMB_OLD=20
+ NUMB_NEW=$A8
+  if [ ${NUMB_NEW}  -gt  ${NUMB_OLD}  ]; then
+echo "PROBLEM with v${SNX_VER} PER run on Persues" >   RUN_INFO 
+fi
+
+done < /${DISK}/PPV/products/$CASE/OPS/${SERVICE}_${SOL_EN}_/${ARC}.JCET
+
+
+ if [ -f "RUN_INFO" ]
+      then
+    echo "RUN_INFO found."
+ echo | mailx -s "PROBLEM WITH v${SNX_VER} PER"  2405939122@tmomail.net
+     else
+    NUMB_NEW=0
+       fi

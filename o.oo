@@ -1,0 +1,33 @@
+spawn ssh magdak@jcetdb.rs.umbc.edu
+WARNING: UNAUTHORIZED ACCESS to this computer is in violation of Criminal Law
+         Article section 8-606 and 7-302 of the Annotated Code of MD.
+
+NOTICE:  This system is for the use of authorized users only. Individuals using
+         this computer system without authority, or in excess of their authority
+         , are subject to having all of their activities on this system
+         monitored and recorded by system personnel.
+
+magdak@jcetdb.rs.umbc.edu's password: 
+Last login: Mon Apr 29 16:03:58 2024 from perseus2.rs.umbc.edu
+
+UMBC Division of Information Technology                    http://doit.umbc.edu/
+--------------------------------------------------------------------------------
+If you have any questions or problems regarding these systems, please call the
+DoIT Technology Support Center at 410-455-3838, or submit your request on the
+web by visiting http://my.umbc.edu/help/request
+
+Remember that the Division of Information Technology will never ask for your
+password. Do NOT give out this information under any circumstances.
+--------------------------------------------------------------------------------
+
+pwd: Undefined variable.
+[7mjcetdb[27m[1] [~/]$ ksh
+alias: cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/GISL2: invalid alias name
+alias: cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA1: invalid alias name
+alias: cd /umbc/epavlis/data01/LOCAL/magdak/MISSIONS/ETA2: invalid alias name
+alias: cd /umbc/epavlis/data01/LOCAL/magdak/tmp/magda: invalid alias name
+$ pwd
+
+$ cd /umbc/epavlis/data01/LOCAL/magdak/scripts/SIMULATIONS/SLR
+$ ./RUN _REAL _ONE _ARC _2 _DB _181204 _P2 _2 > o.RUN _REAL _ONE _ARC _2 _DB _181204 _P2 _3 2>&1 
+$ 
